@@ -1,0 +1,217 @@
+package services
+
+import (
+	"context"
+	"fmt"
+	"im-server/commons/bases"
+	"im-server/commons/pbdefines/pbobjs"
+	"im-server/commons/tools"
+	"im-server/services/botmsg/botclient"
+	"im-server/services/commonservices"
+	"im-server/services/commonservices/msgdefines"
+	"strings"
+)
+
+var MsgSinglePools *tools.SinglePools
+
+func init() {
+	MsgSinglePools = tools.NewSinglePools(8192, true)
+}
+
+func DispatchMsg(ctx context.Context, downMsg *pbobjs.DownMsg) {
+	appkey := bases.GetAppKeyFromCtx(ctx)
+	if downMsg.ChannelType == pbobjs.ChannelType_Private || downMsg.ChannelType == pbobjs.ChannelType_System {
+		receiverId := bases.GetTargetIdFromCtx(ctx)
+		MsgSinglePools.GetPool(strings.Join([]string{appkey, receiverId}, "_")).Submit(func() {
+			doDispatch(ctx, receiverId, downMsg, false)
+		})
+	} else if downMsg.ChannelType == pbobjs.ChannelType_Group {
+		memberIds := bases.GetTargetIdsFromCtx(ctx)
+		bases.SetTargetIds2Ctx(ctx, []string{})
+		threadhold := 1000
+		forceCloseOfflineMsg := false
+		appinfo, exist := commonservices.GetAppInfo(appkey)
+		if exist && appinfo != nil {
+			threadhold = appinfo.BigGrpThreshold
+			forceCloseOfflineMsg = appinfo.ForceCloseOfflineMsg
+		}
+		if downMsg.MemberCount > int32(threadhold) {
+			preheat(ctx, appkey, memberIds)
+			for _, receiverId := range memberIds {
+				newDownMsg := copyDownMsg(downMsg, receiverId)
+				receId := receiverId
+				closeOffline := forceCloseOfflineMsg
+				if !closeOffline {
+					userStatus := GetUserStatus(appkey, receId)
+					closeOffline = (!userStatus.IsOnline())
+				}
+				MsgSinglePools.GetPool(strings.Join([]string{appkey, receId}, "_")).Submit(func() {
+					doDispatch(ctx, receId, newDownMsg, closeOffline)
+				})
+			}
+		} else {
+			for _, receiverId := range memberIds {
+				newDownMsg := copyDownMsg(downMsg, receiverId)
+				receId := receiverId
+				MsgSinglePools.GetPool(strings.Join([]string{appkey, receId}, "_")).Submit(func() {
+					doDispatch(ctx, receId, newDownMsg, false)
+				})
+			}
+		}
+	} else if downMsg.ChannelType == pbobjs.ChannelType_SubStatus {
+		memberIds := bases.GetTargetIdsFromCtx(ctx)
+		ctx = bases.SetTargetIds2Ctx(ctx, []string{})
+		for _, receiverId := range memberIds {
+			receId := receiverId
+			if UserStatusCacheContains(appkey, receId) {
+				userStatus := GetUserStatus(appkey, receId)
+				if userStatus.IsOnline() {
+					newDownMsg := commonservices.CopyDownMsg(downMsg, receiverId)
+					MsgSinglePools.GetPool(strings.Join([]string{appkey, receId}, "_")).Submit(func() {
+						dispatchStatusSubMsgs(ctx, receId, newDownMsg)
+					})
+				}
+			}
+		}
+	}
+}
+
+func preheat(ctx context.Context, appkey string, memberIds []string) {
+	//preheat user status
+	noStatusCacheUids := []string{}
+	for _, receiverId := range memberIds {
+		if !UserStatusCacheContains(appkey, receiverId) {
+			noStatusCacheUids = append(noStatusCacheUids, receiverId)
+		}
+	}
+	if len(noStatusCacheUids) > 0 {
+		BatchInitUserStatus(ctx, appkey, noStatusCacheUids)
+	}
+}
+
+func doDispatch(ctx context.Context, receiverId string, msg *pbobjs.DownMsg, closeOffline bool) {
+	appkey := bases.GetAppKeyFromCtx(ctx)
+	//TODO save imediately when user online, other wise, use async queue.
+	//TODO batch insert
+	sendTime := RegenateSendTime(appkey, receiverId, msg.MsgTime)
+	msg.MsgTime = sendTime
+	//handle conversation check, such as undisturb, unread index
+	HandleDownMsgByConver(ctx, receiverId, msg.TargetId, msg.SubChannel, msg.ChannelType, msg)
+	targetUserInfo := commonservices.GetTargetUserInfo(ctx, receiverId)
+	if targetUserInfo.UserType == pbobjs.UserType_Bot {
+		if msg.ChannelType != pbobjs.ChannelType_Private && msg.ChannelType != pbobjs.ChannelType_Group {
+			return
+		}
+		if msgdefines.IsStateMsg(msg.Flags) || msgdefines.IsCmdMsg(msg.Flags) {
+			return
+		}
+		if msg.ChannelType == pbobjs.ChannelType_Group {
+			onlyMentioned := true
+			if targetUserInfo.BotSettings != nil {
+				onlyMentioned = targetUserInfo.BotSettings.OnlyMentioned
+			}
+			if onlyMentioned && !commonservices.IsDirectMentionedMe(targetUserInfo.UserId, msg) {
+				return
+			}
+		}
+		if targetUserInfo.HasBotConf {
+			botclient.SendMsg2Bot(ctx, receiverId, msg)
+		}
+		if msgdefines.IsStateMsg(msg.Flags) {
+			MsgDirect(ctx, receiverId, msg)
+		} else {
+			commonservices.SaveConversation(ctx, receiverId, msg)
+			SaveMsg2Inbox(appkey, receiverId, msg)
+			//send to client
+			MsgOrNtf(ctx, receiverId, msg, true)
+		}
+	} else {
+		if closeOffline {
+			if !msgdefines.IsStateMsg(msg.Flags) {
+				target := fmt.Sprintf("%s_%s_%d", appkey, msg.TargetId, msg.ChannelType)
+				batchExecutorPool.GetBatchExecutor(target).Append(fmt.Sprintf("%s_%s", target, receiverId), &BatchConverItem{
+					Appkey: appkey,
+					UserId: receiverId,
+					Msg:    msg,
+				})
+			}
+		} else {
+			if msgdefines.IsStateMsg(msg.Flags) {
+				MsgDirect(ctx, receiverId, msg)
+			} else {
+				commonservices.SaveConversation(ctx, receiverId, msg)
+				SaveMsg2Inbox(appkey, receiverId, msg)
+				//send to client
+				MsgOrNtfWithPush(ctx, receiverId, msg)
+			}
+		}
+	}
+}
+
+func copyDownMsg(msg *pbobjs.DownMsg, receiverId string) *pbobjs.DownMsg {
+	referMsg := msg.ReferMsg
+	if referMsg != nil {
+		if referMsg.SenderId == receiverId {
+			referMsg.IsSend = true
+		} else {
+			referMsg.IsSend = false
+		}
+	}
+	return &pbobjs.DownMsg{
+		TargetId:          msg.TargetId,
+		ChannelType:       msg.ChannelType,
+		MsgType:           msg.MsgType,
+		SenderId:          msg.SenderId,
+		MsgId:             msg.MsgId,
+		MsgSeqNo:          msg.MsgSeqNo,
+		MsgContent:        msg.MsgContent,
+		MsgTime:           msg.MsgTime,
+		Flags:             msg.Flags,
+		IsSend:            msg.IsSend,
+		Platform:          msg.Platform,
+		ClientUid:         msg.ClientUid,
+		PushData:          msg.PushData,
+		MentionInfo:       msg.MentionInfo,
+		IsRead:            msg.IsRead,
+		ReferMsg:          referMsg,
+		TargetUserInfo:    msg.TargetUserInfo,
+		SenderInfo:        msg.SenderInfo,
+		GroupInfo:         msg.GroupInfo,
+		MergedMsgs:        msg.MergedMsgs,
+		UndisturbType:     msg.UndisturbType,
+		MemberCount:       msg.MemberCount,
+		ReadCount:         msg.ReadCount,
+		UnreadIndex:       msg.UnreadIndex,
+		SearchText:        msg.SearchText,
+		GrpMemberInfo:     msg.GrpMemberInfo,
+		DestroyTime:       msg.DestroyTime,
+		LifeTimeAfterRead: msg.LifeTimeAfterRead,
+		SubChannel:        msg.SubChannel,
+		ConverTags:        msg.ConverTags,
+	}
+}
+
+func UserPush(ctx context.Context, msg *pbobjs.DownMsg) {
+	appkey := bases.GetAppKeyFromCtx(ctx)
+	targetId := bases.GetTargetIdFromCtx(ctx)
+	if !UserStatusCacheContains(appkey, targetId) {
+		BatchInitUserStatus(ctx, appkey, []string{targetId})
+	}
+	userStatus := GetUserStatus(appkey, targetId)
+	if userStatus != nil {
+		if msg.PushData != nil && msg.PushData.IsVoip {
+			SendPush(ctx, bases.GetRequesterIdFromCtx(ctx), targetId, msg)
+		} else {
+			if !userStatus.IsOnline() || userStatus.OpenPushSwitch() {
+				SendPush(ctx, bases.GetRequesterIdFromCtx(ctx), targetId, msg)
+			}
+		}
+	}
+}
+
+func dispatchStatusSubMsgs(ctx context.Context, receiverId string, msg *pbobjs.DownMsg) {
+	appkey := bases.GetAppKeyFromCtx(ctx)
+	sendTime := RegenateSendTime(appkey, receiverId, msg.MsgTime)
+	msg.MsgTime = sendTime
+	MsgOrNtf(ctx, receiverId, msg, true)
+}

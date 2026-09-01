@@ -1,0 +1,40 @@
+{
+  "dialog": {
+    "title": "创建邀请码",
+    "code": "邀请码",
+    "description": "描述",
+    "maxUses": "最大使用次数",
+    "maxUsesPlaceholder": "0 表示无限制",
+    "editTitle": "编辑邀请码",
+    "status": "状态"
+  },
+  "feedback": {
+    "createFailed": "创建失败: {code}",
+    "deleteFailed": "删除失败: {code}",
+    "updateFailed": "更新失败: {code}",
+    "fetchFailed": "获取列表失败: {code}",
+    "success": "操作成功"
+  },
+  "status": {
+    "active": "生效中",
+    "disabled": "已禁用",
+    "expired": "已过期",
+    "usedUp": "已用完"
+  },
+  "action": {
+    "create": "创建邀请码",
+    "delete": "删除",
+    "disable": "禁用",
+    "enable": "启用",
+    "refresh": "刷新"
+  },
+  "field": {
+    "code": "邀请码",
+    "description": "描述",
+    "maxUses": "最大使用次数",
+    "usedCount": "已使用次数",
+    "status": "状态",
+    "createdAt": "创建时间",
+    "expiredAt": "过期时间"
+  }
+}

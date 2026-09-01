@@ -1,0 +1,82 @@
+package models
+
+type GroupMuteReq struct {
+	GrouopId string `json:"group_id"`
+	IsMute   int    `json:"is_mute"`
+}
+
+type GroupInfo struct {
+	GroupId          string            `json:"group_id"`
+	GroupName        string            `json:"group_name"`
+	GroupPortrait    string            `json:"group_portrait"`
+	IsMute           int               `json:"is_mute"`
+	UpdatedTime      int64             `json:"updated_time"`
+	ExtFields        map[string]string `json:"ext_fields"`
+	Settings         *GroupSettings    `json:"settings"`
+	GlobalConverTags *[]string         `json:"global_conver_tags"`
+}
+
+type GroupSettings struct {
+	HideGrpMsg          *int64 `json:"hide_grp_msg"`
+	GrpMsgSecondLimiter *int64 `json:"grp_msg_second_limiter"`
+	GrpMsgMinuteLimiter *int64 `json:"grp_msg_minute_limiter"`
+	GrpMsgHourLimiter   *int64 `json:"grp_msg_hour_limiter"`
+}
+
+type GroupMembersReq struct {
+	GroupId          string            `json:"group_id"`
+	GroupName        string            `json:"group_name"`
+	GroupPortrait    string            `json:"group_portrait"`
+	ExtFields        map[string]string `json:"ext_fields"`
+	MemberIds        []string          `json:"member_ids"`
+	GlobalConverTags *[]string         `json:"global_conver_tags"`
+}
+
+type GroupMemberUpdateReq struct {
+	GroupId        string            `json:"group_id"`
+	MemberId       string            `json:"member_id"`
+	GrpDisplayName string            `json:"grp_display_name"`
+	ExtFields      map[string]string `json:"ext_fields"`
+}
+
+type GroupMember struct {
+	MemberId       string               `json:"member_id"`
+	IsMute         int                  `json:"is_mute"`
+	IsAllow        int                  `json:"is_allow"`
+	GrpDisplayName string               `json:"grp_display_name"`
+	ExtFields      map[string]string    `json:"ext_fields"`
+	Settings       *GroupMemberSettings `json:"settings,omitempty"`
+}
+
+type GroupMemberSettings struct {
+	HideGrpMsg *int64 `json:"hide_grp_msg"`
+}
+
+type GroupMembersResp struct {
+	Items  []*GroupMember `json:"items"`
+	Offset string         `json:"offset"`
+}
+
+type GroupMemberMuteReq struct {
+	GroupId    string   `json:"group_id"`
+	MemberIds  []string `json:"member_ids"`
+	IsMute     int      `json:"is_mute"`
+	MuteMinute int      `json:"mute_minute"`
+}
+
+type GroupMemberAllowReq struct {
+	GroupId   string   `json:"group_id"`
+	MemberIds []string `json:"member_ids"`
+	IsAllow   int      `json:"is_allow"`
+}
+
+type SetGroupSettingReq struct {
+	GroupId  string         `json:"group_id"`
+	Settings *GroupSettings `json:"settings"`
+}
+
+type SetGroupMemberSettingReq struct {
+	GroupId  string               `json:"group_id"`
+	MemberId string               `json:"member_id"`
+	Settings *GroupMemberSettings `json:"settings"`
+}

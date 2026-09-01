@@ -1,0 +1,366 @@
+package dbs
+
+import (
+	"errors"
+	"fmt"
+	"strings"
+	"time"
+
+	"gorm.io/gorm"
+	"github.com/juggleim/jugglechat-server/commons/dbcommons"
+	utils "github.com/juggleim/jugglechat-server/commons/tools"
+	"github.com/juggleim/jugglechat-server/storages/models"
+)
+
+type UserDao struct {
+	ID           int64     `gorm:"primary_key"`
+	UserType     int       `gorm:"user_type"`
+	UserId       string    `gorm:"user_id"`
+	Nickname     string    `gorm:"nickname"`
+	UserPortrait string    `gorm:"user_portrait"`
+	Pinyin       string    `gorm:"pinyin"`
+	Phone        string    `gorm:"phone"`
+	Email        string    `gorm:"email"`
+	LoginAccount string    `gorm:"login_account"`
+	LoginPass    string    `gorm:"login_pass"`
+	Status       int       `gorm:"status"`
+	Role         int       `gorm:"role"`
+	CreatedTime  time.Time `gorm:"created_time"`
+	UpdatedTime  time.Time `gorm:"updated_time"`
+	AppKey       string    `gorm:"app_key"`
+}
+
+func (user UserDao) TableName() string {
+	return "users"
+}
+
+func (user UserDao) FindByUserId(appkey, userId string) (*models.User, error) {
+	var item UserDao
+	err := dbcommons.GetDb().Where("app_key=? and user_id=?", appkey, userId).Take(&item).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &models.User{
+		ID:           item.ID,
+		UserId:       item.UserId,
+		Nickname:     item.Nickname,
+		UserPortrait: item.UserPortrait,
+		Pinyin:       item.Pinyin,
+		UserType:     item.UserType,
+		Phone:        item.Phone,
+		Email:        item.Email,
+		LoginAccount: item.LoginAccount,
+		LoginPass:    item.LoginPass,
+		Status:       item.Status,
+		Role:         item.Role,
+		CreatedTime:  item.CreatedTime,
+		UpdatedTime:  item.UpdatedTime,
+		AppKey:       item.AppKey,
+	}, nil
+}
+
+func (user UserDao) FindByUserIds(appkey string, userIds []string) (map[string]*models.User, error) {
+	var items []*UserDao
+	err := dbcommons.GetDb().Where("app_key=? and user_id in (?)", appkey, userIds).Find(&items).Error
+	ret := map[string]*models.User{}
+	for _, item := range items {
+		ret[item.UserId] = &models.User{
+			ID:           item.ID,
+			UserId:       item.UserId,
+			Nickname:     item.Nickname,
+			UserPortrait: item.UserPortrait,
+			Pinyin:       item.Pinyin,
+			UserType:     item.UserType,
+			Phone:        item.Phone,
+			Email:        item.Email,
+			Status:       item.Status,
+			Role:         item.Role,
+			CreatedTime:  item.CreatedTime,
+			UpdatedTime:  item.UpdatedTime,
+			AppKey:       item.AppKey,
+		}
+	}
+	return ret, err
+}
+
+func (user UserDao) SearchByKeyword(appkey string, userId, keyword string, isAmbiguous bool) ([]*models.User, error) {
+	var items []*UserDao
+	var err error
+	if isAmbiguous {
+		keyword = "%" + keyword + "%"
+		err = dbcommons.GetDb().Where("app_key=? and user_id!=? and (user_id like ? or phone like ? or email like ? or nickname like ? or login_account like ?)", appkey, userId, keyword, keyword, keyword, keyword, keyword).Find(&items).Error
+	} else {
+		err = dbcommons.GetDb().Where("app_key=? and user_id!=? and (user_id=? or phone=? or email=? or nickname=? or login_account=?)", appkey, userId, keyword, keyword, keyword, keyword, keyword).Find(&items).Error
+	}
+	if err != nil {
+		return nil, err
+	}
+	ret := []*models.User{}
+	for _, item := range items {
+		ret = append(ret, &models.User{
+			ID:           item.ID,
+			UserId:       item.UserId,
+			Nickname:     item.Nickname,
+			UserPortrait: item.UserPortrait,
+			Pinyin:       item.Pinyin,
+			UserType:     item.UserType,
+			Phone:        item.Phone,
+			Email:        item.Email,
+			LoginAccount: item.LoginAccount,
+			Status:       item.Status,
+			Role:         item.Role,
+			CreatedTime:  item.CreatedTime,
+			UpdatedTime:  item.UpdatedTime,
+			AppKey:       item.AppKey,
+		})
+	}
+	return ret, nil
+}
+
+func (user UserDao) FindByPhone(appkey, phone string) (*models.User, error) {
+	var item UserDao
+	err := dbcommons.GetDb().Where("app_key=? and phone=?", appkey, phone).Take(&item).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &models.User{
+		ID:           item.ID,
+		UserId:       item.UserId,
+		Nickname:     item.Nickname,
+		UserPortrait: item.UserPortrait,
+		Pinyin:       item.Pinyin,
+		UserType:     item.UserType,
+		Phone:        item.Phone,
+		Email:        item.Email,
+		LoginAccount: item.LoginAccount,
+		LoginPass:    item.LoginPass,
+		Status:       item.Status,
+		Role:         item.Role,
+		CreatedTime:  item.CreatedTime,
+		UpdatedTime:  item.UpdatedTime,
+		AppKey:       item.AppKey,
+	}, nil
+}
+
+func (user UserDao) FindByEmail(appkey, email string) (*models.User, error) {
+	var item UserDao
+	err := dbcommons.GetDb().Where("app_key=? and email=?", appkey, email).Take(&item).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &models.User{
+		ID:           item.ID,
+		UserId:       item.UserId,
+		Nickname:     item.Nickname,
+		UserPortrait: item.UserPortrait,
+		Pinyin:       item.Pinyin,
+		UserType:     item.UserType,
+		Phone:        item.Phone,
+		Email:        item.Email,
+		LoginAccount: item.LoginAccount,
+		LoginPass:    item.LoginPass,
+		Status:       item.Status,
+		Role:         item.Role,
+		CreatedTime:  item.CreatedTime,
+		UpdatedTime:  item.UpdatedTime,
+		AppKey:       item.AppKey,
+	}, nil
+}
+
+func (user UserDao) FindByAccount(appkey, account string) (*models.User, error) {
+	var item UserDao
+	err := dbcommons.GetDb().Where("app_key=? and login_account=?", appkey, account).Take(&item).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &models.User{
+		ID:           item.ID,
+		UserId:       item.UserId,
+		Nickname:     item.Nickname,
+		UserPortrait: item.UserPortrait,
+		Pinyin:       item.Pinyin,
+		UserType:     item.UserType,
+		Phone:        item.Phone,
+		Email:        item.Email,
+		LoginAccount: item.LoginAccount,
+		LoginPass:    item.LoginPass,
+		Status:       item.Status,
+		Role:         item.Role,
+		CreatedTime:  item.CreatedTime,
+		UpdatedTime:  item.UpdatedTime,
+		AppKey:       item.AppKey,
+	}, nil
+}
+
+func (user UserDao) Create(item models.User) error {
+	var sqlBuilder strings.Builder
+	params := []interface{}{}
+	sqlBuilder.WriteString("INSERT INTO ")
+	sqlBuilder.WriteString(user.TableName())
+	sqlBuilder.WriteString(" (app_key,user_id,user_type,nickname,user_portrait,pinyin")
+	params = append(params, item.AppKey)
+	params = append(params, item.UserId)
+	params = append(params, item.UserType)
+	params = append(params, item.Nickname)
+	params = append(params, item.UserPortrait)
+	pinyin := utils.GetPinyin(item.Nickname)
+	params = append(params, pinyin)
+	if item.Phone != "" {
+		sqlBuilder.WriteString(",phone")
+		params = append(params, item.Phone)
+	}
+	if item.Email != "" {
+		sqlBuilder.WriteString(",email")
+		params = append(params, item.Email)
+	}
+	if item.LoginAccount != "" {
+		sqlBuilder.WriteString(",login_account,login_pass")
+		params = append(params, item.LoginAccount)
+		params = append(params, item.LoginPass)
+	}
+	sqlBuilder.WriteString(")VALUES(")
+	marks := []string{}
+	for range params {
+		marks = append(marks, "?")
+	}
+	sqlBuilder.WriteString(strings.Join(marks, ","))
+	sqlBuilder.WriteString(")")
+	err := dbcommons.GetDb().Exec(sqlBuilder.String(), params...).Error
+	return err
+}
+
+func (user UserDao) Upsert(item models.User) error {
+	return dbcommons.GetDb().Exec(fmt.Sprintf("INSERT INTO %s (user_id,user_type,nickname,user_portrait,app_key)VALUES(?,?,?,?,?) ON DUPLICATE KEY UPDATE nickname=?,user_portrait=?", user.TableName()), item.UserId, item.UserType, item.Nickname, item.UserPortrait, item.AppKey, item.Nickname, item.UserPortrait).Error
+}
+
+func (user UserDao) Update(appkey, userId, nickname, userPortrait string) error {
+	upd := map[string]interface{}{}
+	if nickname != "" {
+		upd["nickname"] = nickname
+		upd["pinyin"] = utils.GetPinyin(nickname)
+	}
+	if userPortrait != "" {
+		upd["user_portrait"] = userPortrait
+	}
+	if len(upd) > 0 {
+		upd["updated_time"] = time.Now()
+	} else {
+		return fmt.Errorf("do nothing")
+	}
+	err := dbcommons.GetDb().Model(&UserDao{}).Where("app_key=? and user_id=?", appkey, userId).Updates(upd).Error
+	return err
+}
+
+func (user UserDao) UpdateAccount(appkey, userId, account string) error {
+	return dbcommons.GetDb().Model(&UserDao{}).Where("app_key=? and user_id=?", appkey, userId).Update("login_account", account).Error
+}
+
+func (user UserDao) UpdatePass(appkey, userId, pass string) error {
+	return dbcommons.GetDb().Model(&UserDao{}).Where("app_key=? and user_id=?", appkey, userId).Update("login_pass", pass).Error
+}
+
+func (user UserDao) UpdatePhone(appkey, userId, phone string) error {
+	return dbcommons.GetDb().Model(&UserDao{}).Where("app_key=? and user_id=?", appkey, userId).Update("phone", phone).Error
+}
+
+func (user UserDao) UpdateEmail(appkey, userId, email string) error {
+	return dbcommons.GetDb().Model(&UserDao{}).Where("app_key=? and user_id=?", appkey, userId).Update("email", email).Error
+}
+
+func (user UserDao) UpdateStatus(appkey, userId string, status models.UserStatus) error {
+	return dbcommons.GetDb().Model(&UserDao{}).Where("app_key=? and user_id=?", appkey, userId).Update("status", status).Error
+}
+
+func (user UserDao) Count(appkey string) int {
+	var count int64
+	err := dbcommons.GetDb().Model(&UserDao{}).Where("app_key=?", appkey).Count(&count).Error
+	if err != nil {
+		return 0
+	}
+	return int(count)
+}
+
+func (user UserDao) CountByTime(appkey string, start, end int64) int64 {
+	var count int64
+	err := dbcommons.GetDb().Model(&UserDao{}).Where("app_key=? and created_time>=? and created_time<=?", appkey, time.UnixMilli(start), time.UnixMilli(end)).Count(&count).Error
+	if err != nil {
+		return count
+	}
+	return count
+}
+
+func (user UserDao) QryUsers(appkey, name string, startId, limit int64, isPositiveOrder bool) ([]*models.User, error) {
+	var items []*UserDao
+	whereStr := "app_key=?"
+	params := []interface{}{appkey}
+	orderBy := "id desc"
+	if isPositiveOrder {
+		orderBy = "id asc"
+		whereStr = whereStr + " and id>?"
+		params = append(params, startId)
+	} else {
+		if startId > 0 {
+			whereStr = whereStr + " and id<?"
+			params = append(params, startId)
+		}
+	}
+	if name != "" {
+		whereStr = whereStr + " and nickname like ?"
+		params = append(params, "%"+name+"%")
+	}
+	err := dbcommons.GetDb().Where(whereStr, params...).Order(orderBy).Limit(int(limit)).Find(&items).Error
+	ret := []*models.User{}
+	if err == nil {
+		for _, item := range items {
+			ret = append(ret, &models.User{
+				ID:           item.ID,
+				UserId:       item.UserId,
+				Nickname:     item.Nickname,
+				UserPortrait: item.UserPortrait,
+				Pinyin:       item.Pinyin,
+				UserType:     item.UserType,
+				Phone:        item.Phone,
+				Email:        item.Email,
+				LoginAccount: item.LoginAccount,
+				LoginPass:    item.LoginPass,
+				Status:       item.Status,
+				Role:         item.Role,
+				CreatedTime:  item.CreatedTime,
+				UpdatedTime:  item.UpdatedTime,
+				AppKey:       item.AppKey,
+			})
+		}
+	}
+	return ret, err
+}
+
+func (user UserDao) FindByRole(appkey string, role int) ([]*models.User, error) {
+	var items []*UserDao
+	err := dbcommons.GetDb().Where("app_key=? and role=?", appkey, role).Find(&items).Error
+	ret := []*models.User{}
+	if err == nil {
+		for _, item := range items {
+			ret = append(ret, &models.User{
+				ID:           item.ID,
+				UserId:       item.UserId,
+				Nickname:     item.Nickname,
+				UserPortrait: item.UserPortrait,
+				Role:         item.Role,
+				AppKey:       item.AppKey,
+			})
+		}
+	}
+	return ret, err
+}

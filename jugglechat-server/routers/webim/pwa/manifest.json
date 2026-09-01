@@ -1,0 +1,32 @@
+{
+  "name": "乐享 - 让沟通更快乐",
+  "short_name": "乐享",
+  "description": "年轻人的快乐社交平台，支持一对一聊天、群组聊天、语音视频通话、文件分享。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563EB",
+  "icons": [
+    {
+      "src": "/pwa/icon_1024.png",
+      "type": "image/png",
+      "sizes": "1024x1024"
+    }
+  ],
+  "screenshots" : [
+    {
+      "src": "/pwa/screenshot.png",
+      "sizes": "2880x1589",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "乐享 桌面应用"
+    },
+    {
+      "src": "/pwa/screenshot.png",
+      "sizes": "2880x1589",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "乐享 移动应用"
+    }
+  ]
+}

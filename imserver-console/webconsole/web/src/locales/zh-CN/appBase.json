@@ -1,0 +1,24 @@
+{
+  "sectionTitle": "基本信息",
+  "field": {
+    "appName": "App 名称",
+    "appKey": "App Key",
+    "alias": "组织代码",
+    "appSecret": "App Secret",
+    "expireTime": "App 到期时间",
+    "licenseCount": "授权数量",
+    "status": "App 状态"
+  },
+  "status": {
+    "online": "已上线"
+  },
+  "validation": {
+    "aliasRequired": "组织代码不能为空",
+    "aliasTooLong": "组织代码不能超过 50 个字符"
+  },
+  "feedback": {
+    "aliasSaved": "组织代码更新成功",
+    "aliasSaveFailed": "组织代码更新失败：{code} {msg}",
+    "aliasRequestFailed": "请求失败，请稍后重试"
+  }
+}

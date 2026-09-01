@@ -1,0 +1,85 @@
+# ============================================================
+# 乐享 IM - Docker Compose 生产环境编排
+# 服务: im-server (单体集成) + MySQL 8.0
+# 前置: 复制 .env.example 为 .env 并修改密码
+# 启动: docker compose up -d
+# ============================================================
+
+services:
+  # ---------- MySQL 数据库 ----------
+  mysql:
+    image: mysql:8.0
+    container_name: lexiang-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-jim_db}
+      MYSQL_USER: ${MYSQL_USER:-lexiang}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      TZ: Asia/Shanghai
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --max-connections=1000
+      - --innodb-buffer-pool-size=1G
+      - --innodb-log-file-size=256M
+      - --innodb-flush-log-at-trx-commit=2
+      - --sync-binlog=0
+      - --slow-query-log=1
+      - --long-query-time=2
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "127.0.0.1:3306:3306"  # 仅本地访问，不对外暴露
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - lexiang-net
+
+  # ---------- IM Server (单体集成) ----------
+  im-server:
+    build:
+      context: ..
+      dockerfile: deploy/im-server/Dockerfile
+    container_name: lexiang-im-server
+    restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./im-server/config.yml:/app/conf/config.yml:ro
+      - im_logs:/app/logs
+      - im_kvdb:/app/kvdb_data
+    ports:
+      - "127.0.0.1:9001:9001"  # API 网关 (仅本地)
+      - "127.0.0.1:9003:9003"  # WebSocket + 业务 API (仅本地)
+      - "127.0.0.1:8090:8090"  # 管理后台 (仅本地)
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:9003/jim/serverinfos"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    networks:
+      - lexiang-net
+
+# ---------- 数据卷 ----------
+volumes:
+  mysql_data:
+    driver: local
+  im_logs:
+    driver: local
+  im_kvdb:
+    driver: local
+
+# ---------- 网络 ----------
+networks:
+  lexiang-net:
+    driver: bridge

@@ -1,0 +1,18 @@
+.idea/
+.vscode/
+**/conf/*.yml
+launcher/uploads/
+**/logs
+**/build
+**/local_logs
+**/client-logs
+./launcher/build/imserver
+**/.DS_Store
+CLAUDE.md
+.claude/
+<<<<<<< HEAD
+opencode.jsonc
+=======
+.promotion-metrics/
+/benchmark-results/
+>>>>>>> master

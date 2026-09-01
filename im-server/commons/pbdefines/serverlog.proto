@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+option go_package = "commons/pbdefines/pbobjs";
+
+message QryServerLogsReq{
+  string logType = 1;
+  string userId = 2;
+  string session = 3;
+  int32 index = 4;
+
+  int64 start = 5;
+  int64 count = 6;
+}
+
+message QryServerLogsResp{
+  repeated string logs = 1;
+}
+
+message LogEntities {
+  repeated LogEntity entities = 1;
+}
+
+message LogEntity {
+    oneof logOf{
+      UserConnectLog userConnectLog = 11;
+      ConnectionLog connectionLog = 12;
+      BusinessLog businessLog = 13;
+    }
+}
+message UserConnectLog{
+  int64 timestamp = 1;
+  int64 real_time = 2;
+  string app_key = 3;
+  string user_id = 4;
+  string session = 5;
+  int32 code = 6;
+  string platform = 7;
+  string version = 8;
+  string client_ip = 9;
+}
+
+message ConnectionLog {
+  int64 timestamp = 1;
+  int64 real_time = 2;
+  string app_key = 3;
+  string session = 4;
+  int32 index = 5;
+  string action = 6;
+  string method = 7;
+  string target_id = 8;
+  int32 data_len  = 9;
+  int32 code = 10;
+}
+
+message BusinessLog {
+  string timestamp = 1;
+  int64 real_time = 2;
+  string session = 3;
+  uint32 index = 4;
+  string service_name = 5;
+  string method = 6;
+  string message = 7;
+  string appKey = 8;
+}
+
+message QryConnectCountReq {
+  int64 start = 1;
+  int64 end = 2;
+}
+
+message QryConnectCountResp{
+  repeated ConnectCountItem items = 1;
+}
+
+message ConnectCountItem{
+  int64 timeMark = 1;
+  int64 count = 2;
+}

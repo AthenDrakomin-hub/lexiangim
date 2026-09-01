@@ -1,0 +1,1 @@
+System.register(["./index-legacy-a2c95a25.js"],function(e,s){"use strict";var t,i,n,a,r,u,c;return{setters:[e=>{t=e.o,i=e.c,n=e.g,a=e.F,r=e.ar,u=e.as,c=e.at}],execute:function(){e("default",{__name:"login",setup:e=>(e,s)=>(t(),i(a,null,[n(r),n(u,{"is-login":!0,"is-add":!1,"is-show":!0}),n(c)],64))})}}});

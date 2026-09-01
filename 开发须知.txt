@@ -1,0 +1,119 @@
+📦 项目整体架构（4个仓库）
+text
+JuggleIM 生态
+├── im-server                (核心 IM 服务 - Go)
+│   └── 负责：消息收发、存储、长连接、路由
+├── jugglechat-server        (业务服务 - Go)
+│   └── 负责：用户注册/登录、好友、群组、会话管理等业务逻辑
+├── jugglechat-web           (Web 客户端 - Vue 3)
+│   └── 负责：终端用户的聊天界面（就是你刚才改的那个）
+└── imserver-console         (管理后台前端 - Vue 3)
+    └── 负责：管理员用的统计、配置、应用管理界面
+🔍 每个仓库的目录详解
+1️⃣ im-server（核心服务——一般不改）
+text
+im-server/
+├── launcher/          # 启动入口（main.go）
+├── services/          # 各个核心模块（消息、连接、存储等）
+│   ├── connect/       # 长连接管理
+│   ├── message/       # 消息处理
+│   ├── storage/       # 消息存储
+│   └── ...
+├── commons/           # 公共库（数据库、缓存、工具）
+├── conf/              # 配置文件
+├── sql/               # 数据库表结构
+└── docker-compose.yml # Docker 编排
+⚠️ 这个仓库你几乎不用改，除非你要扩展 IM 底层能力（如新增消息类型、更换存储引擎）。目前你的二开任务不涉及它。
+
+2️⃣ jugglechat-server（业务服务——二开主力）
+text
+jugglechat-server/
+├── main.go            # 启动入口
+├── services/          # 业务模块（你改业务逻辑的地方）
+│   ├── user/          # 用户注册、登录、资料修改
+│   ├── friend/        # 好友申请、同意、删除
+│   ├── group/         # 群组创建、管理
+│   ├── message/       # 消息发送、接收（业务层）
+│   └── ...
+├── conf/              # 配置文件（数据库、API地址等）
+├── dbs/               # 数据库操作层
+├── models/            # 数据模型
+└── utils/             # 工具函数
+✅ 你可以改：services/ 下的业务逻辑（如注册加验证码、好友推荐算法）。
+❌ 不要改：main.go 的服务注册、conf/ 的配置项（除非你知道参数作用）。
+
+3️⃣ jugglechat-web（Web客户端——你主要改的品牌界面）
+text
+jugglechat-web/
+├── public/            # 静态资源（index.html, favicon, manifest等）
+│   └── index.html     # 页面标题（可改）
+├── src/
+│   ├── api/           # 🔒 绝对不要动！所有后端API函数
+│   ├── assets/        # 图片、Logo、CSS（Logo可替换）
+│   │   └── logo.png   # 替换成你自己的Logo
+│   ├── components/    # 公共UI组件（有些文案在这里）
+│   │   ├── ChatInput.vue  # 输入框占位符
+│   │   └── Sidebar.vue    # 侧边栏品牌名
+│   ├── views/         # 页面级组件（主要文案在这里）
+│   │   ├── login/     # 登录页 → 改标题、副标题
+│   │   ├── chat/      # 聊天页 → 改输入框占位符、空状态
+│   │   └── about/     # 关于页 → 改产品描述
+│   ├── router/        # 🔒 路由配置（不要动）
+│   ├── store/         # 🔒 Vuex状态管理（不要动）
+│   ├── styles/        # 全局CSS（品牌色在这里改）
+│   │   └── variables.css 或 app.css → 改主色 #FF6B35
+│   └── locales/       # 如果有多语言，可改翻译文本（安全）
+├── package.json       # ❌ 只改"name"可能会影响构建，不建议动
+└── vite.config.js     # 🔒 构建配置（不要动）
+✅ 你可以安全修改的文件：
+
+public/index.html 的 <title>
+
+src/assets/logo.png（直接替换）
+
+src/views/login/index.vue 里的 <h1>、<p> 等文案
+
+src/views/chat/ 下的输入框 placeholder
+
+src/components/Sidebar.vue 里的品牌文字
+
+src/styles/ 里的 --primary-color 等颜色变量
+
+src/locales/（如果有）的 zh-CN.json 翻译文件
+
+❌ 绝对不要动：
+
+src/api/ 整个目录
+
+src/store/ 整个目录
+
+src/router/ 整个目录
+
+src/main.js（入口文件）
+
+任何 *.js 文件里的 import/export、变量名、函数名
+
+4️⃣ imserver-console（管理后台前端）
+text
+imserver-console/
+├── public/
+│   └── index.html     # 标题可改
+├── src/
+│   ├── api/           # 🔒 不要动
+│   ├── assets/        # Logo可替换
+│   ├── views/         # 页面文案可改（如dashboard、login）
+│   ├── styles/        # 品牌色可改
+│   └── ...
+✅ 修改原则同 jugglechat-web：只动 views/ 里的模板文案、assets/ 的Logo、styles/ 的颜色。
+
+🎯 你的二开安全区
+目标	改哪个仓库	具体文件/目录
+换Logo	jugglechat-web	src/assets/logo.png
+换App名称	jugglechat-web	public/index.html 的 <title>
+换登录页文案	jugglechat-web	src/views/login/index.vue
+换聊天输入框占位符	jugglechat-web	src/components/ChatInput.vue 或 views/chat/
+换品牌色	jugglechat-web	src/styles/app.css 或 variables.css
+修改注册逻辑	jugglechat-server	services/user/register.go
+修改好友添加逻辑	jugglechat-server	services/friend/add.go
+修改群组创建逻辑	jugglechat-server	services/group/create.go
+后台换品牌	imserver-console	同 jugglechat-web 的做法

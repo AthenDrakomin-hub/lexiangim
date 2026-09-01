@@ -1,0 +1,107 @@
+package dbcommons
+
+import (
+	"embed"
+	"fmt"
+	"im-server/commons/tools"
+	"io"
+	"sort"
+	"strings"
+)
+
+//go:embed sqls/*
+var sqlFs embed.FS
+
+const (
+	JimDbVersionKey       = "jimdb_version"
+	initVersion     int64 = 20240716
+)
+
+type CountResult struct {
+	Count int64 `gorm:"count"`
+}
+
+func Upgrade() {
+	var currVersion int64 = 0
+	dao := GlobalConfDao{}
+	conf, err := dao.FindByKey(JimDbVersionKey)
+	if err == nil {
+		ver, err := tools.String2Int64(conf.ConfValue)
+		if err == nil && ver > 0 {
+			currVersion = ver
+		}
+	} else {
+		err = dao.Create(GlobalConfDao{
+			ConfKey:   JimDbVersionKey,
+			ConfValue: fmt.Sprintf("%d", initVersion),
+		})
+		if err == nil {
+			currVersion = initVersion
+		}
+	}
+	fmt.Println("[DbMigration]current version:", currVersion)
+	sqlFiles, err := sqlFs.ReadDir("sqls")
+	if err == nil {
+		neededVers := []int64{}
+		for _, sqlFile := range sqlFiles {
+			fileName := strings.TrimSuffix(sqlFile.Name(), ".sql")
+			ver, err := tools.String2Int64(fileName)
+			if err == nil && ver > 0 {
+				neededVers = append(neededVers, ver)
+			}
+		}
+		//sort
+		sort.Slice(neededVers, func(i, j int) bool {
+			return neededVers[i] < neededVers[j]
+		})
+		for _, ver := range neededVers {
+			if ver > currVersion {
+				sqlFileName := fmt.Sprintf("sqls/%d.sql", ver)
+				fmt.Println("[DbMigration]start to execute sql file:", sqlFileName)
+				err := executeSqlFile(sqlFileName)
+				if err == nil {
+					fmt.Println("[DbMigration]execute sql file success:", sqlFileName)
+					dao.Upsert(GlobalConfDao{
+						ConfKey:   JimDbVersionKey,
+						ConfValue: fmt.Sprintf("%d", ver),
+					})
+				}
+			}
+		}
+	}
+}
+
+func executeSqlFile(fileName string) error {
+	sqlFile, err := sqlFs.Open(fileName)
+	if err != nil {
+		fmt.Println("[DbMigration_Err]Read sql file err:", err, "file_name:", fileName)
+		return err
+	}
+	defer sqlFile.Close()
+
+	content, err := io.ReadAll(sqlFile)
+	if err != nil {
+		fmt.Println("[DbMigration_Err]Read sql file content err:", err, "file_name:", fileName)
+		return err
+	}
+
+	var queryBuilder strings.Builder
+	for _, rawLine := range strings.Split(string(content), "\n") {
+		line := strings.TrimSpace(rawLine)
+		if strings.HasPrefix(line, "--") {
+			continue
+		}
+		queryBuilder.WriteString(line)
+		queryBuilder.WriteByte(' ')
+		if strings.HasSuffix(line, ";") {
+			query := strings.TrimSpace(queryBuilder.String())
+			if query != "" {
+				if err := GetDb().Exec(query).Error; err != nil {
+					fmt.Println("[DbMigration_Err]Execute sql error:", err, query)
+				}
+			}
+			queryBuilder.Reset()
+		}
+	}
+	return nil
+}

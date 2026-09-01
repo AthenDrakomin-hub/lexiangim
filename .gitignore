@@ -1,0 +1,79 @@
+# ============================================================
+# 乐享 IM - Git 忽略文件
+# 安全原则: 严禁提交密钥、证书、环境变量、构建产物、日志
+# ============================================================
+
+# ---------- 依赖 ----------
+node_modules/
+**/node_modules/
+vendor/
+
+# ---------- 构建产物 ----------
+dist/
+**/dist/
+build/
+**/build/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# ---------- 环境变量 (严禁提交实际 .env) ----------
+.env
+.env.local
+.env.*.local
+!.env.example
+!.env.development
+!.env.production
+
+# ---------- 日志 ----------
+*.log
+logs/
+**/logs/
+im-server-err.log
+im-server.log
+
+# ---------- 数据库 / 缓存 ----------
+*.sql
+!**/migrations/*.sql
+!deploy/mysql-init/*.sql
+kvdb_data/
+**/kvdb_data/
+*.db
+*.sqlite
+*.sqlite3
+
+# ---------- IDE / 编辑器 ----------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ---------- 临时文件 ----------
+*.tmp
+*.temp
+admin_token.txt
+create_admin_tables.sql
+fix_structs.py
+*.html
+!**/public/*.html
+
+# ---------- 用户上传 / 素材 ----------
+user-attachment/
+素材/
+uploads/
+**/uploads/
+
+# ---------- 代码图谱缓存 ----------
+.codegraph/
+
+# ---------- Docker ----------
+docker-compose.override.yml
+
+# ---------- 测试覆盖率 ----------
+coverage/
+*.coverage

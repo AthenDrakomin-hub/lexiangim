@@ -1,0 +1,14 @@
+port: 8091
+
+log:
+  logPath: ./logs
+  logName: imserver-console
+
+mysql:
+  user: root
+  password: juggleim
+  address: 127.0.0.1:3306
+  name: jim_db
+
+imApiDomain: http://127.0.0.1:9001
+imAdminDomain: http://127.0.0.1:8090

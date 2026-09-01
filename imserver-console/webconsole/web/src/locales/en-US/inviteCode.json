@@ -1,0 +1,40 @@
+{
+  "dialog": {
+    "title": "Create Invite Code",
+    "code": "Code",
+    "description": "Description",
+    "maxUses": "Max Uses",
+    "maxUsesPlaceholder": "0 means unlimited",
+    "editTitle": "Edit Invite Code",
+    "status": "Status"
+  },
+  "feedback": {
+    "createFailed": "Create failed: {code}",
+    "deleteFailed": "Delete failed: {code}",
+    "updateFailed": "Update failed: {code}",
+    "fetchFailed": "Failed to load list: {code}",
+    "success": "Operation succeeded"
+  },
+  "status": {
+    "active": "Active",
+    "disabled": "Disabled",
+    "expired": "Expired",
+    "usedUp": "Used Up"
+  },
+  "action": {
+    "create": "Create Code",
+    "delete": "Delete",
+    "disable": "Disable",
+    "enable": "Enable",
+    "refresh": "Refresh"
+  },
+  "field": {
+    "code": "Code",
+    "description": "Description",
+    "maxUses": "Max Uses",
+    "usedCount": "Used Count",
+    "status": "Status",
+    "createdAt": "Created At",
+    "expiredAt": "Expired At"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "sectionTitle": "Basic Info",
+  "field": {
+    "appName": "App Name",
+    "appKey": "App Key",
+    "alias": "Org Code",
+    "appSecret": "App Secret",
+    "expireTime": "App Expiration",
+    "licenseCount": "Licensed Users",
+    "status": "App Status"
+  },
+  "status": {
+    "online": "Online"
+  },
+  "validation": {
+    "aliasRequired": "Org Code is required",
+    "aliasTooLong": "Org Code cannot exceed 50 characters"
+  },
+  "feedback": {
+    "aliasSaved": "Org Code updated successfully",
+    "aliasSaveFailed": "Failed to update Org Code: {code} {msg}",
+    "aliasRequestFailed": "Request failed. Please try again later"
+  }
+}

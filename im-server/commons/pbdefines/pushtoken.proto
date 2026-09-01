@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+option go_package = "commons/pbdefines/pbobjs";
+
+enum Platform{
+    DefaultPlatform = 0;
+    Android = 1;
+    iOS = 2;
+    Web = 3;
+    PC = 4;
+}
+
+enum PushChannel{
+    DefaultChannel = 0;
+    Apple = 1;
+    Huawei = 2;
+    Xiaomi = 3;
+    Oppo = 4;
+    Vivo = 5;
+    FCM = 6;
+    JPush = 7;
+    Meizhu = 8;
+    Honor = 9;
+    Getui = 10;
+}
+
+message RegPushTokenReq{
+    string deviceId = 1;
+    Platform platform = 2;
+    PushChannel pushChannel = 3;
+    string pushToken = 4;
+    string packageName = 5;
+    string voipToken = 6;
+}

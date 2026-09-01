@@ -1,0 +1,1 @@
+import{o as s,c as e,g as a,F as o,ar as t,as as n,at as r}from"./index-842ac311.js";const m={__name:"login",setup(c){return(_,i)=>(s(),e(o,null,[a(t),a(n,{"is-login":!0,"is-add":!1,"is-show":!0}),a(r)],64))}};export{m as default};
