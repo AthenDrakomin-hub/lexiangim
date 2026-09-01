@@ -1,0 +1,33 @@
+.tyn-appbar-link{
+  cursor: pointer;
+}
+.tyn-appbar-link::before{
+  font-size: var(--jg-font-size-icon-xl);
+}
+.jg-dropmenu-show{
+  position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate3d(-23px, 70px, 0px);
+}
+.tyn-link-item::before{
+  font-size: var(--jg-font-size-lg);
+}
+.tyn-link-item:hover{
+  background: var(--jg-bg-hover);
+}
+.tyn-list-links li .tyn-link-item, .tyn-list-links li button:not(.btn) {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  gap: 0.675rem;
+  padding: 0.5rem 1.25rem;
+  color: var(--link-color);
+  font-size: var(--jg-font-size-sm);
+  line-height: 1.25rem;
+  font-weight: 500;
+}
+.tyn-appbar-wrap:first-child{
+  flex: 1 1;
+}
+.tyn-appbar-wrap:last-child .tyn-appbar-link{
+  margin-bottom: var(--jg-space-25);
+}

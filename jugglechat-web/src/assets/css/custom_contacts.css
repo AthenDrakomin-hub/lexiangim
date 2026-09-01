@@ -1,0 +1,99 @@
+.contact_dp_show{
+  position: absolute; 
+  inset: 0px 0px auto auto; 
+  margin: 0px; 
+  transform: translate3d(0px, 40px, 0px);
+}
+.setting-content,
+.contact-content{
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+.contact-content .tyn-chat-head{
+  flex-direction: column;
+  background: none;
+}
+.contact-content .tyn-media-group{
+  width: 380px;
+  margin-top: 2rem;
+}
+.contact-content .tyn-media-row{
+  width: 100%;
+}
+.contact-send-msg{
+  background: var(--jg-primary);
+  color: var(--jg-text-white);
+  border: 0;
+}
+.contact-content .tyn-media-col{
+  margin-right: 3rem;
+}
+.tyn-contact .nav-link::before{
+  font-size: var(--jg-font-size-base);
+  margin-right: var(--jg-space-05);
+}
+.contact-content .lower-btn{
+  color: red;
+  background-color: var(--bs-btn-hover-bg);
+  border-color: var(--bs-btn-hover-border-color);
+  border: 0;
+}
+/* .tyn-contact .modal-content{
+  height: 140px;
+} */
+.tyn-contact .tyn-conver-avatar{
+  border: 1px solid var(--jg-border-active);
+}
+.tyn-contact .modal-body .tyn-aside-search{
+  padding: 0 0 0 0;
+}
+
+.m-friend-name,
+.m-friend-add-btn{
+  width: 6rem;
+  display: flex;
+  justify-content: end;
+}
+.m-friend-name{
+  justify-content: start;
+}
+.m-friend-add-btn .wr-plus{
+  background-color: var(--jg-primary-lighter);
+  border-radius: var(--jg-radius-sm);
+  padding: 0 var(--jg-space-1);
+  font-weight: 700;
+  transition: background-color 0.3s ease;
+}
+.m-friend-add-btn .wr-plus:hover{
+  background-color: var(--jg-primary);
+  color: var(--jg-primary-lighter);
+}
+
+.jg-setting-body{
+  width: 600px;
+}
+.jg-formuser-avatar{
+  height: 60px;
+  width: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.jg-setting-body .form-avatars{
+  height: 500px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.jg-setting-body .form-avatar{
+  height: 40px;
+  width: 40px;
+}
+.jg-setting-body .form-avatar-selected{
+  height: 60px;
+  width: 60px;
+}
+.jg-setting-body .form-avatar-selected::before{
+  font-size: 60px;
+}

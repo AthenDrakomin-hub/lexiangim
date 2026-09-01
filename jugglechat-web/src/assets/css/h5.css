@@ -1,0 +1,193 @@
+@media (max-width: 768px) {  
+  .tyn-root::after,
+  .tyn-root::before{
+    position: fixed;
+  }
+  .tyn-web-root{
+    --footer-height: 0;
+  }
+  .tyn-web-root .jg-nlogin-num-btn{
+    display: none;
+  }
+  .jg-nlogin-main{
+    height: auto;
+    margin-top: 5rem;
+  }
+  .jg-nlogin-btnbox{
+    width: 18rem;
+  }
+  .jg-server-settings{
+    right: 4%;
+    top: 6%;
+  }
+  .jg-serversetting-modal .modal-content{
+    width: 360px;
+  }
+  .tyn-aside-footer,
+  .jg-footer,
+  .jg-conver-group-container,
+  .jg-conversations-header{
+    display: none;
+  }
+  .tyn-aside{
+    width: 100%;
+    position: absolute;
+  }
+  .tyn-chat-head{
+    height: 86px;
+    min-height: 86px;
+  }
+  .tyn-chat-head > .h5-list{
+    display: flex;
+  }
+  .tyn-chat-content {
+    flex-direction: column;
+    display: flex;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+  }
+  .tyn-content .tyn-aside{
+    left: 0;
+  }
+  .tyn-chat-none-box{
+    display: none;
+  }
+  .tyn-content .tyn-chat-content{
+    right: -100%;
+    
+  }
+  .jg-content-active .tyn-aside{
+    opacity: 0;
+    left: -400%;
+  }
+  .jg-content-active .tyn-chat-content{
+    transition: right 0.3s ease;
+    right: 0;
+  }
+  .tyn-content{
+    --aside-item-gap-y: 0.5rem 0.8rem;
+    width: 100vw;
+    height: 100vh !important;
+  }
+  .jg-conversation-body,
+  .jg-conver-list{
+    width: 100%;
+  }
+  .jg-conver-list{
+    transition: none;
+  }
+  .tyn-aside-list{
+    margin-bottom: var(--jg-space-25);
+  }
+ 
+  .tyn-media-group{
+    gap: 0.5rem;
+  }
+  .jg-size-lg{
+    --tyn-size: 3.5rem;
+  }
+  .jg-conversation-title{
+    min-height: 1.5rem;
+  }
+  .tyn-chat-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+  }
+  .jg-stream-text{
+    max-width: 300px;
+  }
+  .jg-h5header,
+  .jg-h5footer{
+    display: flex;
+  }
+  .fadeoutxr{
+    animation: fadeoutyr 0.3s;
+  }
+  .tyn-emoji-pn{
+    width: 300px;
+  }
+  .tyn-emoji-pn.show-aside{
+    top: -16rem;
+  }
+  .emojis__grid{
+    justify-content: center;
+  }
+  .wr-rtc-mic,
+  .wr-rtc-camera{
+    display: none;
+  }
+
+  .tyn-media-col .name{
+    font-size: var(--jg-font-size-lg);
+  }
+  .tyn-media-col .content{
+    font-size: var(--jg-font-size-base);
+  }
+  .tyn-media-col .meta{
+    font-size: var(--jg-font-size-base);
+  }
+  .jg-h5header-title{
+    font-size: var(--jg-font-size-lg);
+    font-weight: 600;
+    color: #000000ba;
+  }
+  .jg-message-senttime,
+  .tyn-reply-text,
+  .tyn-reply-bubble{
+    -webkit-touch-callout:none; 
+    -webkit-user-select:none; 
+    -moz-user-select:none; 
+    -ms-user-select:none; 
+    user-select:none;
+  }
+
+  .tyn-common-aside.show-caside{
+    width: 100%;
+  }
+  .nav-link,
+  .nav-link::before{
+    font-size: var(--jg-font-size-lg) !important;
+  }
+  .jg-setting-aside .jg-cards{
+    padding-bottom: 8rem;
+  }
+  .jg-setting-aside .jg-li,
+  .jg-setting-aside .jg-li a::before{
+    font-size: var(--jg-font-size-lg);
+  }
+  .tyn-h5-aside-body{
+    padding-bottom: 5rem;
+  }
+  .tyn-h5-chat-body{
+    padding-bottom: 8rem;
+  }
+  .tyn-h5-chat-form{
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+  }
+  .tyn-common-body{
+    /* transform: scale(1.1); */
+  }
+  .tyn-h5-root{}
+
+  .tyn-h5-root .tyn-common-body{
+    padding-bottom: 6rem;
+  }
+  .tyn-reply-bubble > *:first-child:not(:only-child){
+    max-width: 80%;
+  }
+  .jg-asider-footer-item .icon::before{
+    font-size: var(--jg-font-size-xl);
+  }
+  .tyn-h5header-create-list .dropdown-menu,
+  .tyn-h5header-nav-list .dropdown-menu{
+    transition: opacity .2s ease-in,transform .2s ease-in;
+  }
+  .jg-pinned-box{
+    top: 90px;
+  }
+}
