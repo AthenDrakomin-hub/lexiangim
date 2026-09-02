@@ -353,6 +353,12 @@ getFriends();
 .jg-contact-action-btn:hover {
   background: #f0f0f0;
 }
+
+/* 深色模式联系人操作按钮 */
+[data-bs-theme="dark"] .jg-contact-action-btn:hover {
+  background: var(--jg-bg-hover);
+}
+
 .jg-contact-signature {
   font-size: 12px;
   color: #999;
@@ -361,6 +367,11 @@ getFriends();
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* 深色模式联系人签名 */
+[data-bs-theme="dark"] .jg-contact-signature {
+  color: var(--jg-text-muted);
 }
 .jg-contact-empty {
   display: flex;
@@ -381,10 +392,21 @@ getFriends();
   color: #333;
   margin-bottom: 8px;
 }
+
+/* 深色模式空状态标题 */
+[data-bs-theme="dark"] .jg-empty-title {
+  color: var(--jg-text-body);
+}
+
 .jg-empty-desc {
   font-size: 13px;
   color: #999;
   line-height: 1.6;
   max-width: 240px;
+}
+
+/* 深色模式空状态描述 */
+[data-bs-theme="dark"] .jg-empty-desc {
+  color: var(--jg-text-muted);
 }
 </style>

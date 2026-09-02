@@ -196,11 +196,18 @@ watch(() => props.isShow, () => {
   color: #333;
   margin: 0;
 }
+
+/* 深色模式协议文本 */
+[data-bs-theme="dark"] .jg-agreement-text {
+  color: var(--jg-text-body);
+}
+
 .content {
   width: 100%;
   height: 100%;
   border: none;
 }
+
 .jg-agreement-empty {
   display: flex;
   flex-direction: column;
@@ -209,13 +216,20 @@ watch(() => props.isShow, () => {
   height: 100%;
   padding: 40px;
 }
+
 .jg-empty-icon {
   font-size: 48px;
   margin-bottom: 16px;
   opacity: 0.6;
 }
+
 .jg-empty-text {
   font-size: 14px;
   color: #999;
+}
+
+/* 深色模式空状态文本 */
+[data-bs-theme="dark"] .jg-empty-text {
+  color: var(--jg-text-muted);
 }
 </style>

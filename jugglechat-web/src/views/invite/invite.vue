@@ -291,9 +291,40 @@ async function onEnter() {
   border-color: rgba(255,255,255,0.6);
   transform: scale(1.08);
 }
+
 .lx-help-btn svg {
   width: 18px;
   height: 18px;
+}
+
+/* 深色模式邀请页面 */
+[data-bs-theme="dark"] .lx-page {
+  background: linear-gradient(160deg, #0d1117 0%, #161b22 35%, #21262d 70%, #30363d 100%);
+}
+
+[data-bs-theme="dark"] .lx-logo-text {
+  color: #ffffff;
+}
+
+[data-bs-theme="dark"] .lx-subtitle {
+  color: rgba(255,255,255,0.7);
+}
+
+[data-bs-theme="dark"] .lx-card {
+  background: linear-gradient(135deg, rgba(30,30,50,0.85) 0%, rgba(20,20,40,0.95) 100%);
+  border: 1.5px solid rgba(255,255,255,0.1);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+[data-bs-theme="dark"] .lx-help-btn {
+  border-color: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.6);
+}
+
+[data-bs-theme="dark"] .lx-help-btn:hover {
+  background: rgba(255,255,255,0.15);
+  color: #ffffff;
 }
 
 .lx-input-wrap {
@@ -391,10 +422,13 @@ async function onEnter() {
   box-shadow: 0 24px 64px rgba(0,0,0,0.3);
   animation: lx-scale-in 0.25s ease;
 }
-@keyframes lx-scale-in {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+
+/* 深色模式帮助弹窗 */
+[data-bs-theme="dark"] .lx-help-modal-content {
+  background: var(--jg-bg-card);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.5);
 }
+
 .lx-help-close {
   position: absolute;
   top: 14px;
@@ -412,9 +446,16 @@ async function onEnter() {
   transition: all 0.2s ease;
   padding: 0;
 }
+
 .lx-help-close:hover {
   background: #f3f4f6;
   color: #4b5563;
+}
+
+/* 深色模式关闭按钮悬停 */
+[data-bs-theme="dark"] .lx-help-close:hover {
+  background: var(--jg-bg-hover);
+  color: var(--jg-text-body);
 }
 .lx-help-close svg {
   width: 16px;

@@ -70,6 +70,16 @@
   color: var(--jg-primary-lighter);
 }
 
+/* 深色模式好友添加按钮 */
+[data-bs-theme="dark"] .m-friend-add-btn .wr-plus {
+  background-color: rgba(37, 99, 235, 0.2);
+}
+
+[data-bs-theme="dark"] .m-friend-add-btn .wr-plus:hover {
+  background-color: var(--jg-primary);
+  color: var(--jg-text-white);
+}
+
 .jg-setting-body{
   width: 600px;
 }

@@ -165,6 +165,12 @@ function onCancel() {
   font-weight: 600;
   color: #333;
 }
+
+/* 深色模式标题 */
+[data-bs-theme="dark"] .section-header .title {
+  color: var(--jg-text-body);
+}
+
 .btn-add {
   padding: 6px 14px;
   background: #2563eb;
@@ -174,10 +180,16 @@ function onCancel() {
   font-size: 13px;
   cursor: pointer;
 }
+
 .empty-tip {
   text-align: center;
   padding: 40px 20px;
   color: #999;
+}
+
+/* 深色模式空提示 */
+[data-bs-theme="dark"] .empty-tip {
+  color: var(--jg-text-muted);
 }
 .empty-tip .sub {
   font-size: 12px;
@@ -196,9 +208,20 @@ function onCancel() {
   border-radius: 10px;
   border: 1px solid transparent;
 }
+
+/* 深色模式账户项 */
+[data-bs-theme="dark"] .account-item {
+  background: var(--jg-bg-card);
+}
+
 .account-item.active {
   border-color: #2563eb;
   background: #eff6ff;
+}
+
+/* 深色模式活跃账户项 */
+[data-bs-theme="dark"] .account-item.active {
+  background: var(--jg-bg-hover);
 }
 .account-avatar {
   width: 44px;

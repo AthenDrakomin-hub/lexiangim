@@ -219,12 +219,24 @@ watch(() => props.isShow, () => {
   color: #333;
   margin-bottom: 8px;
 }
+
+/* 深色模式空状态标题 */
+[data-bs-theme="dark"] .jg-empty-title {
+  color: var(--jg-text-body);
+}
+
 .jg-empty-desc {
   font-size: 13px;
   color: #999;
   line-height: 1.6;
   max-width: 240px;
 }
+
+/* 深色模式空状态描述 */
+[data-bs-theme="dark"] .jg-empty-desc {
+  color: var(--jg-text-muted);
+}
+
 .jg-loading-state {
   display: flex;
   flex-direction: column;
@@ -232,6 +244,7 @@ watch(() => props.isShow, () => {
   justify-content: center;
   padding: 60px 20px;
 }
+
 .jg-loading-spinner {
   width: 24px;
   height: 24px;
@@ -241,10 +254,22 @@ watch(() => props.isShow, () => {
   animation: spin 0.8s linear infinite;
   margin-bottom: 12px;
 }
+
+/* 深色模式加载旋转器 */
+[data-bs-theme="dark"] .jg-loading-spinner {
+  border-color: var(--jg-border);
+}
+
 .jg-loading-text {
   font-size: 13px;
   color: #999;
 }
+
+/* 深色模式加载文本 */
+[data-bs-theme="dark"] .jg-loading-text {
+  color: var(--jg-text-muted);
+}
+
 .jg-load-more {
   display: flex;
   align-items: center;
@@ -253,6 +278,11 @@ watch(() => props.isShow, () => {
   gap: 8px;
   font-size: 13px;
   color: #999;
+}
+
+/* 深色模式加载更多 */
+[data-bs-theme="dark"] .jg-load-more {
+  color: var(--jg-text-muted);
 }
 .jg-load-more .jg-loading-spinner {
   width: 16px;

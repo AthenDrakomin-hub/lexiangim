@@ -208,14 +208,32 @@ function onUploadAvatar(e) {
   border: 2px dashed #ddd;
   cursor: pointer;
 }
+
+/* 深色模式头像上传 */
+[data-bs-theme="dark"] .form-avatar-upload {
+  background: var(--jg-bg-input);
+  border-color: var(--jg-border);
+}
+
 .form-avatar-upload:hover {
   border-color: #2563EB;
   background: #f0f7ff;
 }
+
+/* 深色模式头像上传悬停 */
+[data-bs-theme="dark"] .form-avatar-upload:hover {
+  background: var(--jg-bg-hover);
+}
+
 .form-avatar-upload-icon {
   font-size: 32px;
   color: #999;
   font-weight: 300;
+}
+
+/* 深色模式上传图标 */
+[data-bs-theme="dark"] .form-avatar-upload-icon {
+  color: var(--jg-text-muted);
 }
 .form-avatar-uploading {
   border-color: #2563EB;

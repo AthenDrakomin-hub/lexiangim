@@ -275,6 +275,17 @@
 
 /* ── Dark Theme Overrides ─────────────────────────────────── */
 [data-bs-theme="dark"] {
+  /* 深色模式基础变量 */
+  --jg-bg-body: #0d1117;
+  --jg-bg-input: #2d2d44;
+  --jg-bg-card: #1e1e32;
+  --jg-bg-hover: #2a2a44;
+  --jg-text-body: #e6e6e6;
+  --jg-text-muted: #a0a0b8;
+  --jg-border: #3d3d5c;
+  --jg-shadow: 0 2px 8px rgba(0,0,0,0.5);
+
+  /* 继承原有覆盖 */
   --jg-bg-chat: var(--jg-gray-800);
   --jg-bg-input: var(--jg-gray-800);
   --jg-bg-hover: var(--jg-gray-700);
@@ -286,6 +297,10 @@
   --jg-text-reply-anchor: var(--bs-primary-500);
   --jg-text-reply-anchor-hover: var(--bs-primary);
   --jg-link-hover: var(--bs-primary-500);
+
+  /* 消息气泡深色模式 */
+  --jg-bg-outgoing: #1a73e8;
+  --jg-bg-sender-name: rgba(255,255,255,0.1);
 }
 
 

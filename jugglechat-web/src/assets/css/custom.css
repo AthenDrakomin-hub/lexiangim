@@ -296,7 +296,7 @@
 
 .tyn-group-reads-links li{
   margin-bottom: 0.5rem;
-  border-bottom: 1px solid #f5f5f5;
+  border-bottom: 1px solid var(--jg-divider);
   padding-bottom: 4px;
 }
 .tyn-media-group-reads{
@@ -395,6 +395,11 @@
 .tny-message:hover{
   background: hsl(215deg 89% 51% / 20%);
   cursor: pointer;
+}
+
+/* 深色模式消息选中效果 */
+[data-bs-theme="dark"] .tny-message:hover {
+  background: var(--jg-bg-hover);
 }
 .tyn-modal.show{
   display: block;
@@ -782,6 +787,12 @@
   font-size: var(--jg-font-size-xs);
 }
 
+/* 深色模式底部导航 */
+[data-bs-theme="dark"] .jg-footer {
+  border-top-color: var(--jg-border);
+  color: var(--jg-text-muted);
+}
+
 .fade-bg{
   position: fixed;
   top: 0;
@@ -799,6 +810,11 @@
   background-color: rgb(112 117 121 / 8%);
   border: none;
 }
+
+/* 深色模式侧边栏工具按钮 */
+[data-bs-theme="dark"] .jg-asider-tools .btn {
+  background-color: rgba(255,255,255,0.08);
+}
 .tyn-header-btn{
   font-size: 18px;  
   cursor: pointer;
@@ -814,6 +830,12 @@
   border: 1px solid #DCDCDC !important;
   border-radius: var(--jg-radius-xl);
 }
+
+/* 深色模式搜索框组 */
+[data-bs-theme="dark"] .jg-asider-seach-box .form-group {
+  border-color: rgba(255,255,255,0.15) !important;
+  background: var(--jg-bg-input);
+}
 .jg-asider-seach-box .form-control{
   border: 0 !important;
   padding-left: 6px;
@@ -821,6 +843,11 @@
 .jg-asider-seach-box .jg-search-icon::before{
   font-size: 18px;
   color: #95a4b8;
+}
+
+/* 深色模式搜索图标 */
+[data-bs-theme="dark"] .jg-asider-seach-box .jg-search-icon::before {
+  color: rgba(255,255,255,0.5);
 }
 .jg-asider-seach-box .form-control-wrap{
   display: flex;
@@ -837,6 +864,12 @@
   align-items: center;
   justify-content: center;
   border: 1px solid #2e283112;
+}
+
+/* 深色模式工具栏搜索框 */
+[data-bs-theme="dark"] .jg-asider-tools .form-control-wrap {
+  border-color: rgba(255,255,255,0.1);
+  background: var(--jg-bg-input);
 }
 .jg-asider-tools .form-control{
   padding: var(--jg-space-05) var(--jg-space-25);
@@ -886,6 +919,12 @@
   left: 14px;
   right: 14px;
 }
+
+/* 深色模式搜索框 */
+[data-bs-theme="dark"] .jg-search-rs-box {
+  background-color: var(--jg-bg-card);
+  border: 1px solid var(--jg-border);
+}
 .jg-search-list{
   flex: 1;
 }
@@ -895,7 +934,7 @@
   border-radius: var(--jg-radius-sm);
 }
 .jg-search-child .tyn-aside-item:hover{
-  background-color: #d6e4f3;
+  background-color: var(--jg-selected-highlight);
 }
 .jg-search-child .content{
   font-size: var(--jg-font-size-xs);
@@ -924,6 +963,12 @@
   display: flex;
   flex-direction: column;
   width: 300px;
+}
+
+/* 深色模式搜索预览框 */
+[data-bs-theme="dark"] .jg-search-preview-box {
+  background-color: var(--jg-bg-card);
+  box-shadow: var(--jg-shadow);
 }
 .jg-search-pv-header{
   display: flex;
@@ -2134,6 +2179,11 @@
   padding: var(--jg-space-1);
   border-radius: var(--jg-radius-lg);
   -webkit-app-region: no-drag;
+}
+
+/* 深色模式底部工具 */
+[data-bs-theme="dark"] .jg-footer-tool {
+  background-color: rgba(255,255,255,0.08);
 }
 .jg-footer-top-box .jg-footer-tool:first-child{
   background: transparent;

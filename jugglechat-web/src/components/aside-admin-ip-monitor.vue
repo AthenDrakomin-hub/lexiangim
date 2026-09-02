@@ -188,11 +188,18 @@ function onCancel() {
   padding: 40px 20px;
   color: #999;
 }
+
+/* 深色模式空提示 */
+[data-bs-theme="dark"] .empty-tip {
+  color: var(--jg-text-muted);
+}
+
 .user-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
+
 .user-item {
   display: flex;
   align-items: flex-start;
@@ -202,8 +209,19 @@ function onCancel() {
   cursor: pointer;
   transition: background 0.2s;
 }
+
+/* 深色模式用户项 */
+[data-bs-theme="dark"] .user-item {
+  background: var(--jg-bg-card);
+}
+
 .user-item:hover {
   background: #eff6ff;
+}
+
+/* 深色模式用户项悬停 */
+[data-bs-theme="dark"] .user-item:hover {
+  background: var(--jg-bg-hover);
 }
 .user-avatar {
   width: 40px;

@@ -184,6 +184,11 @@ function onCancel() {
   padding: 40px 20px;
   color: #999;
 }
+
+/* 深色模式空提示 */
+[data-bs-theme="dark"] .empty-tip {
+  color: var(--jg-text-muted);
+}
 .notification-list {
   display: flex;
   flex-direction: column;
@@ -198,12 +203,29 @@ function onCancel() {
   cursor: pointer;
   transition: background 0.2s;
 }
+
+/* 深色模式通知项 */
+[data-bs-theme="dark"] .notification-item {
+  background: var(--jg-bg-card);
+}
+
 .notification-item.unread {
   background: #eff6ff;
   border-left: 3px solid #2563eb;
 }
+
+/* 深色模式未读通知 */
+[data-bs-theme="dark"] .notification-item.unread {
+  background: var(--jg-bg-hover);
+}
+
 .notification-item:hover {
   background: #eef2ff;
+}
+
+/* 深色模式通知项悬停 */
+[data-bs-theme="dark"] .notification-item:hover {
+  background: var(--jg-bg-hover);
 }
 .notif-icon {
   position: relative;

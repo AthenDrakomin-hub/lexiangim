@@ -128,14 +128,26 @@ watch(() => props.isShow, () => {
   font-size: 14px;
   color: #999;
 }
+
+/* 深色模式加载文本 */
+[data-bs-theme="dark"] .jg-loading-text {
+  color: var(--jg-text-muted);
+}
+
 .jg-error-icon {
   font-size: 48px;
   margin-bottom: 16px;
 }
+
 .jg-error-text {
   font-size: 14px;
   color: #666;
   margin-bottom: 20px;
+}
+
+/* 深色模式错误文本 */
+[data-bs-theme="dark"] .jg-error-text {
+  color: var(--jg-text-muted);
 }
 @keyframes spin {
   to { transform: rotate(360deg); }

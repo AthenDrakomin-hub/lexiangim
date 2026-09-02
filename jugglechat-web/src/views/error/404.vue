@@ -26,16 +26,24 @@ function goHome() {
   min-height: 100vh;
   background: linear-gradient(180deg, #eff6ff 0%, #ffffff 100%);
 }
+
+/* 深色模式 404 页面背景 */
+[data-bs-theme="dark"] .error-404-page {
+  background: linear-gradient(180deg, #0d1117 0%, #161b22 100%);
+}
+
 .error-404-content {
   text-align: center;
   padding: 40px;
 }
+
 .error-404-illustration {
   width: 200px;
   height: 200px;
   margin-bottom: 16px;
   object-fit: contain;
 }
+
 .error-404-code {
   font-size: 72px;
   font-weight: 800;
@@ -43,16 +51,28 @@ function goHome() {
   margin: 0;
   line-height: 1;
 }
+
 .error-404-title {
   font-size: 22px;
   font-weight: 600;
   color: #1e293b;
   margin: 12px 0 6px;
 }
+
+/* 深色模式 404 标题 */
+[data-bs-theme="dark"] .error-404-title {
+  color: var(--jg-text-body);
+}
+
 .error-404-desc {
   font-size: 14px;
   color: #64748b;
   margin: 0 0 28px;
+}
+
+/* 深色模式 404 描述 */
+[data-bs-theme="dark"] .error-404-desc {
+  color: var(--jg-text-muted);
 }
 .error-404-btn {
   padding: 12px 36px;

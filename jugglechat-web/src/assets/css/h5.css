@@ -134,6 +134,11 @@
     font-weight: 600;
     color: #000000ba;
   }
+
+  /* 深色模式 H5 标题 */
+  [data-bs-theme="dark"] .jg-h5header-title {
+    color: var(--jg-text-body);
+  }
   .jg-message-senttime,
   .tyn-reply-text,
   .tyn-reply-bubble{

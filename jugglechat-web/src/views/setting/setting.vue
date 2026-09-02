@@ -179,4 +179,9 @@ emitter.$on(EVENT_NAME.ON_USER_INFO_UPDATE, ({ user }) => {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* 深色模式用户签名 */
+[data-bs-theme="dark"] .jg-header-user-signature {
+  color: var(--jg-text-muted);
+}
 </style>
