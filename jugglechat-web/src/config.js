@@ -1,8 +1,8 @@
 
 import { STORAGE } from "./common/enum";
-import Stroage from "./common/storage";
+import Storage from "./common/storage";
 
-let appConfig = Stroage.get(STORAGE.SERVER_SETTING);
+let appConfig = Storage.get(STORAGE.SERVER_SETTING);
 
 // 优先读取外部配置文件 public/config.js 中的 window.LEXIANG_CONFIG
 // 这样部署后修改API地址无需重新构建，直接编辑 config.js 即可

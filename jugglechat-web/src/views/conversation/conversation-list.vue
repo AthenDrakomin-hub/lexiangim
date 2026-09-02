@@ -172,12 +172,13 @@ function onConversationRemove({ conversations }){
 function getConversations(isFirst = false, tag, callback = utils.noop) {
   let params = {};
   if (!isFirst) {
-    let index = state.conversationMap[tag].length - 1;
-    let item = state.conversationMap[tag][index];
-    params = { time: item.sortTime };
+    let tagList = state.conversationMap[tag] || [];
+    let index = tagList.length - 1;
+    let item = tagList[index];
+    if (item) {
+      params = { time: item.sortTime };
+    }
   }
-  utils.extend(params, { tag });
-
   //临时代码：和服务端约定获取全部规则后可删除
   if(utils.isEqual(tag, CONVERATION_TAG_ID.ALL)){
     params.tag = '';

@@ -136,12 +136,12 @@ watch(() => props.isShow, () => {
                 </ul>
                 <div class="jg-search-preview-box" v-if="!utils.isEmpty(state.currentConversation)">
                   <div class="jg-search-pv-header">
-                    <div class="total">{{ state.currentConversation.matchedList.length }} 条与 {{ state.content }} 相关的搜索结果</div>
+                    <div class="total">{{ (state.currentConversation.matchedList || []).length }} 条与 {{ state.content }} 相关的搜索结果</div>
                     <div class="nav wr wr-right-af" @click="onNavChat">进入聊天</div>
                   </div>
                   <div class="jg-search-pv-body">
                     <ul class="jg-search-pv-msgs">
-                      <li class="tyn-aside-item js-toggle-main" v-for="(item, index) in state.currentConversation.matchedList" @click="onNavChat">
+                      <li class="tyn-aside-item js-toggle-main" v-for="(item, index) in (state.currentConversation.matchedList || [])" @click="onNavChat">
                         <div class="tyn-media-group">
                           <div class="tyn-media jg-size-lg">
                             <div class="tyn-avatar tyn-s-avatar position-relative jg-circle"
