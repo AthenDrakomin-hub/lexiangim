@@ -1,4 +1,4 @@
-﻿package routers
+package routers
 
 import (
 	"net/http"
@@ -28,6 +28,9 @@ func Route(eng *gin.Engine, prefix string) *gin.RouterGroup {
 	group.POST("/file_cred", apis.GetFileCred)
 	group.POST("/translate", apis.Translate)
 	group.GET("/syncconfs", apis.SyncConfs)
+
+	// AI 回答接口（对接 Agnes API）
+	group.POST("/ai/answer", apis.AiAnswer)
 
 	group.POST("/users/update", apis.UpdateUser)
 	group.POST("/users/updpass", apis.UpdatePass)

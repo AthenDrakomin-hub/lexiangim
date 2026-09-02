@@ -29,6 +29,11 @@ type AppConfig struct {
 	AiBotCallbackUrl  string `yaml:"aiBotCallbackUrl"`
 	AssistantAgentUrl string `yaml:"assistantAgentUrl"`
 
+	// Agnes AI 配置
+	AgnesApiKey string `yaml:"agnesApiKey"`
+	AgnesApiUrl string `yaml:"agnesApiUrl"`
+	AgnesModel  string `yaml:"agnesModel"`
+
 	BotConnector struct {
 		Domain string `yaml:"domain"`
 	} `yaml:"botConnector"`
