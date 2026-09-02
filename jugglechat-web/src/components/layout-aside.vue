@@ -203,7 +203,7 @@ watch(useRouterCurrent, (value) => {
     <ul class="jg-footer-tools jg-footer-top-box">
       <li class="jg-footer-tool"  @click.prevent="onShowSettingMenu(true)">
         <div class="jg-header-user">
-          <div class="tyn-avatar jg-header-user-avatar" :style="{ 'background-image': 'url(' + state.user.portrait + ')' }"></div>
+          <div class="tyn-avatar jg-header-user-avatar" :style="{ 'background-image': state.user.portrait ? 'url(' + state.user.portrait + ')' : '' }"></div>
           <div class="jg-header-user-name">{{ state.user.name || state.user.id }}</div>
         </div>
       </li>

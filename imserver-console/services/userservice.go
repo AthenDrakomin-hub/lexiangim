@@ -304,8 +304,8 @@ func UnBanUsers(ctx context.Context, req *apimodels.BanUsersReq) errs.AdminError
 	return errs.AdminErrorCode_Success
 }
 
-func UpdateUserProfile(appkey, userId, nickname string) errs.AdminErrorCode {
-	if appkey == "" || userId == "" || nickname == "" {
+func UpdateUserProfile(appkey, userId, nickname string, vipLevel int) errs.AdminErrorCode {
+	if appkey == "" || userId == "" {
 		return errs.AdminErrorCode_ParamError
 	}
 	storage := dbs.UserDao{}
@@ -313,7 +313,7 @@ func UpdateUserProfile(appkey, userId, nickname string) errs.AdminErrorCode {
 	if err != nil || user == nil {
 		return errs.AdminErrorCode_Default
 	}
-	err = storage.UpdateUserProfile(appkey, userId, nickname, "")
+	err = storage.UpdateUserProfile(appkey, userId, nickname, "", vipLevel)
 	if err != nil {
 		logs.NewLogEntity().Error(err.Error())
 		return errs.AdminErrorCode_Default

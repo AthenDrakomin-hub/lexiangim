@@ -138,16 +138,21 @@ func (user UserDao) qryByVipLevel(VipLevel int, appkey, name string, startId, li
 	return items, err
 }
 
-func (user UserDao) UpdateUserProfile(appkey, userId, nickname, portrait string) error {
+func (user UserDao) UpdateUserProfile(appkey, userId, nickname, portrait string, vipLevel int) error {
 	updates := map[string]interface{}{
-		"nickname":      nickname,
 		"updated_time":  time.Now(),
+	}
+	if nickname != "" {
+		updates["nickname"] = nickname
 	}
 	if portrait != "" {
 		updates["user_portrait"] = portrait
 	}
+	if vipLevel >= 0 {
+		updates["vip_level"] = vipLevel
+	}
 	return dbcommons.GetDb().Model(&UserDao{}).
-		Where("app_key=? and user_id=? and vip_level=?", appkey, userId, VipLevel_Normal).
+		Where("app_key=? and user_id=?", appkey, userId).
 		Updates(updates).Error
 }
 

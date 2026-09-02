@@ -1,4 +1,4 @@
-package apis
+﻿package apis
 
 import (
 	"strconv"
@@ -103,15 +103,16 @@ type UpdateUserProfileReq struct {
 	AppKey      string `json:"app_key"`
 	UserId      string `json:"user_id"`
 	Nickname    string `json:"nickname"`
+	VipLevel    int    `json:"vip_level"`
 }
 
 func UpdateUserProfile(ctx *gin.Context) {
 	var req UpdateUserProfileReq
-	if err := ctx.ShouldBindJSON(&req); err != nil || req.AppKey == "" || req.UserId == "" || req.Nickname == "" {
+	if err := ctx.ShouldBindJSON(&req); err != nil || req.AppKey == "" || req.UserId == "" {
 		ctxs.FailHttpResp(ctx, errs.AdminErrorCode_ParamError)
 		return
 	}
-	code := services.UpdateUserProfile(req.AppKey, req.UserId, req.Nickname)
+	code := services.UpdateUserProfile(req.AppKey, req.UserId, req.Nickname, req.VipLevel)
 	if code != errs.AdminErrorCode_Success {
 		ctxs.FailHttpResp(ctx, code)
 		return
