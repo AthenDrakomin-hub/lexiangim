@@ -115,8 +115,8 @@
   .emojis__grid{
     justify-content: center;
   }
-  .wr-rtc-mic,
-  .wr-rtc-camera{
+  .jg-icon-mic,
+  .jg-icon-camera{
     display: none;
   }
 

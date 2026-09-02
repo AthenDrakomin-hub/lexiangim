@@ -189,14 +189,14 @@ function calcSize(params, patch = 20){
 }
 function formatTags(tags){
   let tagIcons = {
-    jg_all: 'wr-mg-msg',
-    jg_mentionme: 'wr-mg-mention',
-    jg_private: 'wr-mg-user',
-    jg_unread: 'wr-mg-unread',
-    jg_group: 'wr-mg-group',
+    jg_all: 'jg-icon-msg',
+    jg_mentionme: 'jg-icon-mention',
+    jg_private: 'jg-icon-user-group',
+    jg_unread: 'jg-icon-unread',
+    jg_group: 'jg-icon-group',
   };
   // let groups = utils.map(tags, (tag) => {
-  //   let icon = tagIcons[tag.id] || 'wr-mg-tag';
+  //   let icon = tagIcons[tag.id] || 'jg-icon-tag';
   //   let isInner = tag.type > 0;
   //   let isActive = utils.isEqual(tag.id, 'jg_all');
   //   utils.extend(tag, { icon, isActive, isInner });
@@ -207,13 +207,13 @@ function formatTags(tags){
   let groups = [];
   utils.forEach(tags, (tag) => {
     if(!tagIcons[tag.id]){
-      let icon = 'wr-mg-tag';
+      let icon = 'jg-icon-tag';
       let isInner = tag.type > 0;
       utils.extend(tag, { icon, isActive: false, isInner });
       groups.push(tag);
     }
   });
-  groups.unshift({ id: 'jg_all', name: '消息', icon: 'wr-mg-msg', isActive: true, isInner: true})
+  groups.unshift({ id: 'jg_all', name: '消息', icon: 'jg-icon-msg', isActive: true, isInner: true})
   return groups;
 }
 

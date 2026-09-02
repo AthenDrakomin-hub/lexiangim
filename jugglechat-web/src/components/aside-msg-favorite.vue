@@ -135,19 +135,19 @@ watch(() => props.isShow, () => {
           <div class="jg-fav-msg" v-if="utils.isEqual(item.message.name, MessageType.TEXT)">
             <div class="jg-fav-msg-text">{{ item.message.content.content }}</div>
             <ul class="jg-fav-tools">
-              <li class="jg-fav-tool wr wr-delete warn" @click.stop="onRemove(item.message, index)"></li>
+              <li class="jg-fav-tool wr jg-icon-delete warn" @click.stop="onRemove(item.message, index)"></li>
             </ul>
           </div>
           <div class="jg-fav-msg" v-if="utils.isEqual(item.message.name, MessageType.IMAGE)">
             <img :src="item.message.content.thumbnail" class="tyn-image fadein-o" alt/>
             <ul class="jg-fav-tools">
-              <li class="jg-fav-tool wr wr-delete warn" @click.stop="onRemove(item.message, index)"></li>
+              <li class="jg-fav-tool wr jg-icon-delete warn" @click.stop="onRemove(item.message, index)"></li>
             </ul>
           </div>
           <div class="jg-fav-msg" v-if="utils.isEqual(item.message.name, MessageType.FILE)">
             <a :href="item.message.content.url" class="jg-file" :download="item.message.content.name">
               <div class="tyn-media-group">
-                <div class="tyn-media jg-size-lg text-bg-light wr wr-file tyb-msg-fileicon">
+                <div class="tyn-media jg-size-lg text-bg-light wr jg-icon-file tyb-msg-fileicon">
                 </div>
                 <div class="tyn-media-col">
                   <h6 class="name">{{ item.message.content.name }}</h6>
@@ -156,7 +156,7 @@ watch(() => props.isShow, () => {
               </div>
             </a>
             <ul class="jg-fav-tools">
-              <li class="jg-fav-tool wr wr-delete warn" @click.stop="onRemove(item.message, index)"></li>
+              <li class="jg-fav-tool wr jg-icon-delete warn" @click.stop="onRemove(item.message, index)"></li>
             </ul>
           </div>
           <div class="jg-fav-msg" v-if="utils.isEqual(item.message.name, MessageType.VIDEO)">
@@ -164,7 +164,7 @@ watch(() => props.isShow, () => {
               <video :src="item.message.content.url" class="tyn-image" controls></video>
             </a>
             <ul class="jg-fav-tools">
-              <li class="jg-fav-tool wr wr-delete warn" @click.stop="onRemove(item.message, index)"></li>
+              <li class="jg-fav-tool wr jg-icon-delete warn" @click.stop="onRemove(item.message, index)"></li>
             </ul>
           </div>
           <div class="jg-fav-msg" v-if="utils.isEqual(item.message.name, MessageType.MERGE)">
@@ -178,7 +178,7 @@ watch(() => props.isShow, () => {
               </div>
             </div>
             <ul class="jg-fav-tools">
-              <li class="jg-fav-tool wr wr-delete warn" @click.stop="onRemove(item.message, index)"></li>
+              <li class="jg-fav-tool wr jg-icon-delete warn" @click.stop="onRemove(item.message, index)"></li>
             </ul>
           </div>
           <div class="jg-fav-info">

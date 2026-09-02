@@ -1,4 +1,5 @@
 @import './iconfont.css';
+@import './jg-icon-aliases.css';
 @import './custom_chat.css';
 @import './custom_header.css';
 @import './custom_conversation.css';
@@ -128,7 +129,7 @@
 .badge{
   --bs-badge-font-size: 0.6rem;
 }
-.tyn-reply-tools .wr-more::before{
+.tyn-reply-tools .jg-icon-more::before{
   font-size: var(--jg-font-size-2xl);
 }
 .tyn-text-btn{
@@ -329,7 +330,7 @@
 .tyn-transfer::before{
   font-size: var(--jg-font-size-lg);
 }
-.tyn-transfer.wr-success-square{
+.tyn-transfer.jg-icon-success-square{
   color: #214521;
 }
 .tyn-transfer-pn{

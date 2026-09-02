@@ -210,14 +210,14 @@ watch(useRouterCurrent, (value) => {
       
       <li class="jg-footer-tool" v-if="juggle.isDesktop()">
         <div class="jg-asider-footer-item" @click="onShowSearchModal(true)">
-          <div class="icon wr wr-search"></div>
+          <div class="icon wr jg-icon-search"></div>
           <div class="name">搜索</div>
         </div>
       </li>
 
       <li class="jg-footer-tool">
         <div class="jg-asider-footer-item" @click="onShowAddMenu(true)">
-          <div class="icon wr wr-plus"></div>
+          <div class="icon wr jg-icon-add"></div>
           <div class="name">创建</div>
         </div>
         <HeaderDropMenu @onemit="onDropMenuClick" :is-show="state.isShowAddMenu" :menus="state.addMenus" :class="'jg-header-create-list'" @onhide="onShowAddMenu(false)"></HeaderDropMenu>
@@ -233,7 +233,7 @@ watch(useRouterCurrent, (value) => {
 
       <li class="jg-footer-tool">
         <div class="jg-asider-footer-item" @click="onShowFavoriteMsg(true)">
-          <div class="icon wr wr-fav"></div>
+          <div class="icon wr jg-icon-favorite"></div>
           <div class="name">收藏</div>
         </div>
       </li>
@@ -241,7 +241,7 @@ watch(useRouterCurrent, (value) => {
     <!-- <ul class="jg-footer-tools jg-footer-bottom-box">
       <li class="jg-footer-tool">
         <div class="jg-asider-footer-item" @click="onShowSettingMenu(true)">
-          <div class="icon wr wr-setting"></div>
+          <div class="icon wr jg-icon-settings"></div>
           <div class="name">设置</div>
         </div>
         <HeaderDropMenu @onemit="onDropMenuClick" :is-show="state.isShowSettingMenu" :menus="state.bottomMenus" :class="'jg-header-create-list jg-layout-settingdrop'" @onhide="onShowSettingMenu(false)"></HeaderDropMenu>

@@ -28,7 +28,7 @@ watch(() => props.isShow, () => {
     <Perch></Perch>
     <div class="tyn-common-header">
       <ul class="tools">
-        <li class="tool close wr wr-left" @click.prevent="onCancel()" v-if="!props.disabledClose"></li>
+        <li class="tool close wr jg-icon-arrow-left" @click.prevent="onCancel()" v-if="!props.disabledClose"></li>
       </ul>
       <div class="title">{{ props.title }}</div>
       <div class="title-none"></div>

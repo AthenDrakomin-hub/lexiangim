@@ -77,8 +77,8 @@ function onClickRight(e){
           <span class="sender">{{ item.senderName }}:</span>
           <span class="message">{{ item.content }}</span>
         </div>
-       <div class="wr message-state wr-circle" @click.stop="onShowReadDetail(true)"
-        :class="{ 'wr-dui': props.message.isRead && !messageUtils.isGroup(props.message) || props.message.unreadCount == 0, 'message-read': props.message.isRead && !messageUtils.isGroup(props.message) || props.message.readCount > 0 }"
+       <div class="wr message-state jg-icon-circle" @click.stop="onShowReadDetail(true)"
+        :class="{ 'jg-icon-check': props.message.isRead && !messageUtils.isGroup(props.message) || props.message.unreadCount == 0, 'message-read': props.message.isRead && !messageUtils.isGroup(props.message) || props.message.readCount > 0 }"
           v-if="props.message.isSender && !props.isRead">
           <div v-if="messageUtils.isGroup(props.message) && props.message.readCount > 0 && props.message.unreadCount > 0"
             class="message-group-state"

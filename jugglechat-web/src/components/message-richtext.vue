@@ -24,20 +24,20 @@ const props = defineProps(["message"]);
         </div>
         <ul class="tyn-reply-tools">
           <li>
-            <button class="btn btn-icon btn-sm btn-transparent btn-pill wr wr-smile"></button>
+            <button class="btn btn-icon btn-sm btn-transparent btn-pill wr jg-icon-emoji"></button>
           </li>
           <!-- li -->
           <li class="dropup-center">
-            <button class="btn btn-icon btn-sm btn-transparent btn-pill wr wr-more" data-bs-toggle="dropdown"></button>
+            <button class="btn btn-icon btn-sm btn-transparent btn-pill wr jg-icon-more" data-bs-toggle="dropdown"></button>
             <div class="dropdown-menu dropdown-menu-xxs">
               <ul class="tyn-list-links">
                 <li>
-                  <a href="#" class="wr wr-modify">
+                  <a href="#" class="wr jg-icon-edit">
                     <span>Edit</span>
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="wr wr-delete">
+                  <a href="#" class="wr jg-icon-delete">
                     <span>Delete</span>
                   </a>
                 </li>

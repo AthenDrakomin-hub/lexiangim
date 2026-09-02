@@ -66,7 +66,7 @@ function onSelected(item, index) {
       <ul class="tyn-media-list gap gap-2">
         <li v-for="(item, index) in state.members"  @click="onSelected(item, index)" class="tyn-media-item">
           <span class="wr tyn-tfcontact-s"
-            :class="[item.isTransferChecked ? 'wr-radio-select tyn-contact-checked' : 'wr-radio', item.disabled ? 'wr-disabled' : '']"></span>
+            :class="[item.isTransferChecked ? 'jg-icon-radio-select tyn-contact-checked' : 'jg-icon-radio', item.disabled ? 'jg-icon-disabled' : '']"></span>
             <div class="tyn-media jg-size-md tyn-conver-avatar"
               :style="{ 'background-image': 'url(' + item.portrait + ')' }">
             </div>

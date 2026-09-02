@@ -34,7 +34,7 @@ function onPlay(messageId){
       <div class="col-6" v-for="msg in props.messages">
         <a class="glightbox tyn-video" data-gallery="media-video" @click="onPlay(msg.messageId)">
           <video :src="msg.content.url"  ref="videos" class="tyn-image" :id="msg.messageId"></video>
-          <div class="tyn-video-icon wr wr-video tyn-aside-video" v-if="state.list.indexOf(msg.messageId) == -1"></div>
+          <div class="tyn-video-icon wr jg-icon-video tyn-aside-video" v-if="state.list.indexOf(msg.messageId) == -1"></div>
         </a>
       </div>
       <div class="name tyn-aside-nothing" v-if="props.messages.length == 0">没有更多了</div>

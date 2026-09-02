@@ -93,7 +93,7 @@ watch(() => props.isShow, () => {
             <div class="jg-asider-seach-box">
               <div class="form-group">
                 <div class="form-control-wrap">
-                  <div class="jg-search-icon wr wr-search"></div>
+                  <div class="jg-search-icon wr jg-icon-search"></div>
                   <input type="text" class="form-control" v-model="state.content" placeholder="Search Chat" autocomplete="off" @keydown.enter="onSearch" @input="onSearch"/>
                 </div>
               </div>
@@ -137,7 +137,7 @@ watch(() => props.isShow, () => {
                 <div class="jg-search-preview-box" v-if="!utils.isEmpty(state.currentConversation)">
                   <div class="jg-search-pv-header">
                     <div class="total">{{ (state.currentConversation.matchedList || []).length }} 条与 {{ state.content }} 相关的搜索结果</div>
-                    <div class="nav wr wr-right-af" @click="onNavChat">进入聊天</div>
+                    <div class="nav wr jg-icon-arrow-right-af" @click="onNavChat">进入聊天</div>
                   </div>
                   <div class="jg-search-pv-body">
                     <ul class="jg-search-pv-msgs">
@@ -165,7 +165,7 @@ watch(() => props.isShow, () => {
               </div>
             </div>
           </div>
-          <button @click="$emit('oncancel')" class="btn btn-md btn-icon btn-pill btn-white shadow position-absolute top-0 end-0 mt-n3 me-n3 wr wr-close"></button>
+          <button @click="$emit('oncancel')" class="btn btn-md btn-icon btn-pill btn-white shadow position-absolute top-0 end-0 mt-n3 me-n3 wr jg-icon-close"></button>
         </div>
       </div>
     </DialogContent>

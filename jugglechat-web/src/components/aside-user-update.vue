@@ -151,7 +151,7 @@ function onUploadAvatar(e) {
       <div class="form-group form-avatars">
         <label class="form-label">选择头像</label>
         <div class="form-avatars-grid">
-          <div class="form-avatar wr" @click.stop="onSelected(avatar)" :class="{'wr-mark form-avatar-selected': avatar.isSelected}" v-for="avatar in state.avatars" :style="{ 'background-image': 'url(' + avatar.url + ')' }"></div>
+          <div class="form-avatar wr" @click.stop="onSelected(avatar)" :class="{'jg-icon-mark form-avatar-selected': avatar.isSelected}" v-for="avatar in state.avatars" :style="{ 'background-image': 'url(' + avatar.url + ')' }"></div>
           <!-- 上传自定义头像按钮 -->
           <label class="form-avatar form-avatar-upload" :class="{ 'form-avatar-uploading': state.isUploading }">
             <input type="file" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp" @change="onUploadAvatar" style="display:none;">

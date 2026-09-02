@@ -55,7 +55,7 @@ function onMouseleave(){
   <div class="ai-select-box">
     <div class="ai-select-favorites" @click="onClick">{{ state.favorites.join(',') }}</div>
     <ul class="ai-select-list" v-if="state.isShow" @mouseleave="onMouseleave">
-      <span class="ai-select-shouqi wr wr-shouqi" @click="onMouseleave"></span>
+      <span class="ai-select-shouqi wr jg-icon-collapse" @click="onMouseleave"></span>
       <li class="ai-select-item" :class="{'ai-select-item-selected': item.isSelected}" @click="onItemClick(item)" v-for="item in props.list" >{{ item.name }}</li>
     </ul>
   </div>

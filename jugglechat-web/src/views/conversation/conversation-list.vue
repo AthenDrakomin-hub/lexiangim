@@ -355,8 +355,8 @@ function onTagConversationChanged({ removes, adds, tag }){
 
           <div class="jg-conversations-header">
             <ul class="jg-conversations-tools jg-convers-tools">
-              <li class="jg-conversation-tool wr" :class="[state.isShowConversationGroup ? 'wr-menu-left' : 'wr-menu-right']" @click="onShowConversationGroup()">消息</li>
-              <li class="jg-conversation-tool wr wr-menu-modify" @click="onShowGroupMemberManager(true)" v-if="state.currentTag.type == CONVERSATION_TAG_TYPE.CUSTOM">会话设置</li>
+              <li class="jg-conversation-tool wr" :class="[state.isShowConversationGroup ? 'jg-icon-menu-left' : 'jg-icon-menu-right']" @click="onShowConversationGroup()">消息</li>
+              <li class="jg-conversation-tool wr jg-icon-menu-edit" @click="onShowGroupMemberManager(true)" v-if="state.currentTag.type == CONVERSATION_TAG_TYPE.CUSTOM">会话设置</li>
             </ul>
           </div>
 
@@ -378,7 +378,7 @@ function onTagConversationChanged({ removes, adds, tag }){
                   <div class="dropdown-menu" :class="{ 'show jg-topmenu-show': item.isShowTopDrop }">
                     <ul class="tyn-list-links">
                       <li>
-                        <a class="wr wr-untop" @click.stop="onSetConversationTop(item, false)">
+                        <a class="wr jg-icon-untop" @click.stop="onSetConversationTop(item, false)">
                           <span>取消置顶</span>
                         </a>
                       </li>

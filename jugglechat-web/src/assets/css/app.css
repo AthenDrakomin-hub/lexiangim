@@ -1042,15 +1042,15 @@ dl {
   height: 20px;
   background: linear-gradient(239deg, #FFF 0%, #FFF 50%, transparent 50%, transparent);
 }
-.wr-bubble-a::after,
-.wr-bubble-b::before{
+.jg-icon-bubble-a::after,
+.jg-icon-bubble-b::before{
   position: absolute;
   left: -17px;
   font-size: var(--jg-font-size-5xl);
   top: 11px;
   color: var(--jg-text-white);
 }
-.wr-bubble-a::after{
+.jg-icon-bubble-a::after{
   left: auto;
   right: -17px;
   top: 11px;

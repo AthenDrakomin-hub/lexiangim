@@ -86,7 +86,7 @@ function onRetry(){
       <div class="tyn-reply-file wr" :messageid="props.message.tid" v-longpress="onClickRight" @click.right.prevent="onClickRight">
         <a :href="props.message.content.url" class="jg-file" :download="props.message.content.name">
           <div class="tyn-media-group">
-            <div class="tyn-media jg-size-lg text-bg-light wr wr-file tyb-msg-fileicon">
+            <div class="tyn-media jg-size-lg text-bg-light wr jg-icon-file tyb-msg-fileicon">
             </div>
             <div class="tyn-media-col">
               <h6 class="name">{{ props.message.content.name }}</h6>
@@ -100,8 +100,8 @@ function onRetry(){
         
         <Reaction :is-show="!utils.isEmpty(props.message.reactions)" :reactions="props.message.reactions" @oncancel="onChoiceEmoji"></Reaction>
 
-       <div class="wr message-state wr-circle" @click.stop="onShowReadDetail(true)"
-        :class="{ 'wr-dui': props.message.isRead && !messageUtils.isGroup(props.message) || props.message.unreadCount == 0, 'message-read': props.message.isRead && !messageUtils.isGroup(props.message) || props.message.readCount > 0 }"
+       <div class="wr message-state jg-icon-circle" @click.stop="onShowReadDetail(true)"
+        :class="{ 'jg-icon-check': props.message.isRead && !messageUtils.isGroup(props.message) || props.message.unreadCount == 0, 'message-read': props.message.isRead && !messageUtils.isGroup(props.message) || props.message.readCount > 0 }"
           v-if="props.message.isSender && !props.isRead">
 
           <div v-if="messageUtils.isGroup(props.message) && props.message.readCount > 0 && props.message.unreadCount > 0"
@@ -114,7 +114,7 @@ function onRetry(){
         </div>
         <div class="jg-message-senttime" v-if="props.message.sentTime">{{ utils.formatTimetoHM(props.message.sentTime) }}</div>
         <div v-if="props.message.sentState == 3" class="jg-msg-retry" @click.stop="onRetry">
-          <span class="wr wr-retry"></span>
+          <span class="wr jg-icon-retry"></span>
           <span>发送失败，点击重试</span>
         </div>
       </div>

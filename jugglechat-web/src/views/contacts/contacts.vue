@@ -276,8 +276,8 @@ getFriends();
         </ul>
         <!-- 操作按钮 -->
         <div class="jg-contact-actions">
-          <button class="jg-contact-action-btn wr wr-adduser" title="添加好友" @click="onShowAddFriend(true)"></button>
-          <button class="jg-contact-action-btn wr wr-group" title="创建群组" @click="onShowCreateGroup(true)"></button>
+          <button class="jg-contact-action-btn wr jg-icon-user-add" title="添加好友" @click="onShowAddFriend(true)"></button>
+          <button class="jg-contact-action-btn wr jg-icon-group" title="创建群组" @click="onShowCreateGroup(true)"></button>
         </div>
       </div>
       <div class="tyn-aside-body">

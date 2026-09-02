@@ -27,14 +27,14 @@ watch(() => props.isShow, (value) => {
    :class="{ 'show': props.isShow, 'dropdown-menu-xxs-bottom': !state.isTop }">
     <ul class="tyn-list-links">
       <li class="tyn-list-link">
-        <a class="wr wr-read" @click.stop="emit('onmark', props.index)">
+        <a class="wr jg-icon-read" @click.stop="emit('onmark', props.index)">
           <span>{{ props.conversation.unreadTag ? '清理未读' : '标记未读' }}</span>
         </a>
       </li>
       <li class="tyn-list-link">
         <a
-          class="wr wr-top"
-          :class="{'wr-untop': props.conversation.isTop}"
+          class="wr jg-icon-top"
+          :class="{'jg-icon-untop': props.conversation.isTop}"
           data-bs-toggle="modal"
           @click.stop="emit('ontop', props.conversation, !props.conversation.isTop)"
         >
@@ -43,8 +43,8 @@ watch(() => props.isShow, (value) => {
       </li>
       <li class="tyn-list-link">
         <a
-          class="wr wr-mute"
-          :class="{'wr-unmute': utils.isEqual(props.conversation.undisturbType, UndisturbType.UNDISTURB)}"
+          class="wr jg-icon-mute"
+          :class="{'jg-icon-unmute': utils.isEqual(props.conversation.undisturbType, UndisturbType.UNDISTURB)}"
           data-bs-toggle="modal"
           @click.stop="emit('ondisturb', props.conversation)"
         >
@@ -54,7 +54,7 @@ watch(() => props.isShow, (value) => {
       <li class="dropdown-divider"></li>
       <li class="tyn-list-link">
         <a
-          class="wr wr-delete"
+          class="wr jg-icon-delete"
           data-bs-toggle="modal"
           @click.stop="emit('onremove', props.index)"
         >
@@ -62,7 +62,7 @@ watch(() => props.isShow, (value) => {
         </a>
       </li>
       <li class="tyn-list-link">
-        <a href="#" class="wr wr-clear" @click.stop="emit('onclearmsg', props.index)">
+        <a href="#" class="wr jg-icon-clear" @click.stop="emit('onclearmsg', props.index)">
           <span>清空消息</span>
         </a>
       </li>

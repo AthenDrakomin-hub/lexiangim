@@ -197,7 +197,7 @@ function onMinWindow(isMin){
           <div class="jcall-header">
             <div class="jgcall-time">{{ state.callTime }}</div>
             <ul class="jgcall-mtools">
-              <li class="jgcall-mtool wr wr-min jc-tool-active" @click="onMinWindow(true)"></li>
+              <li class="jgcall-mtool wr jg-icon-min jc-tool-active" @click="onMinWindow(true)"></li>
             </ul>
           </div>
           <div class="jcall-users" ref="rtcusers">
@@ -213,36 +213,36 @@ function onMinWindow(isMin){
           </div>
           <div class="jcall-tools">
             <div class="jcall-tool" @click="onmutemic">
-              <div class="jcall-tool-icon wr wr-rtc-mutemic" :class="{ 'jc-tool-active': !state.isMuteMic }"></div>
+              <div class="jcall-tool-icon wr jg-icon-mic-mute" :class="{ 'jc-tool-active': !state.isMuteMic }"></div>
               <div class="jcall-tool-label" :class="{ 'jc-tool-active': !state.isMuteMic }">{{ state.isMuteMic ? '麦克风已禁用' : '麦克风已启用' }}</div>
             </div>
             <div class="jcall-tool" @click="onmutespeaker">
-              <div class="jcall-tool-icon wr wr-rtc-ummutespeaker"  :class="{ 'jc-tool-active': !state.isMuteSpeaker }"></div>
+              <div class="jcall-tool-icon wr jg-icon-speaker"  :class="{ 'jc-tool-active': !state.isMuteSpeaker }"></div>
               <div class="jcall-tool-label"  :class="{ 'jc-tool-active': !state.isMuteSpeaker }">{{ state.isMuteSpeaker ? '扬声器已关闭' : '扬声器已打开'}}</div>
             </div>
             <!-- <div class="jcall-tool" @click="on">
-              <div class="jcall-tool-icon wr wr-rtc-mutecamera"></div>
+              <div class="jcall-tool-icon wr jg-icon-camera-mute"></div>
               <div class="jcall-tool-label">摄像头</div>
             </div> -->
             <div class="jcall-tool" v-if="state.session.isMultiCall" @click="onInvite(true)">
-              <div class="jcall-tool-icon wr wr-rtc-add jc-tool-active"></div>
+              <div class="jcall-tool-icon wr jg-icon-rtc-add jc-tool-active"></div>
               <div class="jcall-tool-label jc-tool-active">邀请成员</div>
             </div>
             <div class="jcall-tool" @click="onHangup">
-              <div class="jcall-tool-icon wr wr-rtc-hangup"></div>
+              <div class="jcall-tool-icon wr jg-icon-call-end"></div>
               <div class="jcall-tool-label jc-tool-active">挂断</div>
             </div>
           </div>
         </div>
         <div class="jcall-members-box" :class="{ 'jcall-mbox-show': state.isShowInvite }">
           <ul class="jgcall-mtools">
-            <li class="jgcall-mtool wr wr-close jc-tool-active" @click="onInvite(false)"></li>
+            <li class="jgcall-mtool wr jg-icon-close jc-tool-active" @click="onInvite(false)"></li>
           </ul>
           <ul class="jgcall-members">
             <li class="jgcall-member" v-for="item in state.friends" @click="onSelected(item)">
               <div class="form-check form-check-algin">
                 <span class="wr tyn-tfcontact-s"
-                  :class="[item.isTransferChecked ? 'wr-success-square tyn-contact-checked' : 'wr-square', item.disabled ? 'wr-disabled' : '']"></span>
+                  :class="[item.isTransferChecked ? 'jg-icon-success-square tyn-contact-checked' : 'jg-icon-square', item.disabled ? 'jg-icon-disabled' : '']"></span>
                 <div class="form-check-label">
                   <div class="tyn-media-group">
                     <div class="tyn-media jg-size-xs d-none d-sm-inline-flex tyn-conver-avatar"

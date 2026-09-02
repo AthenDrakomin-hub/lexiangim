@@ -71,7 +71,7 @@ function getMsg(){
   <div class="tyn-reply-group">
     <span class="jg-sender-name" v-if="messageUtils.isGroup(props.message)">{{ props.message.sender.name }}</span>
     <div class="tyn-reply-bubble">
-      <div class="tyn-reply-text tyn-reply-call-text wr wr-rtc-status-hangup">{{ state.msg }}</div>
+      <div class="tyn-reply-text tyn-reply-call-text wr jg-icon-call-hangup">{{ state.msg }}</div>
     </div>
   </div>
 </template>

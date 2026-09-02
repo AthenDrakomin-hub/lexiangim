@@ -124,7 +124,7 @@ function onSelected(item) {
       <ul class="tyn-media-list gap gap-2">
         <li v-for="item in state.friends" @click="onSelected(item)" class="tyn-media-item">
           <span class="wr tyn-tfcontact-s"
-            :class="[item.isTransferChecked ? 'wr-success-square tyn-contact-checked' : 'wr-square', item.disabled ? 'wr-disabled' : '']"></span>
+            :class="[item.isTransferChecked ? 'jg-icon-success-square tyn-contact-checked' : 'jg-icon-square', item.disabled ? 'jg-icon-disabled' : '']"></span>
             <div class="tyn-media jg-size-md tyn-conver-avatar"
               :style="{ 'background-image': 'url(' + item.avatar + ')' }">
             </div>

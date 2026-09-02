@@ -46,7 +46,7 @@ function onSelected(item){
             <ul class="tyn-media-list gap gap-2">
               <li v-for="item in state.conversations" @click="onSelected(item)">
                 <div class="form-check form-check-algin">
-                  <span class="wr tyn-tfcontact-s" :class="[item.isTransferChecked ? 'wr-success-square tyn-contact-checked' : 'wr-square']"></span>
+                  <span class="wr tyn-tfcontact-s" :class="[item.isTransferChecked ? 'jg-icon-success-square tyn-contact-checked' : 'jg-icon-square']"></span>
                   <div class="form-check-label">
                     <div class="tyn-media-group">
                     <div class="tyn-media jg-size-md tyn-conver-avatar"
@@ -71,7 +71,7 @@ function onSelected(item){
               </li>
             </ul>
           </div>
-          <button @click="onCancel()" class="btn btn-md btn-icon btn-pill btn-white shadow position-absolute top-0 end-0 mt-n3 me-n3 wr wr-close"></button>
+          <button @click="onCancel()" class="btn btn-md btn-icon btn-pill btn-white shadow position-absolute top-0 end-0 mt-n3 me-n3 wr jg-icon-close"></button>
         </div>
       </div>
     </DialogContent>

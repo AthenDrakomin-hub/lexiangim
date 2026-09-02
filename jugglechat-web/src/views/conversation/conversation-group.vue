@@ -105,12 +105,12 @@ watch(() => props.isShow, async () => {
     <div class="jg-conversations-header">
       <ul class="jg-conversations-tools">
         <li></li>
-        <li class="jg-conversation-tool wr wr-setting" @click="onShowGroupManager(true)">设置</li>
+        <li class="jg-conversation-tool wr jg-icon-settings" @click="onShowGroupManager(true)">设置</li>
       </ul>
     </div>
     <ul class="jg-conver-groups">
       <li class="jg-conver-group" v-for="(group, index) in state.groups" :key="group.id" :class="{'active': group.isActive}" @click="onSelected(group, index)">
-        <div class="jg-conver-group-content wr wr-mg-tag" :class="[group.icon]" >
+        <div class="jg-conver-group-content wr jg-icon-tag" :class="[group.icon]" >
           <span class="jg-conver-group-content-name">{{ group.name }}</span>
         </div>
       </li>

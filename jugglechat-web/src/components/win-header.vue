@@ -33,16 +33,16 @@ function setWin(type){
    <div class="tyn-desktop-header" v-if="juggle.isDesktop()">
     <ul class="tyn-desktop-navs" v-if="!utils.isMacBrowser()">
       <li class="tyn-desktop-nav">
-        <a class="wr wr-win-hide" @click="setWin('minimize')"></a>
+        <a class="wr jg-icon-window-hide" @click="setWin('minimize')"></a>
       </li>
       <li class="tyn-desktop-nav" v-if="state.isMax">
-        <a class="wr wr-win-max" @click="setWin('unmaximize')"></a>
+        <a class="wr jg-icon-window-maximize" @click="setWin('unmaximize')"></a>
       </li>
       <li class="tyn-desktop-nav" v-else>
-        <a class="wr wr-win-min" @click="setWin('maximize')"></a>
+        <a class="wr jg-icon-window-minimize" @click="setWin('maximize')"></a>
       </li>
       <li class="tyn-desktop-nav">
-        <a class="wr wr-win-close" @click="setWin('close')"></a>
+        <a class="wr jg-icon-window-close" @click="setWin('close')"></a>
       </li>
     </ul>
   </div>

@@ -100,11 +100,11 @@ function onRemoveFriend(){
         <div class="tyn-media-group">
           <div class="tyn-media-row">
             <div class="tyn-media-col" v-if="!utils.isEqual(props.current.type, CONTACT_TYPE.NEW_FRIEND) || (utils.isEqual(props.current.type, CONTACT_TYPE.NEW_FRIEND) && utils.isEqual(props.current.status, FRIEND_APPLY_STATUS.ACCEPTED))">
-              <div class="wr wr-message btn btn-light jg-size-md w-100 contact-send-msg" @click="onConversation">发起会话</div>
-              <div class="wr wr-message btn btn-light jg-size-md w-100 jg-warn-bg" @click="onRemoveFriend" v-if="utils.isEqual(props.current.type, ConversationType.PRIVATE)" >删除好友</div>
+              <div class="wr jg-icon-message btn btn-light jg-size-md w-100 contact-send-msg" @click="onConversation">发起会话</div>
+              <div class="wr jg-icon-message btn btn-light jg-size-md w-100 jg-warn-bg" @click="onRemoveFriend" v-if="utils.isEqual(props.current.type, ConversationType.PRIVATE)" >删除好友</div>
             </div>
             <div class="tyn-media-col" v-else-if="!props.current.isOneSelf && utils.isEqual(props.current.status, FRIEND_APPLY_STATUS.APPLYING)">
-              <div class="wr wr-message btn btn-light jg-size-md w-100 contact-send-msg" @click="onAddFriend(true)">添加好友</div>
+              <div class="wr jg-icon-message btn btn-light jg-size-md w-100 contact-send-msg" @click="onAddFriend(true)">添加好友</div>
             </div>
           </div>
         </div>

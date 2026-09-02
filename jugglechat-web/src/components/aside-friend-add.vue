@@ -88,7 +88,7 @@ watch(() => props.isShow, () => {
       <div class="tyn-aside-search">
         <div class="form-group tyn-pill">
           <div class="form-control-wrap">
-            <div class="form-control-icon start wr wr-search"></div>
+            <div class="form-control-icon start wr jg-icon-search"></div>
             <input type="search" class="form-control form-control-solid" placeholder="输入手机号回车搜索好友"
               @keydown.enter.self="onSearch" v-model="state.phone" @input="onInput"/>
             <label class="form-label" for="email-address">
@@ -110,7 +110,7 @@ watch(() => props.isShow, () => {
             </div>
             <div class="tyn-media-col">
               <div class="tyn-media-row m-friend-add-btn" @click.stop="onAdd(user)">
-                <div class="wr" :class="[user.is_friend ? 'wr-success' : 'wr-plus']"></div>
+                <div class="wr" :class="[user.is_friend ? 'jg-icon-success' : 'jg-icon-add']"></div>
               </div>
             </div>
           </div>

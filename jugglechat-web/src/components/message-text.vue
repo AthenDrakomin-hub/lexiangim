@@ -176,8 +176,8 @@ function onRetry(){
         
         <Reaction :is-show="!utils.isEmpty(props.message.reactions)" :reactions="props.message.reactions" @oncancel="onChoiceEmoji"></Reaction>
 
-        <div class="wr message-state wr-circle" @click.stop="onShowReadDetail(true)"
-          :class="{ 'wr-dui': props.message.isRead && !messageUtils.isGroup(props.message) || props.message.unreadCount == 0, 'message-read': props.message.isRead && !messageUtils.isGroup(props.message) || props.message.readCount > 0 }"
+        <div class="wr message-state jg-icon-circle" @click.stop="onShowReadDetail(true)"
+          :class="{ 'jg-icon-check': props.message.isRead && !messageUtils.isGroup(props.message) || props.message.unreadCount == 0, 'message-read': props.message.isRead && !messageUtils.isGroup(props.message) || props.message.readCount > 0 }"
           v-if="props.message.sentState == 2 && props.message.isSender && !props.isRead">
 
           <div v-if="messageUtils.isGroup(props.message) && props.message.readCount > 0 && props.message.unreadCount > 0"
@@ -192,9 +192,9 @@ function onRetry(){
         </div>
 
         <div class="wr message-state message-send-loading message-sending" v-if="props.message.sentState == 1"></div>
-        <div class="wr wr-failed message-state message-failed" v-if="props.message.sentState == 3" @click.stop="onResend"></div>
+        <div class="wr jg-icon-failed message-state message-failed" v-if="props.message.sentState == 3" @click.stop="onResend"></div>
         <div v-if="props.message.sentState == 3" class="jg-msg-retry" @click.stop="onRetry">
-          <span class="wr wr-retry"></span>
+          <span class="wr jg-icon-retry"></span>
           <span>发送失败，点击重试</span>
         </div>
 

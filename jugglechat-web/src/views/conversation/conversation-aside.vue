@@ -353,12 +353,12 @@ watch(() => props.isShow, () => {
           <div class="tyn-aside-member-name">{{ member.name }}</div>
         </div>
         <div class="tyn-aside-member" @click="onShowFriendAdd(true)">
-          <div class="tyn-media jg-size-md tyn-chat-aside-avatar wr wr-plus border"></div>
+          <div class="tyn-media jg-size-md tyn-chat-aside-avatar wr jg-icon-add border"></div>
           <div class="tyn-aside-member-name">添加</div>
         </div>
         <div class="tyn-aside-member" @click="onShowMemberRemove(props.conversation.conversationId)"
           v-if="utils.isEqual(props.conversation.conversationType, ConversationType.GROUP)">
-          <div class="tyn-media jg-size-md tyn-chat-aside-avatar wr wr-jian border"></div>
+          <div class="tyn-media jg-size-md tyn-chat-aside-avatar wr jg-icon-subtract border"></div>
           <div class="tyn-aside-member-name">移除</div>
         </div>
       </div>
@@ -388,18 +388,18 @@ watch(() => props.isShow, () => {
           </li>
           <li class="jg-aside-li jg-aside-bli" v-if="state.group.my_role == GROUP_ROLE.OWNER" @click="onShowTransferGroupOwner(true)">
             <div class="tyn-aside-title">转让群主</div>
-            <span class="tyn-aside-icon wr wr-right"></span>
+            <span class="tyn-aside-icon wr jg-icon-arrow-right"></span>
           </li>
           <li class="jg-bottom-line"></li>
         </ul>
         <ul class="jg-aside-ul">
           <li class="jg-aside-li jg-aside-bli" @click="onShowTranslator(true)">
             <div class="tyn-aside-title">接收消息自动翻译</div>
-            <span class="tyn-aside-icon wr wr-right"></span>
+            <span class="tyn-aside-icon wr jg-icon-arrow-right"></span>
           </li>
           <li class="jg-aside-li jg-aside-bli" @click="onShowGroupQrCode(true)">
             <div class="tyn-aside-title">群组二维码</div>
-            <span class="tyn-aside-icon wr wr-right"></span>
+            <span class="tyn-aside-icon wr jg-icon-arrow-right"></span>
           </li>
           <li class="jg-bottom-line"></li>
         </ul>

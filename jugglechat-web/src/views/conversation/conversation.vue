@@ -875,7 +875,7 @@ watch(() => state.content, (val) => {
     <div class="tyn-chat-head">
       <ul class="tyn-list-inline d-md-none ms-n1 h5-list">
         <li>
-          <button class="btn btn-icon btn-md btn-pill btn-transparent js-toggle-main wr wr-left"
+          <button class="btn btn-icon btn-md btn-pill btn-transparent js-toggle-main wr jg-icon-arrow-left"
             @click="onHideBack"></button>
         </li>
       </ul>
@@ -895,14 +895,14 @@ watch(() => state.content, (val) => {
         </div>
       </div>
       <ul class="tyn-list-inline gap gap-3 ms-auto">
-        <li><button class="btn btn-icon btn-light wr wr-gpt" @click="onAskAI()"></button></li>
-        <li v-if="!conversationTools.isGroup(state.currentConversation)"><button class="btn btn-icon btn-light wr wr-rtc-mic jg-op-icon" @click="onShowCall(true, MediaType.AUDIO)"></button></li>
-        <li><button class="btn btn-icon btn-light wr wr-rtc-camera jg-op-icon" @click="onShowCall(true, MediaType.VIDEO)"></button></li>
-        <li><button class="btn btn-icon btn-light wr wr-more-dot" @click="onShowAside"></button></li>
+        <li><button class="btn btn-icon btn-light wr jg-icon-ai" @click="onAskAI()"></button></li>
+        <li v-if="!conversationTools.isGroup(state.currentConversation)"><button class="btn btn-icon btn-light wr jg-icon-mic jg-op-icon" @click="onShowCall(true, MediaType.AUDIO)"></button></li>
+        <li><button class="btn btn-icon btn-light wr jg-icon-camera jg-op-icon" @click="onShowCall(true, MediaType.VIDEO)"></button></li>
+        <li><button class="btn btn-icon btn-light wr jg-icon-more-dot" @click="onShowAside"></button></li>
       </ul>
       <div class="jg-pinned-box" v-if="!utils.isEmpty(state.pinnedMessage)">
         <div class="jg-pinned-info">
-          <div class="jg-pinned-icon wr wr-top-s"></div>
+          <div class="jg-pinned-icon wr jg-icon-top-s"></div>
           <ul class="jg-pinned-content">
             <li class="jg-pinned-item content">
               <div class="tyn-avatar tyn-s-avatar jg-top-avatar" :style="{ 'background-image': 'url(' + state.pinnedMessage.message.sender.portrait + ')' }"></div>
@@ -912,7 +912,7 @@ watch(() => state.content, (val) => {
           </ul>
         </div>
         <ul class="jg-pinned-tools">
-          <li class="jg-pinned-item wr wr-close" @click.stop="onUnpinned"></li>
+          <li class="jg-pinned-item wr jg-icon-close" @click.stop="onUnpinned"></li>
         </ul>
       </div>
     </div>
@@ -936,7 +936,7 @@ watch(() => state.content, (val) => {
             <GroupNtfMessage v-else-if="message.name == MSG_NAME.GROUP_NTF" :message="message"></GroupNtfMessage>
             <FriendNtfMessage v-else-if="message.name == MSG_NAME.FRIEND_NTF" :message="message"></FriendNtfMessage>
             <div class="tny-conent-msg" v-else>
-              <span class="tyn-transfer wr" v-if="state.isShowTransfer" :class="{'wr-success-square': message.isSelected, 'wr-square': !message.isSelected}" @click="onSelected(message)"></span>
+              <span class="tyn-transfer wr" v-if="state.isShowTransfer" :class="{'jg-icon-success-square': message.isSelected, 'jg-icon-square': !message.isSelected}" @click="onSelected(message)"></span>
               <div class="tyn-reply-item" :class="[message.isSender ? 'outgoing' : 'ingoing', state.isShowTransfer ? 'tny-message' : '']"  @click="onSelected(message)">
 
                 <Text v-if="utils.isEqual(message.name, MessageType.TEXT)" :message="message"
@@ -1004,7 +1004,7 @@ watch(() => state.content, (val) => {
       <div class="tyn-chat-form-enter jg-conversation-input">
         <ul class="tyn-list-inline me-n2 my-1 tyn-chat-file">
           <li class="d-sm-block">
-            <div class="btn btn-icon btn-light btn-md btn-pill wr wr-huixing tyn-input-file" @click="onFileClick"></div>
+            <div class="btn btn-icon btn-light btn-md btn-pill wr jg-icon-reply tyn-input-file" @click="onFileClick"></div>
             <input type="file" style="display: none;"
               @change="onFileChange" />
           </li>
@@ -1013,10 +1013,10 @@ watch(() => state.content, (val) => {
           @keydown.up.prevent="onInputUp" @keydown.down.prevent="onInputDown" @paste="onPaste" placeholder="输入消息，开启乐享沟通..." ref="messageInput"/>
         <ul class="tyn-list-inline me-n2 my-1">
           <li class="d-sm-block">
-            <div type="file" class="btn btn-icon btn-light btn-md btn-pill wr wr-smile j-pointer" @click="onShowEmoji(true)" ></div>
+            <div type="file" class="btn btn-icon btn-light btn-md btn-pill wr jg-icon-emoji j-pointer" @click="onShowEmoji(true)" ></div>
           </li>
           <li class="d-sm-block tyn-input-block">
-            <button :class="{'tyn-chat-has-content': state.content.length > 0}" class="btn btn-icon btn-light btn-md btn-pill  wr wr-send j-pointer" @click="onSend()"></button>
+            <button :class="{'tyn-chat-has-content': state.content.length > 0}" class="btn btn-icon btn-light btn-md btn-pill  wr jg-icon-send j-pointer" @click="onSend()"></button>
           </li>
         </ul>
       </div>
