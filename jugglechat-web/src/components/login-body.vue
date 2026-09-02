@@ -222,6 +222,7 @@ function onShowServerSetting(isShow) {
               class="lx-input"
               v-model="state.user.account"
               placeholder="账号"
+              aria-label="账号"
               @input="onInput()"
               @keydown.enter="onLogin()"
             >
@@ -234,6 +235,7 @@ function onShowServerSetting(isShow) {
                 class="lx-input"
                 v-model="state.user.password"
                 placeholder="密码"
+                aria-label="密码"
                 @input="onInput()"
                 @keydown.enter="onLogin()"
               >
@@ -262,6 +264,7 @@ function onShowServerSetting(isShow) {
               class="lx-input"
               v-model="state.user.account"
               placeholder="账号（4-20位）"
+              aria-label="账号"
               @input="onInput()"
               @keydown.enter="onRegister()"
             >
@@ -273,6 +276,7 @@ function onShowServerSetting(isShow) {
               class="lx-input"
               v-model="state.nickname"
               placeholder="昵称"
+              aria-label="昵称"
               @input="onInput()"
               @keydown.enter="onRegister()"
             >
@@ -284,6 +288,7 @@ function onShowServerSetting(isShow) {
               class="lx-input"
               v-model="state.user.password"
               placeholder="设置密码（至少6位）"
+              aria-label="密码"
               @input="onInput()"
               @keydown.enter="onRegister()"
             >
@@ -295,6 +300,7 @@ function onShowServerSetting(isShow) {
               class="lx-input"
               v-model="state.confirmPassword"
               placeholder="确认密码"
+              aria-label="确认密码"
               @input="onInput()"
               @keydown.enter="onRegister()"
             >
@@ -302,7 +308,7 @@ function onShowServerSetting(isShow) {
           </div>
           <div class="lx-terms-wrap">
             <label class="lx-terms-checkbox">
-              <input type="checkbox" v-model="state.agreeTerms">
+              <input type="checkbox" v-model="state.agreeTerms" aria-label="我已阅读并同意用户协议和隐私政策">
               <span>我已阅读并同意</span>
             </label>
             <a href="https://juggle.im/jc/user.html" target="_blank" class="lx-terms-link">《用户协议》</a>
