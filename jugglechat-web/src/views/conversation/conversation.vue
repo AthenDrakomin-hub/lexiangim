@@ -39,6 +39,7 @@ import emitter from "../../common/emmit";
 import { Group, AI } from "../../services/index";
 import { DynamicScroller, DynamicScrollerItem } from "vue-virtual-scroller";
 import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
+import { throttle } from 'lodash-es';
 
 const props = defineProps(['conversation']);
 const emit = defineEmits(["ondraft", "onclearmsg", "onquitgroup", "ontop", "ondisturb", "onback"]);
@@ -243,7 +244,7 @@ emitter.$on(EVENT_NAME.SEND_MESSAGE, (msg) => {
 let canscroll = true;
 nextTick(() => {
   let { messages } = context.refs;
-  messages.addEventListener("scroll", () => {
+  messages.addEventListener("scroll", throttle(() => {
     if (canscroll) {
       let scrollTop = messages.scrollTop;
       // if (utils.isEqual(scrollTop, 0)) {
@@ -267,7 +268,7 @@ nextTick(() => {
         });
       }
     }
-  });
+  }, 100));
 })
 
 emitter.$on(EVENT_NAME.ON_GROUP_MEMBER_ADDED, ({ members }) => {
@@ -311,6 +312,7 @@ watch(() => props.conversation, (newConversation, oldConversation) => {
   state.loadError = null;
   conversationTools.getMessages(isFirst, () => {
     scrollBottom();
+    inputFocus();
     state.isLoadingMore = false;
     state.loadError = null;
   }, state, props).catch((err) => {
@@ -326,6 +328,7 @@ state.isLoadingMore = true;
 state.loadError = null;
 conversationTools.getMessages(true, () => {
   scrollBottom();
+  inputFocus();
   state.isLoadingMore = false;
   state.loadError = null;
 }, state, props).catch((err) => {
@@ -949,7 +952,8 @@ watch(() => state.content, (val) => {
         </div>
       </div>
       <ul class="tyn-list-inline gap gap-3 ms-auto">
-        <li><button class="btn btn-icon btn-light wr jg-icon-ai" @click="onAskAI()"></button></li>
+        <!-- AI功能暂未启用（后端需配置open_ai_assistant和AssistantAgentUrl） -->
+        <!-- <li><button class="btn btn-icon btn-light wr jg-icon-ai" @click="onAskAI()"></button></li> -->
         <li v-if="!conversationTools.isGroup(state.currentConversation)"><button class="btn btn-icon btn-light wr jg-icon-mic jg-op-icon" @click="onShowCall(true, MediaType.AUDIO)"></button></li>
         <li><button class="btn btn-icon btn-light wr jg-icon-camera jg-op-icon" @click="onShowCall(true, MediaType.VIDEO)"></button></li>
         <li><button class="btn btn-icon btn-light wr jg-icon-more-dot" @click="onShowAside"></button></li>
@@ -971,7 +975,7 @@ watch(() => state.content, (val) => {
       </div>
     </div>
 <div class="tyn-chat-body js-scroll-to-end" ref="messages" :class="{'tyn-h5-chat-body': !utils.isUniapp()}">
-      <div v-if="state.isLoadingMore" class="jg-msg-loading-skeleton">
+      <div v-if="state.isLoadingMore && state.messages.length === 0" class="jg-msg-loading-skeleton">
         <SkeletonMessage />
       </div>
       <div v-else-if="state.loadError" class="jg-msg-load-error">

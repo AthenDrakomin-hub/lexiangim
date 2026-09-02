@@ -14,21 +14,18 @@ const props = defineProps(["isShow"]);
 const emit = defineEmits(["oncancel"]);
 let juggle = im.getCurrent();
 let state = reactive({
-  phone: '',
+  keyword: '',
   users: []
 });
 function onCancel() {
   emit('oncancel', {});
 }
 function onSearch() {
-  let { phone } = state;
-  if (utils.isEmpty(phone)) {
-    return state.errorMsg = '手机号不能为空';
+  let { keyword } = state;
+  if (utils.isEmpty(keyword)) {
+    return state.errorMsg = '搜索内容不能为空';
   }
-  if (!utils.isPhoneNumber(phone)) {
-    return state.errorMsg = '手机号格式不正确';
-  }
-  User.search({ phone }).then((result) => {
+  User.search({ keyword }).then((result) => {
     let { code, data } = result;
     if(!utils.isEqual(code, RESPONSE.SUCCESS)){
       utils.extend(state, { errorMsg: '没有找到用户', users: [] });
@@ -47,7 +44,7 @@ function onAdd(_user){
   if(_user.is_friend){
     return;
   }
-  utils.extend(state, { phone: '', users: [] });
+  utils.extend(state, { keyword: '', users: [] });
   let friend = { friendId: _user.user_id };
   let user = Storage.get(STORAGE.USER_TOKEN);
   Friend.add(friend).then((result) => {
@@ -70,13 +67,13 @@ function onAdd(_user){
 
 function onInput(){
   state.errorMsg = '';
-  if(utils.isEqual(0, state.phone.length)){
+  if(utils.isEqual(0, state.keyword.length)){
     state.users = [];
   }
 }
 watch(() => props.isShow, () => {
   if(!props.isShow){
-    utils.extend(state, { users: [], phone: '' })
+    utils.extend(state, { users: [], keyword: '' })
   }
 });
 
@@ -89,8 +86,8 @@ watch(() => props.isShow, () => {
         <div class="form-group tyn-pill">
           <div class="form-control-wrap">
             <div class="form-control-icon start wr jg-icon-search"></div>
-            <input type="search" class="form-control form-control-solid" placeholder="输入手机号回车搜索好友"
-              @keydown.enter.self="onSearch" v-model="state.phone" @input="onInput"/>
+            <input type="search" class="form-control form-control-solid" placeholder="输入账号/昵称/手机号搜索好友"
+              @keydown.enter.self="onSearch" v-model="state.keyword" @input="onInput"/>
             <label class="form-label" for="email-address">
               <span class="small ms-2 text-danger">{{ state.errorMsg }}</span>
             </label>
