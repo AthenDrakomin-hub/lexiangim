@@ -26,6 +26,7 @@ import GroupNtfMessage from '../../components/message-group-notify.vue';
 import FriendNtfMessage from '../../components/message-friend-notify.vue';
 import Call1v1FinishedMessage from '../../components/message-1v1-finished.vue';
 import ContactCard from '../../components/message-contact-card.vue';
+import SkeletonMessage from '../../components/SkeletonMessage.vue';
 
 import utils from "../../common/utils";
 import conversationTools from "./conversation";
@@ -84,6 +85,8 @@ let state = reactive({
   group: {},
 
   pinnedMessage: {},
+  isLoadingMore: false,
+  loadError: null,
 });
 
 juggle.once(Event.MESSAGE_RECEIVED, (message) => {
@@ -252,9 +255,16 @@ nextTick(() => {
           return console.log('messages is empty')
         }
         let isFirst = false;
+        state.isLoadingMore = true;
+        state.loadError = null;
         conversationTools.getMessages(isFirst, () => {
           canscroll = true;
-        }, state, props);
+          state.isLoadingMore = false;
+          state.loadError = null;
+        }, state, props).catch((err) => {
+          state.isLoadingMore = false;
+          state.loadError = err;
+        });
       }
     }
   });
@@ -297,17 +307,31 @@ watch(() => props.conversation, (newConversation, oldConversation) => {
   })
   onCancelReply();
   let isFirst = true;
+  state.isLoadingMore = true;
+  state.loadError = null;
   conversationTools.getMessages(isFirst, () => {
     scrollBottom();
-  }, state, props);
+    state.isLoadingMore = false;
+    state.loadError = null;
+  }, state, props).catch((err) => {
+    state.isLoadingMore = false;
+    state.loadError = err;
+  });
   conversationTools.getTopMessage(state, props.conversation);
 })
 
 conversationTools.getTopMessage(state, props.conversation);
 
+state.isLoadingMore = true;
+state.loadError = null;
 conversationTools.getMessages(true, () => {
   scrollBottom();
-}, state, props);
+  state.isLoadingMore = false;
+  state.loadError = null;
+}, state, props).catch((err) => {
+  state.isLoadingMore = false;
+  state.loadError = err;
+});
 
 function scrollBottom() {
   nextTick(() => {
@@ -315,6 +339,36 @@ function scrollBottom() {
     if (messages) {
       messages.scrollTop = messages.scrollHeight;
     }
+  });
+}
+function onRetryLoad() {
+  state.loadError = null;
+  state.isLoadingMore = true;
+  let { conversationType, conversationId } = state.currentConversation;
+  let params = { time: 0, conversationType, conversationId };
+  juggle.getMessages(params).then((result) => {
+    let { messages: msgs, isFinished } = result;
+    msgs.reverse();
+    utils.forEach(msgs, (message) => {
+      let numIndex = utils.find(state.messages, (msg) => {
+        return utils.isEqual(msg.messageId, message.messageId);
+      });
+      if (numIndex == -1) {
+        state.messages.unshift(message);
+      }
+    });
+    state.isFinished = isFinished;
+    state.isLoadingMore = false;
+    state.loadError = null;
+    nextTick(() => {
+      let { messages } = context.refs;
+      if (messages) {
+        messages.scrollTop = 0;
+      }
+    });
+  }).catch((err) => {
+    state.isLoadingMore = false;
+    state.loadError = err;
   });
 }
 function onPreviewImage(image) {
@@ -917,6 +971,13 @@ watch(() => state.content, (val) => {
       </div>
     </div>
 <div class="tyn-chat-body js-scroll-to-end" ref="messages" :class="{'tyn-h5-chat-body': !utils.isUniapp()}">
+      <div v-if="state.isLoadingMore" class="jg-msg-loading-skeleton">
+        <SkeletonMessage />
+      </div>
+      <div v-else-if="state.loadError" class="jg-msg-load-error">
+        <span>加载历史消息失败</span>
+        <button class="jg-msg-retry-btn wr jg-icon-retry" @click="onRetryLoad"></button>
+      </div>
       <WithoutMessage v-if="state.isFinished"></WithoutMessage>
       <DynamicScroller
         :items="state.messages"

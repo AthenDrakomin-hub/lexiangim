@@ -29,7 +29,7 @@ function clearUnreadCount(conversation){
 
 function getMessages(isFirst, callback, state, props) {
   if(!im.isConnected()){
-    return;
+    return Promise.reject(new Error('IM not connected'));
   }
   callback = callback || utils.noop;
   let { conversationType, conversationId, latestMessage } = props.conversation;
