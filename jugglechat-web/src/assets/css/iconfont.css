@@ -401,6 +401,9 @@
  -webkit-animation: flowCss 3s infinite linear;
   text-align: center;
 }
+.wr-retry::before{
+  content: '\e6a0';
+}
 @-webkit-keyframes flowCss {
   0% {
     background-position: 0 0;

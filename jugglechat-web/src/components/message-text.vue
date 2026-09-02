@@ -1,6 +1,6 @@
 <script setup>
 const props = defineProps(['message', 'isRead']);
-const emit = defineEmits(["onrecall", "onmodify", 'ontransfer', 'onreply', 'onreaction', 'onresend', 'onpinned', 'onfav']);
+const emit = defineEmits(["onrecall", "onmodify", 'ontransfer', 'onreply', 'onreaction', 'onresend', 'onpinned', 'onfav', 'onretry']);
 
 import { reactive, watch, getCurrentInstance } from "vue";
 import GroupReads from "./group-reads.vue";
@@ -144,6 +144,9 @@ function onChoiceEmoji(item){
 function onResend(){
   emit('onresend', { message: props.message });
 }
+function onRetry(){
+  emit('onretry', { message: props.message });
+}
 </script>
 
 <template>
@@ -190,6 +193,10 @@ function onResend(){
 
         <div class="wr message-state message-send-loading message-sending" v-if="props.message.sentState == 1"></div>
         <div class="wr wr-failed message-state message-failed" v-if="props.message.sentState == 3" @click.stop="onResend"></div>
+        <div v-if="props.message.sentState == 3" class="jg-msg-retry" @click.stop="onRetry">
+          <span class="wr wr-retry"></span>
+          <span>发送失败，点击重试</span>
+        </div>
 
         <div class="jg-message-senttime">{{ utils.formatTimetoHM(props.message.sentTime) }}</div>
       </div>

@@ -9,7 +9,7 @@ import ReactionEmoji from "../components/emoji-reaction.vue"
 import Reaction from "./message-reaction.vue";
 
 const props = defineProps(["message", "isRead"]);
-const emit = defineEmits(["onrecall", "ontransfer", "onreply", "onpinned", "onfav"]);
+const emit = defineEmits(["onrecall", "ontransfer", "onreply", "onreaction", "onpinned", "onfav", 'onretry']);
 
 let state = reactive({
   isShowDrop: false,
@@ -66,6 +66,9 @@ function onShowEmojiReaction(isShow){
 function onChoiceEmoji(item){
   emit('onreaction', { ...item, message: props.message });
 }
+function onRetry(){
+  emit('onretry', { message: props.message });
+}
 </script>
  
 <template>
@@ -110,6 +113,10 @@ function onChoiceEmoji(item){
             v-if="state.isShowGroupDetail" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"></div>
         </div>
         <div class="jg-message-senttime" v-if="props.message.sentTime">{{ utils.formatTimetoHM(props.message.sentTime) }}</div>
+        <div v-if="props.message.sentState == 3" class="jg-msg-retry" @click.stop="onRetry">
+          <span class="wr wr-retry"></span>
+          <span>发送失败，点击重试</span>
+        </div>
       </div>
 
       <ul class="tyn-reply-tools">

@@ -1745,6 +1745,24 @@
   font-weight: 700;
   color: #e90f0f;
 }
+.jg-msg-retry {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #e90f0f;
+  background: rgba(233, 15, 15, 0.08);
+  border: 1px solid rgba(233, 15, 15, 0.2);
+  border-radius: var(--jg-radius-sm);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+}
+.jg-msg-retry:hover {
+  background: rgba(233, 15, 15, 0.15);
+}
 .message-send-loading {
   width: 10px;
   aspect-ratio: 1;

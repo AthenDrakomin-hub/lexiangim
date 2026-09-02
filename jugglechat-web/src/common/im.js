@@ -60,6 +60,31 @@ function isConnected(){
   return juggle.isConnected();
 }
 
+const RETRY_MAX_COUNT = 3;
+const RETRY_DELAYS = [1000, 2000, 4000];
+
+function sendWithRetry(msg, callbacks = {}, maxRetries = RETRY_MAX_COUNT) {
+  let retryCount = 0;
+
+  function attempt() {
+    return juggle.sendMessage(msg, callbacks).then(
+      (result) => result,
+      (error) => {
+        if (retryCount < maxRetries) {
+          let delay = RETRY_DELAYS[retryCount] || RETRY_DELAYS[RETRY_DELAYS.length - 1];
+          retryCount++;
+          console.warn(`消息发送失败，${delay / 1000}s 后第 ${retryCount} 次重试...`, error);
+          return new Promise((resolve) => setTimeout(resolve, delay)).then(attempt);
+        }
+        console.error('消息发送最终失败', error);
+        throw error;
+      }
+    );
+  }
+
+  return attempt();
+}
+
 function msgShortFormat(message){
   let { MessageType } = juggle;
   let { name, content, sender, isSender, mentionInfo } = message;
@@ -138,4 +163,5 @@ export default {
   CallEvent,
   CallFinishedReason,
   getRTCEngine,
+  sendWithRetry,
 }
