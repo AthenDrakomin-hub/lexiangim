@@ -34,7 +34,7 @@ let SERVER_PATH = {
   GROUP_TRANSFER_OWNER: 'groups/management/chgowner',
   GROUP_QRCODE: 'groups/qrcode',
 
-  AI_ANSWER: 'assistants/answer',
+  AI_ANSWER: 'ai/answer',
 };
 utils.forEach(SERVER_PATH, (url, name) => {
   let protoclName = location.protocol;

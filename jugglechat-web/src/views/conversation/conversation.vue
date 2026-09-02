@@ -952,8 +952,7 @@ watch(() => state.content, (val) => {
         </div>
       </div>
       <ul class="tyn-list-inline gap gap-3 ms-auto">
-        <!-- AI功能暂未启用（后端需配置open_ai_assistant和AssistantAgentUrl） -->
-        <!-- <li><button class="btn btn-icon btn-light wr jg-icon-ai" @click="onAskAI()"></button></li> -->
+        <li><button class="btn btn-icon btn-light wr jg-icon-ai" @click="onAskAI()"></button></li>
         <li v-if="!conversationTools.isGroup(state.currentConversation)"><button class="btn btn-icon btn-light wr jg-icon-mic jg-op-icon" @click="onShowCall(true, MediaType.AUDIO)"></button></li>
         <li><button class="btn btn-icon btn-light wr jg-icon-camera jg-op-icon" @click="onShowCall(true, MediaType.VIDEO)"></button></li>
         <li><button class="btn btn-icon btn-light wr jg-icon-more-dot" @click="onShowAside"></button></li>
