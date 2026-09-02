@@ -43,13 +43,12 @@ let state = reactive({
     {
       uid: SETTING_KEY_TYPE.UNDISTURB,
       title: '全局免打扰',
-      currentValue: '',
+      currentValue: 'none',
       items: [
-        { name: '允许通知', value: '' },
+        { name: '允许通知', value: 'none' },
         { name: '08:00~12:00', value: '08:00~12:00' },
         { name: '19:00~20:00', value: '19:00~20:00' },
         { name: '23:00~06:00', value: '23:00~06:00' },
-        
       ]
     }
   ]
@@ -68,10 +67,14 @@ function getUser(){
       utils.forEach(state.settings, (setting) => {
         let { uid } = setting;
         let value = result[uid];
-        if(utils.isEqual(uid, SETTING_KEY_TYPE.UNDISTURB) && undisturb){
-          let item = utils.parse(undisturb);
-          let rule = item.rules[0] || {};
-          value = `${rule.start}~${rule.end}`;
+        if(utils.isEqual(uid, SETTING_KEY_TYPE.UNDISTURB)){
+          if(undisturb){
+            let item = utils.parse(undisturb);
+            let rule = item.rules[0] || {};
+            value = `${rule.start}~${rule.end}`;
+          }else{
+            value = 'none';
+          }
         }
         utils.extend(setting, { currentValue: value });
       });
@@ -82,13 +85,16 @@ function getUser(){
 function formatTimes(result){
   let { value, uid } = result;
   let _value = value;
-  if(utils.isEqual(uid, SETTING_KEY_TYPE.UNDISTURB) && value){
+  if(utils.isEqual(uid, SETTING_KEY_TYPE.UNDISTURB) && value && value !== 'none'){
     let items = value.split('~');
     _value = utils.toJSON({
       switch: true,
       timezone: 'Asia/Shanghai',
       rules: [{ start: items[0], end: items[1] }]
     });
+  }
+  if(utils.isEqual(uid, SETTING_KEY_TYPE.UNDISTURB) && value === 'none'){
+    _value = '';
   }
   let data = {};
   data[uid] = _value;

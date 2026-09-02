@@ -5,7 +5,7 @@ type User struct {
 	Nickname string `json:"nickname"`
 	Avatar   string `json:"avatar"`
 	Pinyin   string `json:"pinyin"`
-	UserType int    `json:"user_type"`
+	VipLevel int    `json:"vip_level"`
 	Phone    string `json:"phone"`
 	Email    string `json:"email"`
 	Account  string `json:"account"`

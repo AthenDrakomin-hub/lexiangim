@@ -1,4 +1,4 @@
-﻿let EVENT_NAME = {
+let EVENT_NAME = {
   CONVERSATION_HIDE_SEARCH: 'on_hide_search',
   ON_USER_INFO_UPDATE: 'on_user_info_updated',
   UN_UNATHORIZED: 'unathorized',

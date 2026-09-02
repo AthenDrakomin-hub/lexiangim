@@ -25,7 +25,7 @@ let state = reactive({
   isFinished: false,
   // 编辑用户弹窗
   showEditDialog: false,
-  editUser: { user_id: '', nickname: '' },
+  editUser: { user_id: '', nickname: '', vip_level: 0 },
   editErrorMsg: '',
   // 重置密码弹窗
   showResetPwdDialog: false,
@@ -71,7 +71,7 @@ function onCallback(result, text){
 
 // 编辑用户
 function onShowEdit(item){
-  state.editUser = { user_id: item.user_id, nickname: item.nickname };
+  state.editUser = { user_id: item.user_id, nickname: item.nickname, vip_level: item.vip_level || 0 };
   state.editErrorMsg = '';
   state.showEditDialog = true;
 }
@@ -83,15 +83,19 @@ function onEditSave(){
   UserManager.updateProfile({
     app_key: app_key,
     user_id: state.editUser.user_id,
-    nickname: state.editUser.nickname.trim()
+    nickname: state.editUser.nickname.trim(),
+    vip_level: state.editUser.vip_level
   }).then(result => {
     let { code } = result;
     if(utils.isEqual(code, RESPONSE.SUCCESS)){
-      context.proxy.$toast({ icon: 'success', text: '用户昵称更新成功' });
+      context.proxy.$toast({ icon: 'success', text: '用户信息更新成功' });
       state.showEditDialog = false;
-      // 更新列表中的昵称
+      // 更新列表中的昵称和身份
       let user = state.list.find(u => u.user_id === state.editUser.user_id);
-      if (user) user.nickname = state.editUser.nickname.trim();
+      if (user) {
+        user.nickname = state.editUser.nickname.trim();
+        user.vip_level = state.editUser.vip_level;
+      }
     }else{
       context.proxy.$toast({ icon: 'error', text: `更新失败: ${code}` });
     }
@@ -165,6 +169,8 @@ function search(isSearch){
         item.phone = item.phone || '-';
         item.account = item.account || '-';
         item.email = item.email || '-';
+        item.vip_level = item.vip_level || 0;
+        item.vipLevelName = item.vip_level == 1 ? 'VIP' : '普通';
         item.time = format(item.created_time, 'yyyy-MM-dd hh:mm:ss');
         return item;
       });
@@ -211,6 +217,7 @@ search(true)
             <th class="cim-td-c">{{ t('userManager.userList.table.phone') }}</th>
             <th class="cim-td-c">{{ t('userManager.userList.table.email') }}</th>
             <th class="cim-td-c">{{ t('userManager.userList.table.status') }}</th>
+            <th class="cim-td-c">身份</th>
             <th class="cim-td-c">{{ t('userManager.userList.table.operation') }}</th>
           </tr>
         </thead>
@@ -229,6 +236,11 @@ search(true)
             <td class="cim-td-c">{{ item.email}}</td>
             <td class="cim-td-c display_layout">
               <span class="cicon cim-log-status" :class="['cicon-user-state-' + item.status]">{{ item.statusName }}</span>
+            </td>
+            <td class="cim-td-c">
+              <span :class="['user-type-badge', item.vip_level == 1 ? 'type-vip' : 'type-normal']">
+                {{ item.vipLevelName }}
+              </span>
             </td>
             <td class="cim-td-c">
               <ul class="cim-table-tools">
@@ -280,6 +292,14 @@ search(true)
               <label>昵称</label>
               <input type="text" class="form-control" v-model="state.editUser.nickname" placeholder="请输入昵称">
               <span class="text-danger small" v-if="state.editErrorMsg">{{ state.editErrorMsg }}</span>
+            </div>
+            <div class="form-group">
+              <label>用户身份</label>
+              <select class="form-control" v-model="state.editUser.vip_level">
+                <option :value="0">普通用户</option>
+                <option :value="1">VIP用户（可使用客户端管理员功能）</option>
+              </select>
+              <small class="text-muted">VIP用户可使用客户端的多开、IP监控等管理员功能</small>
             </div>
           </div>
           <div class="modal-footer">
@@ -464,5 +484,21 @@ search(true)
 }
 .btn-link.text-danger {
   color: #dc2626;
+}
+/* 用户身份标签 */
+.user-type-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.user-type-badge.type-vip {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff;
+}
+.user-type-badge.type-normal {
+  background: #f3f4f6;
+  color: #6b7280;
 }
 </style>

@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import utils from "../../common/utils";
 import { useRouter } from "vue-router";
 import { reactive, getCurrentInstance, watch } from "vue";
@@ -35,6 +35,7 @@ let state = reactive({
   isShowUserAgreement: false,
   userAgreentUrl: '',
   userAgreentTitle: '',
+  isAdmin: user && user.vip_level === 1
 });
 
 function onLogout(){
@@ -43,6 +44,12 @@ function onLogout(){
 
 function onClick(menu){
   let { event } = menu;
+  // 管理员功能权限检查
+  if(event >= ASIDE_MENU_TYPE.ADMIN_MULTI_ACCOUNT && event <= ASIDE_MENU_TYPE.ADMIN_IP_CHANGES){
+    if(!state.isAdmin){
+      return; // 非管理员不响应
+    }
+  }
   if(utils.isEqual(event, ASIDE_MENU_TYPE.USER_UPDATE)){
     onShowUserUpdateAsider(true);
   }
@@ -63,6 +70,9 @@ function onClick(menu){
   }
   if(utils.isEqual(event, ASIDE_MENU_TYPE.USER_PRIVACY)){
     onShowUserAgreement(true, USER_AGREEMENT.PRIVACY, '隐私协议');
+  }
+  if(utils.isEqual(event, ASIDE_MENU_TYPE.ABOUT)){
+    onShowUserAgreement(true, 'about', '关于乐享');
   }
   if(utils.isEqual(event, ASIDE_MENU_TYPE.USER_LOGOUT)){
     emitter.$emit(EVENT_NAME.UN_UNATHORIZED);
@@ -114,14 +124,19 @@ emitter.$on(EVENT_NAME.ON_USER_INFO_UPDATE, ({ user }) => {
               <li class="jg-li jg-card-li-userinfo">
                 <div class="tyn-avatar jg-header-user-avatar" :style="{ 'background-image': 'url(' + state.user.portrait + ')' }"></div>
                 <div class="jg-header-user-name">{{ state.user.name || state.user.id }}</div>
+                <div class="jg-header-user-signature" v-if="state.user.signature">{{ state.user.signature }}</div>
               </li>
               <li class="jg-li">
                 <div class="label">用户 ID</div>
                 <div class="value">{{ state.user.id }}</div>
               </li>
+              <li class="jg-li" v-if="state.isAdmin">
+                <div class="label">身份</div>
+                <div class="value" style="color: #2563EB;">管理员</div>
+              </li>
             </ul>
           </li>
-          <li class="jg-card" v-for="card in state.cards">
+          <li class="jg-card" v-for="card in state.cards" v-if="!card.isAdmin || state.isAdmin">
             <ul class="jg-ul">
               <li class="jg-li" v-for="menu in card.menus" @click.prevent="onClick(menu)">
                 <a class="wr " :class="{ ['wr-' + menu.icon]: true, 'jg-force-warn-letter': menu.isWarn }">{{ menu.name }}</a>
@@ -153,3 +168,15 @@ emitter.$on(EVENT_NAME.ON_USER_INFO_UPDATE, ({ user }) => {
     @oncancel="onShowUserQrCode(false)">
   </AsiderQrCode>
 </template>
+
+<style scoped>
+.jg-header-user-signature {
+  font-size: 12px;
+  color: #999;
+  margin-top: 4px;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+</style>

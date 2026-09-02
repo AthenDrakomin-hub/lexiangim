@@ -15,16 +15,16 @@ const (
 	UserStatus_Ban    UserStatus = 1
 )
 
-type UserType int
+type VipLevel int
 
 const (
-	UserType_User UserType = 0
-	UserType_Bot  UserType = 1
+	VipLevel_Normal VipLevel = 0
+	VipLevel_VIP  VipLevel = 1
 )
 
 type UserDao struct {
 	ID           int64     `gorm:"primary_key"`
-	UserType     int       `gorm:"user_type"`
+	VipLevel     int       `gorm:"vip_level"`
 	UserId       string    `gorm:"user_id"`
 	Nickname     string    `gorm:"nickname"`
 	UserPortrait string    `gorm:"user_portrait"`
@@ -105,22 +105,22 @@ func (user UserDao) UpdateBotProfile(appkey, userId, nickname, portrait, pinyin 
 		updates["pinyin"] = pinyin
 	}
 	return dbcommons.GetDb().Model(&UserDao{}).
-		Where("app_key=? and user_id=? and user_type=?", appkey, userId, UserType_Bot).
+		Where("app_key=? and user_id=? and vip_level=?", appkey, userId, VipLevel_VIP).
 		Updates(updates).Error
 }
 
 func (user UserDao) QryUsers(appkey, name string, startId, limit int64, isPositiveOrder bool) ([]*UserDao, error) {
-	return user.qryByUserType(int(UserType_User), appkey, name, startId, limit, isPositiveOrder)
+	return user.qryByVipLevel(int(VipLevel_Normal), appkey, name, startId, limit, isPositiveOrder)
 }
 
 func (user UserDao) QryBots(appkey, name string, startId, limit int64, isPositiveOrder bool) ([]*UserDao, error) {
-	return user.qryByUserType(int(UserType_Bot), appkey, name, startId, limit, isPositiveOrder)
+	return user.qryByVipLevel(int(VipLevel_VIP), appkey, name, startId, limit, isPositiveOrder)
 }
 
-func (user UserDao) qryByUserType(userType int, appkey, name string, startId, limit int64, isPositiveOrder bool) ([]*UserDao, error) {
+func (user UserDao) qryByVipLevel(VipLevel int, appkey, name string, startId, limit int64, isPositiveOrder bool) ([]*UserDao, error) {
 	var items []*UserDao
-	whereStr := "app_key=? and user_type=?"
-	params := []interface{}{appkey, userType}
+	whereStr := "app_key=? and vip_level=?"
+	params := []interface{}{appkey, VipLevel}
 	orderBy := "id desc"
 	if isPositiveOrder {
 		orderBy = "id asc"
@@ -147,7 +147,7 @@ func (user UserDao) UpdateUserProfile(appkey, userId, nickname, portrait string)
 		updates["user_portrait"] = portrait
 	}
 	return dbcommons.GetDb().Model(&UserDao{}).
-		Where("app_key=? and user_id=? and user_type=?", appkey, userId, UserType_User).
+		Where("app_key=? and user_id=? and vip_level=?", appkey, userId, VipLevel_Normal).
 		Updates(updates).Error
 }
 

@@ -4,7 +4,7 @@ import ModifyDialog from '../../components/dialog.vue';
 import BindAppDialog from '../../components/dialog-bind-app.vue';
 import { USER_STATE, ErrorType, ROLES, USER_ROLE_TYPE } from "../../common/enum";
 import utils from '../../common/utils';
-import { User } from "../../services";
+import { User, Application } from "../../services";
 import { t } from '@/i18n';
 import PageSection from '@/components/page-section.vue';
 
@@ -14,11 +14,13 @@ let defaltUser = {
   password: '',
   confirmPasswrod: '',
   state: USER_STATE.ENABLE,
-  role: USER_ROLE_TYPE.ADMIN
+  role: USER_ROLE_TYPE.ADMIN,
+  app_key: ''
 }
 let state = reactive({
   users: [],
   roles: utils.clone(ROLES),
+  apps: [], // 应用列表
   radios: [
     { name: 'type', value: USER_STATE.ENABLE, label: 'Enable', labelKey: 'userManager.action.enable' },
     { name: 'type', value: USER_STATE.DISABLE, label: 'Disable', labelKey: 'userManager.action.disable' },
@@ -35,9 +37,25 @@ let state = reactive({
 
   // 修改角色弹窗
   showRoleDialog: false,
-  roleUser: { account: '', role_type: USER_ROLE_TYPE.USER },
+  roleUser: { account: '', role_type: USER_ROLE_TYPE.USER, app_key: '' },
   roleErrorMsg: '',
 });
+
+// 加载应用列表
+function loadApps() {
+  Application.getList().then(({ data }) => {
+    if (data && data.items) {
+      state.apps = data.items.map(item => ({
+        app_key: item.app_key,
+        app_name: item.app_name
+      }));
+    }
+  }).catch(() => {
+    // 加载失败时使用默认应用
+    state.apps = [{ app_key: 'LXIM2026PROD001', app_name: '乐享通信' }];
+  });
+}
+loadApps();
 
 User.getUsers().then(({ data }) => {
   let { items } = data;
@@ -132,7 +150,7 @@ function onSave(){
       }
     });
   }
-  User.add({ account, password, state: user.state, role_type: role }).then(({ code }) => {
+  User.add({ account, password, state: user.state, role_type: role, app_key: user.app_key }).then(({ code }) => {
     let icon = 'success', text = t('userManager.feedback.saveSuccess');
     if(utils.isEqual(code, ErrorType.SUCCESS_0.code)){
       user.time = utils.formatTime(Date.now());
@@ -173,7 +191,7 @@ function onBindApp(){
 
 // 修改角色
 function onShowRoleDialog(user){
-  state.roleUser = { account: user.account, role_type: user.role_type };
+  state.roleUser = { account: user.account, role_type: user.role_type, app_key: user.app_key || '' };
   state.roleErrorMsg = '';
   state.showRoleDialog = true;
 }
@@ -182,9 +200,15 @@ function onRoleSave(){
     state.roleErrorMsg = '请选择角色';
     return;
   }
+  // 应用管理员必须绑定应用
+  if (state.roleUser.role_type === USER_ROLE_TYPE.USER && !state.roleUser.app_key) {
+    state.roleErrorMsg = '应用管理员必须选择绑定的应用';
+    return;
+  }
   User.updateRole({
     account: state.roleUser.account,
-    role_type: state.roleUser.role_type
+    role_type: state.roleUser.role_type,
+    app_key: state.roleUser.app_key
   }).then(({ code, msg }) => {
     if(utils.isEqual(code, ErrorType.SUCCESS_0.code)){
       context.proxy.$toast({
@@ -193,9 +217,12 @@ function onRoleSave(){
         duration: 3000
       });
       state.showRoleDialog = false;
-      // 更新列表中的角色
+      // 更新列表中的角色和应用
       let user = state.users.find(u => u.account === state.roleUser.account);
-      if (user) user.role_type = state.roleUser.role_type;
+      if (user) {
+        user.role_type = state.roleUser.role_type;
+        user.app_key = state.roleUser.app_key;
+      }
     }else{
       context.proxy.$toast({
         icon: 'error',
@@ -267,6 +294,14 @@ function onRoleSave(){
           </select>
           <label>{{ t('userManager.field.userRole') }}</label>
         </div>
+        <!-- 应用选择（仅应用管理员需要） -->
+        <div class="form-floating" v-if="state.user.role == USER_ROLE_TYPE.USER">
+          <select class="form-select" v-model="state.user.app_key">
+            <option value="" disabled>请选择绑定的应用</option>
+            <option :value="app.app_key" v-for="app in state.apps" :key="app.app_key">{{ app.app_name }} ({{ app.app_key }})</option>
+          </select>
+          <label>绑定应用（应用管理员必填）</label>
+        </div>
         <input type="password" autocomplete="new-password" style="display: none;" />
       </div>
     </ModifyDialog>
@@ -294,6 +329,15 @@ function onRoleSave(){
               </select>
               <div class="role-tip" v-if="state.roleUser.role_type == USER_ROLE_TYPE.ADMIN">
                 注意：系统管理员全局只能有1个，设置后当前系统管理员将自动降级为应用管理员。
+              </div>
+              <!-- 应用选择（仅应用管理员需要） -->
+              <div class="form-group" v-if="state.roleUser.role_type == USER_ROLE_TYPE.USER" style="margin-top: 15px;">
+                <label>绑定应用</label>
+                <select class="form-control" v-model="state.roleUser.app_key">
+                  <option value="" disabled>请选择绑定的应用</option>
+                  <option :value="app.app_key" v-for="app in state.apps" :key="app.app_key">{{ app.app_name }} ({{ app.app_key }})</option>
+                </select>
+                <small class="text-muted">应用管理员只能管理绑定的应用</small>
               </div>
               <span class="text-danger small" v-if="state.roleErrorMsg">{{ state.roleErrorMsg }}</span>
             </div>

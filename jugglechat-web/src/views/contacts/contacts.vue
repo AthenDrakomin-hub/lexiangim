@@ -2,6 +2,8 @@
 import utils from "../../common/utils";
 import ContactDetail from "./detail.vue";
 import AsiderContactDetail from "../../components/aside-contact-detail.vue";
+import AsiderFriendAdd from "../../components/aside-friend-add.vue";
+import ModalGroups from "../../components/modal-groups.vue";
 import { useRouter } from "vue-router";
 import Dropmenu from "./dropmenu.vue";
 import { reactive, getCurrentInstance, watch } from "vue";
@@ -29,7 +31,7 @@ let tabs = [
 let contacts = [];
 let groups = [];
 let newContacts = [];
-const context = getCurrentInstance();
+const { proxy } = getCurrentInstance();
 let state = reactive({
   tabs: tabs,
   currentTab: tabs[0].type,
@@ -39,6 +41,7 @@ let state = reactive({
   current: {},
   isShowAddFriend: false,
   isShowDetail: false,
+  isShowCreateGroup: false,
 });
 
 function onConversationChanged({ conversations }){
@@ -91,6 +94,12 @@ function onShowProfile(item){
 function onShowDetail(isShow){
   state.isShowDetail = isShow;
 }
+function onShowAddFriend(isShow){
+  state.isShowAddFriend = isShow;
+}
+function onShowCreateGroup(isShow){
+  state.isShowCreateGroup = isShow;
+}
 function onTab(tab){
   if(utils.isEqual(tab.type, CONTACT_TYPE.FRIEND)){
     getFriends();
@@ -116,7 +125,7 @@ function getBots(){
   Friend.getBots({ count: 50 }).then((result) => {
     let { data: { items }, code } = result;
     if(!utils.isEqual(code, RESPONSE.SUCCESS)){
-      return context.proxy.$toast({ text: `获取失败: ${error.code}`, icon: 'error' });
+      return proxy.$toast({ text: `获取失败`, icon: 'error' });
     }
     let list = utils.map(items, (item) => {
       let { bot_id, nickname, avatar } = item;
@@ -136,7 +145,7 @@ function getNewFriends(start = 0){
   Friend.getNewList({ start, count: 50, order: 0 }).then((result) => {
     let { data: { items = [] }, code } = result;
     if(!utils.isEqual(code, RESPONSE.SUCCESS)){
-      return context.proxy.$toast({ text: `获取失败: ${error.code}`, icon: 'error' });
+      return proxy.$toast({ text: `获取失败`, icon: 'error' });
     }
 
     let user = Storage.get(STORAGE.USER_TOKEN);
@@ -202,16 +211,17 @@ function getFriends(startUserId = ''){
   Friend.getList({ userId: user.id, count: 20, startUserId }).then((result) => {
     let { data: { items }, code } = result;
     if(!utils.isEqual(code, RESPONSE.SUCCESS)){
-      return context.proxy.$toast({ text: `获取失败: ${error.code}`, icon: 'error' });
+      return proxy.$toast({ text: `获取失败`, icon: 'error' });
     }
 
     let list = utils.map(items, (item) => {
-      let { user_id, nickname, avatar } = item;
+      let { user_id, nickname, avatar, signature } = item;
       return {
         id: user_id,
         type: CONTACT_TYPE.FRIEND, 
         name: nickname, 
         avatar: avatar || common.getTextAvatar(nickname), 
+        signature: signature || '',
         isSelected: false
       };
     });
@@ -228,7 +238,7 @@ function getGroups(startId = ''){
   Group.getList({ count: 20, startId }).then((result) => {
     let { data: { items }, code } = result;
     if(!utils.isEqual(code, RESPONSE.SUCCESS)){
-      return context.proxy.$toast({ text: `获取失败: ${error.code}`, icon: 'error' });
+      return proxy.$toast({ text: `获取失败`, icon: 'error' });
     }
 
     let list = utils.map(items, (item) => {
@@ -264,6 +274,11 @@ getFriends();
             <button class="nav-link wr" :class="{['wr-' + tab.icon]: true, 'active': tab.isActive}" type="button" @click="onTab(tab)">{{ tab.name }}</button>
           </li>
         </ul>
+        <!-- 操作按钮 -->
+        <div class="jg-contact-actions">
+          <button class="jg-contact-action-btn wr wr-adduser" title="添加好友" @click="onShowAddFriend(true)"></button>
+          <button class="jg-contact-action-btn wr wr-group" title="创建群组" @click="onShowCreateGroup(true)"></button>
+        </div>
       </div>
       <div class="tyn-aside-body">
         <div class="tab-content">
@@ -277,11 +292,31 @@ getFriends();
                   <div class="tyn-media jg-size-rg contact-avatar" :style="{'background-image': 'url(' + item.avatar +')'}"></div>
                   <div class="tyn-media-col">
                     <div class="tyn-media-row"><h6 class="name">{{ item.name }}</h6></div>
+                    <div class="tyn-media-row jg-contact-signature" v-if="item.signature">{{ item.signature }}</div>
                   </div>
                   <div class="jg-friend-applystatus" v-if="utils.isEqual(item.type, CONTACT_TYPE.NEW_FRIEND)">{{ item.statusName }}</div>
                 </div>
               </li>
-              <li class="tyn-aside-item js-toggle-main name tyn-aside-nothing" v-if="state.currentList.length == 0">没有更多了</li>
+              <!-- 空状态 -->
+              <li class="jg-contact-empty" v-if="state.currentList.length == 0">
+                <div class="jg-empty-icon">
+                  <template v-if="utils.isEqual(state.currentTab, CONTACT_TYPE.FRIEND)">👥</template>
+                  <template v-else-if="utils.isEqual(state.currentTab, CONTACT_TYPE.NEW_FRIEND)">📨</template>
+                  <template v-else-if="utils.isEqual(state.currentTab, CONTACT_TYPE.GROUP)">👨‍👩‍👧‍👦</template>
+                  <template v-else>🤖</template>
+                </div>
+                <div class="jg-empty-title">
+                  <template v-if="utils.isEqual(state.currentTab, CONTACT_TYPE.FRIEND)">暂无联系人</template>
+                  <template v-else-if="utils.isEqual(state.currentTab, CONTACT_TYPE.NEW_FRIEND)">暂无新好友请求</template>
+                  <template v-else-if="utils.isEqual(state.currentTab, CONTACT_TYPE.GROUP)">暂无群组</template>
+                  <template v-else>暂无智能体</template>
+                </div>
+                <div class="jg-empty-desc">
+                  <template v-if="utils.isEqual(state.currentTab, CONTACT_TYPE.FRIEND)">点击右上角添加好友按钮开始添加</template>
+                  <template v-else-if="utils.isEqual(state.currentTab, CONTACT_TYPE.GROUP)">点击右上角创建群组按钮创建群组</template>
+                  <template v-else>暂无内容</template>
+                </div>
+              </li>
             </ul>
           </div>
         </div>
@@ -291,4 +326,65 @@ getFriends();
     <ContactDetail v-if="state.isShowDetail && !utils.isMobile()" :current="state.current" @onadded="onAddFriend" @onremoved="onRemoveFriend"></ContactDetail>
   </div>
   <AsiderContactDetail :is-show="state.isShowDetail && utils.isMobile()" :current="state.current" @onadded="onAddFriend" @onremoved="onRemoveFriend" @oncancel="onShowDetail(false)"></AsiderContactDetail>
+  <AsiderFriendAdd :is-show="state.isShowAddFriend" @oncancel="onShowAddFriend(false)"></AsiderFriendAdd>
+  <ModalGroups :is-show="state.isShowCreateGroup" @oncancel="onShowCreateGroup(false)"></ModalGroups>
 </template>
+
+<style scoped>
+.jg-contact-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  padding-right: 12px;
+}
+.jg-contact-action-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.jg-contact-action-btn:hover {
+  background: #f0f0f0;
+}
+.jg-contact-signature {
+  font-size: 12px;
+  color: #999;
+  margin-top: 2px;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.jg-contact-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+.jg-empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+.jg-empty-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+.jg-empty-desc {
+  font-size: 13px;
+  color: #999;
+  line-height: 1.6;
+  max-width: 240px;
+}
+</style>

@@ -56,7 +56,7 @@ func QryBots(ctx context.Context, appkey, userId, name, offset string, limit int
 	storage := dbs.UserDao{}
 	if userId != "" {
 		user, err := storage.FindByUserId(appkey, userId)
-		if err == nil && user != nil && user.UserType == int(dbs.UserType_Bot) {
+		if err == nil && user != nil && user.VipLevel == int(dbs.VipLevel_VIP) {
 			ret.Items = append(ret.Items, userDaoToBot(appkey, user))
 		}
 	} else {
@@ -96,7 +96,7 @@ func UpdateBot(req *apimodels.BotReq) (errs.AdminErrorCode, *apimodels.Bot) {
 	}
 	storage := dbs.UserDao{}
 	user, err := storage.FindByUserId(req.AppKey, req.BotId)
-	if err != nil || user == nil || user.UserType != int(dbs.UserType_Bot) {
+	if err != nil || user == nil || user.VipLevel != int(dbs.VipLevel_VIP) {
 		return errs.AdminErrorCode_ParamError, nil
 	}
 	botInfo := botReqToSdk(req)
@@ -123,7 +123,7 @@ func userDaoToAPI(user *dbs.UserDao) *apimodels.User {
 		Nickname:    user.Nickname,
 		Avatar:      user.UserPortrait,
 		Pinyin:      user.Pinyin,
-		UserType:    user.UserType,
+	VipLevel:    user.VipLevel,
 		Phone:       user.Phone,
 		Email:       user.Email,
 		Status:      int32(user.Status),
@@ -138,7 +138,7 @@ func userDaoToBot(appkey string, user *dbs.UserDao) *apimodels.Bot {
 		Nickname:    user.Nickname,
 		Avatar:      user.UserPortrait,
 		Pinyin:      user.Pinyin,
-		UserType:    user.UserType,
+		UserType:    int(user.VipLevel),
 		CreatedTime: user.CreatedTime.UnixMilli(),
 	}
 	extDao := dbs.UserExtDao{}
@@ -234,7 +234,7 @@ func upsertBotExts(appkey, userId string, conf *apimodels.BotConf, settings *api
 func loadBot(appkey, botId string, req *apimodels.BotReq) *apimodels.Bot {
 	storage := dbs.UserDao{}
 	user, err := storage.FindByUserId(appkey, botId)
-	if err == nil && user != nil && user.UserType == int(dbs.UserType_Bot) {
+	if err == nil && user != nil && user.VipLevel == int(dbs.VipLevel_VIP) {
 		return userDaoToBot(appkey, user)
 	}
 	bot := &apimodels.Bot{
@@ -242,7 +242,7 @@ func loadBot(appkey, botId string, req *apimodels.BotReq) *apimodels.Bot {
 		Nickname:    req.Nickname,
 		Avatar:      req.Avatar,
 		Pinyin:      req.Pinyin,
-		UserType:    int(dbs.UserType_Bot),
+		UserType:    int(dbs.VipLevel_VIP),
 		BotConf:     req.BotConf,
 		BotSettings: req.BotSettings,
 	}

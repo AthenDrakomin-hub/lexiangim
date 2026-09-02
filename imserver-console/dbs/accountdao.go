@@ -19,6 +19,7 @@ type AccountDao struct {
 	// RoleId        int       `gorm:"role_id"`
 	RoleType      int    `gorm:"role_type"`
 	ParentAccount string `gorm:"parent_account"`
+	AppKey        string `gorm:"app_key"` // 应用管理员绑定的应用key
 }
 
 func (admin AccountDao) TableName() string {
@@ -78,6 +79,26 @@ func (admin AccountDao) CountByRoleType(roleType int) (int64, error) {
 	return count, err
 }
 
+// CountByRoleTypeExcludeAccount 统计指定角色类型的账号数量（排除指定账号）
+func (admin AccountDao) CountByRoleTypeExcludeAccount(roleType int, excludeAccount string) (int64, error) {
+	var count int64
+	err := dbcommons.GetDb().Model(&AccountDao{}).Where("role_type=? and account != ?", roleType, excludeAccount).Count(&count).Error
+	return count, err
+}
+
 func (admin AccountDao) UpdateRoleType(account string, roleType int) error {
 	return dbcommons.GetDb().Model(&AccountDao{}).Where("account=?", account).Update("role_type", roleType).Error
+}
+
+// UpdateRoleTypeAndAppKey 更新角色类型和绑定的应用key
+func (admin AccountDao) UpdateRoleTypeAndAppKey(account string, roleType int, appKey string) error {
+	return dbcommons.GetDb().Model(&AccountDao{}).Where("account=?", account).Updates(map[string]interface{}{
+		"role_type": roleType,
+		"app_key":   appKey,
+	}).Error
+}
+
+// UpdateAppKey 更新绑定的应用key
+func (admin AccountDao) UpdateAppKey(account string, appKey string) error {
+	return dbcommons.GetDb().Model(&AccountDao{}).Where("account=?", account).Update("app_key", appKey).Error
 }

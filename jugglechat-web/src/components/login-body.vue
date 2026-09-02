@@ -6,6 +6,7 @@ import { STORAGE, RESPONSE } from "../common/enum";
 import common from "../common/common";
 import Storage from "../common/storage";
 import im from "../common/im";
+import { CONFIG } from "../config";
 import ModalServerSetting from "../components/modal-server-setting.vue";
 
 const props = defineProps(["isLogin", "isAdd", "isShow"]);
@@ -60,7 +61,7 @@ function validateConfirmPassword(pwd, confirm) {
 }
 
 function getApiBase() {
-  return '/jim';
+  return `https://${CONFIG.API}/jim`;
 }
 
 function onLogin() {
@@ -75,7 +76,7 @@ function onLogin() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'AppKey': Storage.get(STORAGE.SERVER_SETTING)?.appkey || 'demo_app'
+      'AppKey': Storage.get(STORAGE.SERVER_SETTING)?.appkey || 'LXIM2026PROD001'
     },
     body: JSON.stringify({ account: account, password: password })
   })
@@ -138,7 +139,7 @@ function onRegister() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'AppKey': Storage.get(STORAGE.SERVER_SETTING)?.appkey || 'demo_app'
+      'AppKey': Storage.get(STORAGE.SERVER_SETTING)?.appkey || 'LXIM2026PROD001'
     },
     body: JSON.stringify({ account: account, password: password, nickname: nickname })
   })

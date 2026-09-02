@@ -77,3 +77,7 @@ docker-compose.override.yml
 # ---------- 测试覆盖率 ----------
 coverage/
 *.coverage
+
+# Go编译产物
+im-server-console-linux
+im-server-linux

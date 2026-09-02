@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, watch, nextTick, getCurrentInstance } from "vue";
+import { reactive, watch, nextTick, getCurrentInstance, ref } from "vue";
 import utils from "../common/utils";
 import common from "../common/common";
 import emitter from "../common/emmit";
@@ -17,7 +17,8 @@ import Merge from './message-merge.vue';
 
 const props = defineProps(["isShow", "right"]);
 const emit = defineEmits(["oncancel"]);
-const context = getCurrentInstance();
+const { proxy } = getCurrentInstance();
+const favmsgs = ref(null);
 let juggle = im.getCurrent();
 let { MessageType } = juggle;
 
@@ -26,7 +27,8 @@ let state = reactive({
   offset: '',
   limit: 20,
   hasMore: true,
-  isPlaying: false
+  isPlaying: false,
+  isLoading: false
 });
 
 function onCancel(){
@@ -40,20 +42,23 @@ function getMessages(params){
     return;
   }
   if(!state.hasMore){
-    return context.proxy.$toast({ text: `没有更多啦`, icon: 'warn' });
+    return proxy.$toast({ text: `没有更多啦`, icon: 'warn' });
   }
   isFetching = true;
+  state.isLoading = true;
   let { limit, offset } = params;
   let { list } = state;
   juggle.getFavoriteMessages(params).then((result) => {
-    let _list = result.list;
+    let _list = result.list || [];
     let hasMore = _list.length >= limit;
     state.list = list.concat(_list);
     utils.extend(state, { offset:result.offset, hasMore });
     isFetching = false;
+    state.isLoading = false;
     canscroll = true;
   }, () => {
     isFetching = false;
+    state.isLoading = false;
   })
 }
 
@@ -68,12 +73,12 @@ function onRemove(message, index){
     }]
   }).then((result) => {
     state.list.splice(index, 1);
+    proxy.$toast({ text: '已取消收藏', icon: 'success' });
   }, (error) => {
-    context.proxy.$toast({ text: `取消收藏失败: ${error.code}`, icon: 'error' });
+    proxy.$toast({ text: `取消收藏失败: ${error.code}`, icon: 'error' });
   });
 }
 function onPlay() {
-  let { video } = context.refs;
   let { isPlaying } = state;
   if (isPlaying) {
     video.pause();
@@ -84,18 +89,19 @@ function onPlay() {
 }
 
 nextTick(() => {
-  let { favmsgs } = context.refs;
-  favmsgs.addEventListener("scroll", () => {
-    let scrollTop = favmsgs.scrollTop;
-    let scrollHeight = favmsgs.scrollHeight;
-    let rectHeight = favmsgs.getBoundingClientRect().height;
-    let isNeedLoad = scrollHeight - scrollTop - rectHeight < 100;
-    if (isNeedLoad && canscroll) {
-      canscroll = false;
-      let { offset, limit } = state;
-      getMessages({ offset, limit });
-    }
-  });
+  if (favmsgs.value) {
+    favmsgs.value.addEventListener("scroll", () => {
+      let scrollTop = favmsgs.value.scrollTop;
+      let scrollHeight = favmsgs.value.scrollHeight;
+      let rectHeight = favmsgs.value.getBoundingClientRect().height;
+      let isNeedLoad = scrollHeight - scrollTop - rectHeight < 100;
+      if (isNeedLoad && canscroll) {
+        canscroll = false;
+        let { offset, limit } = state;
+        getMessages({ offset, limit });
+      }
+    });
+  }
 });
 
 watch(() => props.isShow, () => {
@@ -110,9 +116,21 @@ watch(() => props.isShow, () => {
 </script>
 
 <template>
-  <Asider :is-show="props.isShow" :title="'消息收藏'" :right="props.right" @oncancel="onCancel">
+  <Asider :is-show="props.isShow" :title="'我的收藏'" :right="props.right" @oncancel="onCancel">
     <div class="jg-aside-favorite-body">
-      <ul class="jg-fav-list" ref="favmsgs">
+      <!-- 空状态 -->
+      <div class="jg-empty-state" v-if="state.list.length === 0 && !state.isLoading">
+        <div class="jg-empty-icon">⭐</div>
+        <div class="jg-empty-title">暂无收藏</div>
+        <div class="jg-empty-desc">在聊天中长按消息，选择收藏即可保存到这里</div>
+      </div>
+      <!-- 加载中 -->
+      <div class="jg-loading-state" v-if="state.isLoading && state.list.length === 0">
+        <div class="jg-loading-spinner"></div>
+        <div class="jg-loading-text">加载中...</div>
+      </div>
+      <!-- 收藏列表 -->
+      <ul class="jg-fav-list" ref="favmsgs" v-if="state.list.length > 0">
         <li class="jg-fav-item" v-for="(item, index) in state.list">
           <div class="jg-fav-msg" v-if="utils.isEqual(item.message.name, MessageType.TEXT)">
             <div class="jg-fav-msg-text">{{ item.message.content.content }}</div>
@@ -172,6 +190,76 @@ watch(() => props.isShow, () => {
           </div>
         </li>
       </ul>
+      <!-- 加载更多 -->
+      <div class="jg-load-more" v-if="state.isLoading && state.list.length > 0">
+        <div class="jg-loading-spinner"></div>
+        <span>加载更多...</span>
+      </div>
     </div>
   </Asider>
 </template>
+
+<style scoped>
+.jg-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+.jg-empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+.jg-empty-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+.jg-empty-desc {
+  font-size: 13px;
+  color: #999;
+  line-height: 1.6;
+  max-width: 240px;
+}
+.jg-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+}
+.jg-loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #f0f0f0;
+  border-top-color: #2563EB;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 12px;
+}
+.jg-loading-text {
+  font-size: 13px;
+  color: #999;
+}
+.jg-load-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  gap: 8px;
+  font-size: 13px;
+  color: #999;
+}
+.jg-load-more .jg-loading-spinner {
+  width: 16px;
+  height: 16px;
+  margin-bottom: 0;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+</style>
