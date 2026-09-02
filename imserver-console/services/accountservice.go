@@ -27,6 +27,7 @@ type AccountInfo struct {
 	Account  string
 	RoleType RoleType
 	State    AccountState
+	AppKey   string // 应用管理员绑定的应用key（role_type=1 时有效）
 }
 
 var accountInfoCache *caches.LruCache
@@ -67,6 +68,7 @@ func GetAccountInfo(account string) (*AccountInfo, bool) {
 				Account:  account,
 				State:    AccountState(acc.State),
 				RoleType: RoleType(acc.RoleType),
+				AppKey:   acc.AppKey,
 			}
 			accountInfoCache.Add(account, info)
 			return info, true
@@ -104,6 +106,7 @@ func CheckLogin(account, password string) (errs.AdminErrorCode, *models.Account)
 			ParentAccount: admin.ParentAccount,
 			// RoleId:        admin.RoleId,
 			RoleType:    admin.RoleType,
+			AppKey:      admin.AppKey,
 			CreatedTime: admin.CreatedTime.UnixMilli(),
 			UpdatedTime: admin.UpdatedTime.UnixMilli(),
 		}

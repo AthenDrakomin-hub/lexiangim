@@ -64,8 +64,8 @@ router.beforeEach((to, from, next) => {
   if (user.id && utils.isEqual(to.name, 'Login')) {
     return next({ name: 'ConversationList' });
   }
-  // 未登录用户访问邀请或登录页，正常放行
-  if (!user.id && (utils.isEqual(to.name, 'Invite') || utils.isEqual(to.name, 'Login'))) {
+  // 未登录用户访问邀请、登录或404页，正常放行
+  if (!user.id && (utils.isEqual(to.name, 'Invite') || utils.isEqual(to.name, 'Login') || utils.isEqual(to.name, '404'))) {
     return next();
   }
   // 未登录访问受保护页面，跳转到邀请页

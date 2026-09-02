@@ -137,7 +137,6 @@ if (utils.isEmpty(user)) {
 
 im.connect(user, {
   success: async (_user) => {
-    console.log("conversation connect success", _user);
     // let { tags = [] } = await juggle.getConversationTags();
     let tags = [{id: CONVERATION_TAG_ID.ALL, name: '消息'}]
     utils.forEach(tags, (tag) => {
@@ -186,7 +185,6 @@ function getConversations(isFirst = false, tag, callback = utils.noop) {
   juggle.getConversations(params).then(result => {
     let { conversations: _list } = result;
     _list = common.filterIgnoreConversations(_list);
-    console.log("conversatoins", _list);
     utils.forEach(_list, conversation => {
       let {
         latestMessage,

@@ -1,4 +1,39 @@
 /** 01. FONTS */
+
+/* Poppins — 英文/数字主字体（本地加载） */
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('../fonts/Poppins-Regular.woff') format('woff'),
+       url('../fonts/Poppins-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url('../fonts/Poppins-Medium.woff') format('woff'),
+       url('../fonts/Poppins-Medium.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url('../fonts/Poppins-SemiBold.woff') format('woff'),
+       url('../fonts/Poppins-SemiBold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('../fonts/Poppins-Bold.woff') format('woff'),
+       url('../fonts/Poppins-Bold.ttf') format('truetype');
+}
+
 ol,
 ul,
 dl {
@@ -8,9 +43,20 @@ dl {
 }
 
 :root {
-  --lx-primary: #FF6B35;
-  --lx-primary-light: #FF8F66;
-  --lx-primary-dark: #E55A28;
+  /* ── 全局字体栈：英文用 Poppins，中文回退系统字体 ── */
+  --jg-font-family: 'Poppins', -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+}
+
+body {
+  font-family: var(--jg-font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  --lx-primary: #5865f2;
+  --lx-primary-light: #7289da;
+  --lx-primary-dark: #4752c4;
 }
 
 /** 02. LAYOUT */
@@ -54,7 +100,7 @@ dl {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  background-color: #f1ede7;
+  background-color: #313338;
   z-index: -1;
 }
 
@@ -243,7 +289,7 @@ dl {
 .tyn-aside {
   /* width: var(--aside-width); */
   background: var(--aside-bg);
-  background-image: linear-gradient(120deg, #fff 45%, #f5f5f5);
+  background-image: linear-gradient(120deg, #2b2d31 45%, #1e1f22);
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -307,7 +353,7 @@ dl {
 }
 
 [data-bs-theme="dark"] .jg-footer-active {
-  color: #5eead4;
+  color: #5865f2;
 }
 .jg-asider-footer-item .nav-unreadcount{
   right: -2px;
@@ -340,7 +386,7 @@ dl {
   border-radius: var(--jg-radius-lg);
 }
 .tyn-aside-item.active{
-  background: #cce3ff;
+  background: rgba(88, 101, 242, 0.15);
   border-radius: var(--jg-radius-lg);
   transition: background 0.3s linear;
 }
@@ -359,13 +405,13 @@ dl {
   height: 100%;
   overflow: auto;
   -webkit-app-region: no-drag;
-  background-image: linear-gradient(120deg, #fff 45%, #f5f5f5);
+  background-image: linear-gradient(120deg, #2b2d31 45%, #1e1f22);
 }
 
 /* 深色模式会话列表背景 */
 [data-bs-theme="dark"] .tyn-aside-body {
   background-image: none;
-  background: var(--jg-bg-card);
+  background: #2b2d31;
 }
 .tyn-chat-content{
   -webkit-app-region: no-drag;
@@ -914,11 +960,11 @@ dl {
   flex-direction: column-reverse;
 }
 [data-bs-theme=dark] .tyn-reply {
-  --reply-bg: #2d2d44;
-  --reply-text: #e6e6e6;
-  --reply-anchor-text: var(--bs-primary-500);
+  --reply-bg: #313338;
+  --reply-text: #dbdee1;
+  --reply-anchor-text: var(--bs-primary-400);
   --reply-anchor-hover: var(--bs-primary);
-  --outgoing-message-bg: #1a73e8;
+  --outgoing-message-bg: #5865f2;
   --outgoing-message-text: #ffffff;
 }
 .tyn-reply-preview {
@@ -1640,22 +1686,22 @@ dl {
   --qa-sap-color: var(--bs-gray-700);
 }
 
-/* 品牌色覆盖：乐享橙色 #FF6B35 */
+/* 品牌色覆盖：乐享 Blurple #5865f2 (Discord 风格) */
 :root {
-  --bs-primary: #FF6B35;
-  --bs-primary-rgb: 255, 107, 53;
-  --bs-primary-50: #FFF3ED;
-  --bs-primary-100: #FFE4D6;
-  --bs-primary-200: #FFC9AD;
-  --bs-primary-300: #FFA87E;
-  --bs-primary-400: #FF844D;
-  --bs-primary-500: #FF6B35;
-  --bs-primary-600: #E55A28;
-  --bs-primary-700: #CC491E;
-  --bs-primary-800: #A33A17;
-  --bs-primary-900: #7A2B11;
-  --bs-primary-dark: #7A2B11;
-  --bs-primary-text-emphasis: #5A1F08;
+  --bs-primary: #5865f2;
+  --bs-primary-rgb: 88, 101, 242;
+  --bs-primary-50: rgba(88, 101, 242, 0.1);
+  --bs-primary-100: rgba(88, 101, 242, 0.2);
+  --bs-primary-200: rgba(88, 101, 242, 0.3);
+  --bs-primary-300: #7289da;
+  --bs-primary-400: #5865f2;
+  --bs-primary-500: #5865f2;
+  --bs-primary-600: #4752c4;
+  --bs-primary-700: #3d47b5;
+  --bs-primary-800: #323aa0;
+  --bs-primary-900: #282d8a;
+  --bs-primary-dark: #282d8a;
+  --bs-primary-text-emphasis: #1a1d4a;
   --bs-primary-bg-subtle: #FFF3ED;
   --bs-primary-border-subtle: #FFD4C0;
 }
@@ -2232,7 +2278,7 @@ dl {
 }
 
 [data-bs-theme="dark"] .lx-terms-link {
-  color: #5eead4;
+  color: #5865f2;
 }
 
 /* 侧边栏工具深色模式 */

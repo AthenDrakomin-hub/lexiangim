@@ -1,4 +1,4 @@
-# 乐享 IM - 即时通讯平台
+# 乐享 IM v1.0.0 - 即时通讯平台
 
 > 乐享，让沟通更快乐。基于 JuggleIM 深度二开的全链路即时通讯平台，支持千人在线。
 
@@ -81,16 +81,6 @@ lexiangim/
 │   ├── README.md                 # 乐享版后台 README
 │   └── go.mod
 │
-├── deploy/                        # 生产环境部署包
-│   ├── im-server/Dockerfile      # im-server 多阶段构建
-│   ├── docker-compose.yml        # 服务编排（im-server + MySQL）
-│   ├── im-server/config.yml      # 生产环境配置
-│   ├── nginx/lexiang.conf        # Nginx 反向代理（API + WS + 管理后台）
-│   ├── cloudflare/               # Cloudflare Pages 配置
-│   ├── mysql-init/               # MySQL 初始化脚本
-│   ├── .env.example              # 环境变量模板
-│   └── README.md                 # 完整部署文档
-│
 ├── .gitignore
 └── README.md                      # 本文件
 ```
@@ -171,49 +161,58 @@ npm run dev
 ### 架构概览
 
 ```
-用户 → Cloudflare CDN → 前端(app.lexiang.com) Pages托管
-                      → API(api.lexiang.com) → Nginx → im-server容器(9003)
-                      → 管理后台(admin.lexiang.com) → Nginx → im-server容器(8090)
+用户 → Cloudflare CDN → 前端(www.lexiangim.com) Pages托管
+                      → API(api.yefeng.us.cc) → Nginx → im-server容器(9003)
+                      → 管理后台(admin.yefeng.us.cc) → Nginx → im-server容器(8090)
 服务器内部: Docker Compose (im-server + MySQL)，数据卷持久化
 ```
 
+### 仓库结构
+
+乐享 IM 采用 **三仓库分离** 部署架构：
+
+| 仓库 | 用途 | 部署方式 |
+|------|------|----------|
+| [lexiangim](https://github.com/AthenDrakomin-hub/lexiangim) | 源码仓库（monorepo） | 本地开发 + 手动构建产物推送 |
+| [lexiang-deploy](https://github.com/AthenDrakomin-hub/lexiang-deploy) | 服务器容器化部署 | Docker Compose + 预编译二进制 |
+| [lexiang-web-deploy](https://github.com/AthenDrakomin-hub/lexiang-web-deploy) | Cloudflare Pages 前端托管 | Git Push 自动部署 |
+
 ### 快速部署
 
+#### 后端（服务器）
+
 ```bash
-# 1. 克隆仓库
-git clone https://github.com/AthenDrakomin-hub/lexiangim.git
-cd lexiangim/deploy
+# 1. 克隆部署仓库
+git clone https://github.com/AthenDrakomin-hub/lexiang-deploy.git
+cd lexiang-deploy
 
 # 2. 配置环境变量
 cp .env.example .env
-nano .env  # 修改所有密码
+nano .env  # 修改所有密码和域名
 
 # 3. 启动服务
-docker compose up -d --build
-
-# 4. 配置 Nginx
-cp nginx/lexiang.conf /etc/nginx/conf.d/
-nginx -t && systemctl reload nginx
-
-# 5. 部署前端到 Cloudflare Pages
-# 参考 deploy/README.md 详细步骤
+docker compose up -d
 ```
 
-### 详细文档
+#### 前端（Cloudflare Pages）
 
-完整的生产环境部署文档请参考 **[deploy/README.md](./deploy/README.md)**，包含：
+```bash
+# 1. 在源码仓库构建
+cd lexiangim/jugglechat-web
+npm run build
 
-- 服务器要求与前置准备
-- Docker Compose 部署详解
-- Nginx 反向代理配置（API + WebSocket + 管理后台 + CORS）
-- Cloudflare Pages 前端部署（Git 集成 / Wrangler CLI）
-- DNS 配置与 SSL 证书
-- 安全加固（防火墙 / SSH / Fail2Ban / 数据库安全）
-- 备份策略（MySQL 自动备份 / 异地备份）
-- 监控与日志
-- 千人在线性能优化（MySQL / Nginx / 系统参数）
-- 常见问题排查（9类问题）
-- 更新部署与回滚
+# 2. 复制产物到部署仓库
+cp -r dist/* ../lexiang-web-deploy/
+cp public/config.js ../lexiang-web-deploy/
+
+# 3. 提交并推送（触发 Cloudflare Pages 自动部署）
+cd ../lexiang-web-deploy
+git add .
+git commit -m "deploy: v1.0.0"
+git push
+```
+
+> 详细部署文档请参考 [DEPLOY.md](./DEPLOY.md) 和各部署仓库的 README。
 
 ## 管理员功能说明
 
@@ -264,6 +263,12 @@ A: 检查 Nginx 是否配置了 `Upgrade` 和 `Connection` header，参考 `depl
 
 ### Q: 管理后台默认账号密码？
 A: `admin / 123456`，首次登录后请立即修改密码。
+
+## 版本信息
+
+- **当前版本**: v1.0.0
+- **发布日期**: 2026-09-03
+- **基础框架**: JuggleIM (https://github.com/juggleim/im-server)
 
 ## 许可证
 

@@ -12,18 +12,14 @@ let { MessageType, ConversationType, MentionType, UndisturbType, UnreadTag } = j
 function readMessage(messages){
   if(!utils.isEmpty(messages)){
     juggle.readMessage(messages).then(() => {
-      console.log('read message successfully.')
     }, (error) => {
-      console.log('read message error', error)
     });
   }
 }
 
 function clearUnreadCount(conversation){
   juggle.clearUnreadcount(conversation).then(() => {
-    console.log('clearnunread successfully.')
   }, (error) => {
-    console.log('clearnunread error', error)
   });
 }
 
@@ -93,7 +89,6 @@ function getMessages(isFirst, callback, state, props) {
 
     readMessage(unReadMsgs);
   }, (error) => {
-    console.log(error);
   })
 }
 
@@ -152,7 +147,6 @@ function sendVideo(file, message, callback, state){
     utils.extend(propMsg, { messageId, sentTime, content });
     callback();
   }, (error) => {
-    console.log(error)
   })
 }
 function sendFile(file, message, callback, state){
@@ -166,7 +160,6 @@ function sendFile(file, message, callback, state){
 
   juggle.sendFileMessage(message, {
     onbefore: (msg) => {
-      console.log('file msg', msg)
       state.messages.unshift(msg);
     },
     onprogress: ({ percent, message }) => {
@@ -182,7 +175,6 @@ function sendFile(file, message, callback, state){
     utils.extend(propMsg, { messageId, sentTime, content, messageIndex });
     callback();
   }, (error) => {
-    console.log(error)
   })
 }
 function isGroup(currentConversation){
@@ -262,10 +254,8 @@ function sendMerge(conversations, msgs, state){
       if(isSameConversation(conversation, state)){
         state.messages.unshift(msg);
       }
-      console.log(msg)
       next();
     }, (error) => {
-      console.log(error);
       next();
     });
   });
@@ -294,11 +284,9 @@ function conversationDisturb(item){
   if(utils.isEqual(item.undisturbType, UndisturbType.DISTURB)){
     conversation.undisturbType = UndisturbType.UNDISTURB;
     return juggle.disturbConversation(conversation).then(() => {
-      console.log('set conversation disturb successfully');
     });
   }
   juggle.disturbConversation(conversation).then(() => {
-    console.log('set conversation disturb successfully');
   });
 }
 function setConversationTop({ item, isTop, tops, conversations }) {
@@ -359,10 +347,8 @@ function clearMessages(conversation) {
   };
   juggle.clearMessage(params).then(
     () => {
-      console.log("clear messages successfully");
     },
     error => {
-      console.log(error);
     }
   );
 }
@@ -371,7 +357,6 @@ function removeConversation(index, state) {
   conversation.isShowDrop = false;
   let { conversationType, conversationId } = conversation;
   juggle.removeConversation({ conversationType, conversationId }).then(() => {
-    console.log("remove conversation successfully");
   });
   let { currentConversation } = state;
   if (isSame(currentConversation, conversation)) {
@@ -396,10 +381,8 @@ function markUnread(index, state) {
       unreadTag: UnreadTag.UNREAD
     }).then(
       () => {
-        console.log("markunread successfully");
       },
       error => {
-        console.log(error);
       }
     );
 }

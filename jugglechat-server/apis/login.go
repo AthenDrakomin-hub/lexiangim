@@ -1,4 +1,4 @@
-﻿package apis
+package apis
 
 import (
 	"bytes"
@@ -51,9 +51,16 @@ func Login(ctx *gin.Context) {
 		responses.ErrorHttpResp(ctx, errs.IMErrorCode_APP_USER_NOT_EXIST)
 		return
 	}
-	if user.LoginPass != utils.SHA1(req.Password) {
+	matched, needsMigrate := utils.CheckPasswordOrMigrate(user.LoginPass, req.Password)
+	if !matched {
 		responses.ErrorHttpResp(ctx, errs.IMErrorCode_APP_LOGIN_ERR_PASS)
 		return
+	}
+	// 旧密码为 SHA1 哈希，登录成功后自动迁移到 bcrypt
+	if needsMigrate {
+		if hashed, err := utils.HashPassword(req.Password); err == nil {
+			storage.UpdatePass(appkey, user.UserId, hashed)
+		}
 	}
 	sdk := imsdk.GetImSdk(appkey)
 	if sdk == nil {
@@ -81,6 +88,7 @@ func Login(ctx *gin.Context) {
 		Avatar:        user.UserPortrait,
 		Authorization: services.GenerateToken(appkey, user.UserId),
 		ImToken:       resp.Token,
+		VipLevel:      user.VipLevel,
 	})
 }
 
@@ -94,6 +102,35 @@ func checkAccount(account string) bool {
 	return accountRegex.MatchString(account)
 }
 
+
+// generateEnterpriseUserId 生成企业风格用户ID：应用前缀+6位数字
+func generateEnterpriseUserId(appkey string) string {
+	// 从appkey提取前缀（取前2个大写字母）
+	prefix := ""
+	for _, c := range appkey {
+		if c >= 'A' && c <= 'Z' {
+			prefix += string(c)
+			if len(prefix) >= 2 {
+				break
+			}
+		}
+	}
+	if prefix == "" {
+		prefix = "LX"
+	}
+	
+	// 使用时间戳后6位+随机数生成唯一序号，避免并发问题
+	seq := time.Now().Unix() % 1000000
+	if seq == 0 {
+		seq = 1
+	}
+	
+	// 生成6位数字序号
+	userId := fmt.Sprintf("%s%06d", prefix, seq)
+	
+	return userId
+}
+
 func Register(ctx *gin.Context) {
 	req := &models.RegisterReq{}
 	if err := ctx.BindJSON(req); err != nil || req.Password == "" || (req.Account == "" && req.Phone == "" && req.Email == "") {
@@ -101,7 +138,7 @@ func Register(ctx *gin.Context) {
 		return
 	}
 	appkey := ctx.GetString(string(ctxs.CtxKey_AppKey))
-	userId := utils.GenerateUUIDShort11()
+	userId := generateEnterpriseUserId(appkey)
 	nickname := fmt.Sprintf("user%05d", utils.RandInt(100000))
 	storage := storages.NewUserStorage()
 	var err error
@@ -111,12 +148,17 @@ func Register(ctx *gin.Context) {
 			responses.ErrorHttpResp(ctx, errs.IMErrorCode_APP_REQ_BODY_ILLEGAL)
 			return
 		}
-		nickname = req.Account
+		if req.Nickname != "" {
+			nickname = req.Nickname
+		} else {
+			nickname = req.Account
+		}
+		errPass, _ := utils.HashPassword(req.Password)
 		err = storage.Create(dbModels.User{
 			UserId:       userId,
 			Nickname:     nickname,
 			LoginAccount: req.Account,
-			LoginPass:    utils.SHA1(req.Password),
+			LoginPass:    errPass,
 			AppKey:       appkey,
 		})
 	} else if req.Phone != "" {
@@ -125,19 +167,21 @@ func Register(ctx *gin.Context) {
 			responses.ErrorHttpResp(ctx, code)
 			return
 		}
+		phonePass, _ := utils.HashPassword(req.Password)
 		err = storage.Create(dbModels.User{
 			UserId:    userId,
 			Nickname:  nickname,
 			Phone:     req.Phone,
-			LoginPass: utils.SHA1(req.Password),
+			LoginPass: phonePass,
 			AppKey:    appkey,
 		})
 	} else if req.Email != "" {
+		emailPass, _ := utils.HashPassword(req.Password)
 		err = storage.Create(dbModels.User{
 			UserId:    userId,
 			Nickname:  nickname,
 			Email:     req.Email,
-			LoginPass: utils.SHA1(req.Password),
+			LoginPass: emailPass,
 			AppKey:    appkey,
 		})
 	}
@@ -203,7 +247,7 @@ func SmsLogin(ctx *gin.Context) {
 				nickname = user.Nickname
 				userPortrait = user.UserPortrait
 			} else {
-				userId = utils.GenerateUUIDShort11()
+				userId = generateEnterpriseUserId(appkey)
 				err = storage.Create(dbModels.User{
 					UserId:   userId,
 					Nickname: nickname,
@@ -298,7 +342,7 @@ func EmailLogin(ctx *gin.Context) {
 			nickname = user.Nickname
 			userportrait = user.UserPortrait
 		} else {
-			userId = utils.GenerateUUIDShort11()
+			userId = generateEnterpriseUserId(appkey)
 			err = storage.Create(dbModels.User{
 				UserId:   userId,
 				Nickname: nickname,

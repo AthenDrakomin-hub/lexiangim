@@ -40,7 +40,6 @@ function connect(user, callbacks){
   }
   juggle.on(Event.STATE_CHANGED, ({ state }) => {
     if (ConnectionState.DISCONNECTED == state) {
-      console.log('im is disconnected');
     }
     if (ConnectionState.CONNECTED == state) {
       let _user = Storage.get(STORAGE.USER_TOKEN);

@@ -7,9 +7,10 @@ log:
 
 mysql:
   user: root
-  password: 123456
+  # 生产环境请通过环境变量 JCHAT_MYSQL_PASSWORD 注入，勿在此硬编码密码
+  password: <your_password>
   address: 127.0.0.1:3306
-  name: im_db
+  name: app_db
 
 imApiDomain: http://127.0.0.1:9001
 imAdminDomain: http://127.0.0.1:8090
@@ -18,3 +19,15 @@ botConnector:
   domain: <bot-connector url>
 
 commercial: false
+
+# ============================================
+# 环境变量覆盖（容器化部署时使用）
+# 以下环境变量优先级高于 config.yml 中的对应字段：
+#   JCHAT_MYSQL_USER        - 数据库用户名
+#   JCHAT_MYSQL_PASSWORD    - 数据库密码
+#   JCHAT_MYSQL_ADDRESS     - 数据库地址（如 mysql:3306）
+#   JCHAT_MYSQL_DBNAME      - 数据库名称
+#   JCHAT_IM_API_DOMAIN     - IM 服务端 API 地址
+#   JCHAT_IM_ADMIN_DOMAIN   - IM 管理后台地址
+# ============================================
+

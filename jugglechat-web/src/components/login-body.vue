@@ -96,7 +96,7 @@ function onLogin() {
       return;
     }
     let { user_id, authorization, nickname, avatar, im_token } = result.data;
-    let user = { id: user_id, token: im_token, authorization: authorization, name: nickname, portrait: avatar, isUsed: true };
+    let user = { id: user_id, token: im_token, authorization: authorization, name: nickname, portrait: avatar, vip_level: result.data.vip_level || 0, isUsed: true };
     Storage.set(STORAGE.USER_TOKEN, user);
     let accounts = Storage.get(STORAGE.USERS);
     if (!Array.isArray(accounts)) {
@@ -154,10 +154,48 @@ function onRegister() {
       }
       return;
     }
-    context.proxy.$toast({ text: '注册成功，请登录', icon: 'success' });
-    state.isRegister = false;
-    state.errorMsg = { account: '', password: '', nickname: '', confirmPassword: '' };
-    state.user = { account: account, password: '' };
+    context.proxy.$toast({ text: '注册成功，正在登录...', icon: 'success' });
+    // 注册成功后自动登录
+    setTimeout(() => {
+      fetch(`${getApiBase()}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'AppKey': Storage.get(STORAGE.SERVER_SETTING)?.appkey || 'LXIM2026PROD001'
+        },
+        body: JSON.stringify({ account: account, password: password })
+      })
+      .then(res => res.json())
+      .then(loginResult => {
+        if (loginResult.code !== 0) {
+          state.isRegister = false;
+          state.user = { account: account, password: '' };
+          state.errorMsg.account = '自动登录失败，请手动登录';
+          return;
+        }
+        let { user_id, authorization, nickname: loginNickname, avatar, im_token } = loginResult.data;
+        let user = { id: user_id, token: im_token, authorization: authorization, name: loginNickname || nickname, portrait: avatar, isUsed: true };
+        Storage.set(STORAGE.USER_TOKEN, user);
+        let accounts = Storage.get(STORAGE.USERS);
+        if (!Array.isArray(accounts)) {
+          accounts = [];
+        }
+        let index = utils.find(accounts, (item) => utils.isEqual(item.id, user.id));
+        if (index === -1) accounts.push(user);
+        Storage.set(STORAGE.USERS, accounts);
+        if (props.isLogin) {
+          router.replace({ name: 'ConversationList' });
+        } else {
+          location.reload();
+        }
+      })
+      .catch(err => {
+        state.isRegister = false;
+        state.user = { account: account, password: '' };
+        state.errorMsg.account = '网络连接失败，请手动登录';
+        console.error(err);
+      });
+    }, 500);
   })
   .catch(err => {
     state.loading = false;
@@ -338,7 +376,7 @@ function onShowServerSetting(isShow) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(160deg, #0a3d3d 0%, #0d5c5c 35%, #118a7e 70%, #2bbbad 100%);
+  background: linear-gradient(160deg, #1a1b2e 0%, #2d2f4a 35%, #3d3f5c 70%, #4a4c6e 100%);
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
 }
@@ -353,14 +391,14 @@ function onShowServerSetting(isShow) {
 .lx-wave-1 {
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, #00c9a7 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(88, 101, 242, 0.4) 0%, transparent 70%);
   top: -200px;
   right: -150px;
 }
 .lx-wave-2 {
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, #00e5c4 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(88, 101, 242, 0.3) 0%, transparent 70%);
   bottom: -180px;
   left: -120px;
 }
@@ -522,21 +560,21 @@ function onShowServerSetting(isShow) {
   width: 100%;
   height: 54px;
   border-radius: 27px;
-  background: linear-gradient(135deg, #5eead4 0%, #2dd4bf 50%, #14b8a6 100%);
-  color: #0d3d3d;
+  background: linear-gradient(135deg, #5865f2 0%, #4752c4 100%);
+  color: #ffffff;
   font-size: 19px;
   font-weight: 700;
   letter-spacing: 4px;
   border: none;
   cursor: pointer;
-  box-shadow: 0 6px 24px rgba(20,184,166,0.5), inset 0 1px 0 rgba(255,255,255,0.5);
+  box-shadow: 0 6px 24px rgba(88, 101, 242, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   transition: all 0.25s ease;
   text-decoration: none;
   margin-top: 8px;
 }
 .lx-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 32px rgba(20,184,166,0.6), inset 0 1px 0 rgba(255,255,255,0.5);
+  box-shadow: 0 10px 32px rgba(88, 101, 242, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 .lx-btn:active {
   transform: translateY(0);
@@ -581,11 +619,11 @@ function onShowServerSetting(isShow) {
 .lx-terms-checkbox input {
   width: 14px;
   height: 14px;
-  accent-color: #2dd4bf;
+  accent-color: #5865f2;
   cursor: pointer;
 }
 .lx-terms-link {
-  color: #5eead4;
+  color: #5865f2;
   text-decoration: none;
   font-weight: 500;
 }
@@ -595,15 +633,15 @@ function onShowServerSetting(isShow) {
 
 /* ── 深色模式登录页 ─────────────────────────────────── */
 [data-bs-theme="dark"] .lx-page {
-  background: linear-gradient(160deg, #0d1117 0%, #161b22 35%, #21262d 70%, #30363d 100%);
+  background: linear-gradient(160deg, #1e1f22 0%, #2b2d31 35%, #313338 70%, #36393f 100%);
 }
 
 [data-bs-theme="dark"] .lx-wave-1 {
-  background: radial-gradient(circle, rgba(94, 234, 173, 0.3) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(88, 101, 242, 0.4) 0%, transparent 70%);
 }
 
 [data-bs-theme="dark"] .lx-wave-2 {
-  background: radial-gradient(circle, rgba(45, 212, 191, 0.25) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(88, 101, 242, 0.3) 0%, transparent 70%);
 }
 
 [data-bs-theme="dark"] .lx-bubble {
@@ -658,12 +696,12 @@ function onShowServerSetting(isShow) {
 }
 
 [data-bs-theme="dark"] .lx-btn {
-  background: linear-gradient(135deg, #5eead4 0%, #2dd4bf 50%, #14b8a6 100%);
-  box-shadow: 0 6px 24px rgba(20,184,166,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+  background: linear-gradient(135deg, #5865f2 0%, #4752c4 100%);
+  box-shadow: 0 6px 24px rgba(88, 101, 242, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 [data-bs-theme="dark"] .lx-btn:hover {
-  box-shadow: 0 10px 32px rgba(20,184,166,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+  box-shadow: 0 10px 32px rgba(88, 101, 242, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 [data-bs-theme="dark"] .lx-toggle {
@@ -679,11 +717,11 @@ function onShowServerSetting(isShow) {
 }
 
 [data-bs-theme="dark"] .lx-terms-link {
-  color: #5eead4;
+  color: #5865f2;
 }
 
 [data-bs-theme="dark"] .lx-terms-checkbox input {
-  accent-color: #2dd4bf;
+  accent-color: #5865f2;
 }
 
 [data-bs-theme="dark"] .lx-error {

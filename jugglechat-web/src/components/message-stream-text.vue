@@ -28,7 +28,6 @@ let isEndStream = false;
 watch(() => props.message.streamMsg.streams, () => {
   let { streamMsg } = props.message;
   streamMsg = streamMsg || {};
-  console.log('streamMsg', streamMsg)
   let { isEnd = false, streams = []} = streamMsg;
   isEndStream = isEnd;
   utils.forEach(streams, (stream) => {

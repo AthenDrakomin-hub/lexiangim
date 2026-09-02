@@ -35,7 +35,6 @@ function search({ content }){
     pageSize: 300,
   };
   juggle.searchMessages(params).then(({ isFinished, total, list }) => {
-    console.log(isFinished, total, list)
     utils.extend(state, { conversations: list });
   });
 }

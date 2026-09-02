@@ -32,7 +32,6 @@ function onSelected(account, index){
   }, 100);
 }
 function onShowLogin(isShow){
-  console.log(state.isShowLogin)
   state.isShowLogin = isShow;
 }
 function onRemove(index){

@@ -91,7 +91,6 @@ let state = reactive({
 });
 
 juggle.once(Event.MESSAGE_RECEIVED, (message) => {
-  console.log('---------', message)
   if (conversationTools.isSameConversation(message, state)) {
     let index = utils.find(state.messages, (msg) => {
       return utils.isEqual(msg.messageId, message.messageId)
@@ -140,7 +139,6 @@ function findMsgById(msg){
 }
 
 juggle.once(Event.MESSAGE_UPDATED, (notify) => {
-  console.log(notify);
   if (conversationTools.isSameConversation(notify, state)) {
     let index = utils.find(state.messages, (msg) => {
       return utils.isEqual(msg.messageId, notify.messageId)
@@ -153,7 +151,6 @@ juggle.once(Event.MESSAGE_UPDATED, (notify) => {
 });
 
 juggle.once(Event.MESSAGE_REACTION_CHANGED, (notify) => {
-  console.log(notify);
   if (conversationTools.isSameConversation(notify, state)) {
     let index = utils.find(state.messages, (msg) => {
       return utils.isEqual(msg.messageId, notify.messageId)
@@ -181,7 +178,6 @@ juggle.once(Event.MESSAGE_REACTION_CHANGED, (notify) => {
 });
 
 juggle.once(Event.MESSAGE_REMOVED, (notify) => {
-  console.log('remove', notify);
   if (conversationTools.isSameConversation(notify, state)) {
     let { messages } = notify;
     utils.forEach(messages, (item) => {
@@ -253,7 +249,7 @@ nextTick(() => {
         let message = state.messages[0];
         if (!message) {
           canscroll = true;
-          return console.log('messages is empty')
+          return;
         }
         let isFirst = false;
         state.isLoadingMore = true;
@@ -484,10 +480,8 @@ function onSend() {
     if(_msg){
       utils.extend(_msg, { sentTime, messageId, sentState: SentState.SUCCESS })
     }
-    console.log('send successfully', msg);
     onCancelReply();
   }, ({ error }) => {
-    console.log(error);
     let index = utils.find(state.messages, (m) => { return utils.isEqual(m.tid, msg.tid)});
     let _msg = state.messages[index];
     if(_msg){
@@ -565,20 +559,17 @@ function sendImage(e) {
       utils.extend(propMsg, { messageId, sentTime, content });
       e.target.value = '';
     }, (error) => {
-      console.log(error)
     })
   }
 
 }
 function onRecall(message) {
   juggle.recallMessage(message).then((msg) => {
-    console.log('recall message successfully', msg);
     let index = utils.find(state.messages, (_msg) => {
       return utils.isEqual(_msg.messageId, msg.content.messageId)
     });
     state.messages.splice(index, 1, msg);
   }, (error) => {
-    console.log(error);
   });
 }
 function onModifyText({ message, content }) {
@@ -595,9 +586,7 @@ function onModifyText({ message, content }) {
     tid: message.tid,
   };
   juggle.updateMessage(msg).then(() => {
-    console.log('update message successfully.')
   }, (error) => {
-    console.log(error)
   });
 }
 
@@ -657,7 +646,6 @@ function removeMessages(msgs){
     let { conversationId, conversationType, tid, messageId, messageIndex, sentTime } = msg;
     return { conversationId, conversationType, tid, messageId, messageIndex, sentTime };
   });
-  console.log(_msgs)
   juggle.removeMessages(_msgs).then(() => {
     utils.forEach(_msgs, (msg) => {
       let index = utils.find(state.messages, (_msg) => {
@@ -716,12 +704,10 @@ function onReaction(reaction){
   if(isRemove){
     list.splice(index, 1);
     juggle.removeMessageReaction({ conversationType, conversationId, messageId, reactionId: text }).then(() => {
-      console.log('remove message reaction successfully.')
     });
   }else{
     list.push({ key: text, value: user.id, user });
     juggle.addMessageReaction({ conversationType, conversationId, messageId, reactionId: text }).then(() => {
-      console.log('add message reaction successfully.')
     });
   }
   if(utils.isEqual(list.length, 0)){
@@ -835,7 +821,6 @@ function onResendMessage({ message }){
     if(_msg){
       utils.extend(_msg, { sentTime, messageId, sentState: SentState.SUCCESS })
     }
-    console.log('re send successfully', _msg);
   }, ({ error }) => {
     if(_msg){
       utils.extend(_msg, { sentState: SentState.FAILED });
@@ -881,6 +866,11 @@ function onBanGroup(isMute){
 function onAskAI(){
   if(state.isAsking){
     return;
+  }
+  // VIP权限检查
+  let user = Storage.get(STORAGE.USER_TOKEN);
+  if (!user || user.vip_level !== 1) {
+    return context.proxy.$toast({ text: "AI功能仅限VIP用户使用", icon: "error" });
   }
   state.isAsking = true;
   let { messages } = state;

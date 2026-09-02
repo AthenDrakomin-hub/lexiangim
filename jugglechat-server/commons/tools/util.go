@@ -14,6 +14,8 @@ import (
 	"strings"
 	"time"
 
+	"golang.org/x/crypto/bcrypt"
+
 	"google.golang.org/protobuf/proto"
 )
 
@@ -137,6 +139,39 @@ func SHA1(s string) string {
 	o := sha1.New()
 	o.Write([]byte(s))
 	return hex.EncodeToString(o.Sum(nil))
+}
+
+// HashPassword 使用 bcrypt 对密码进行哈希（cost=10）
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 10)
+	if err != nil {
+		return "", err
+	}
+	return string(bytes), nil
+}
+
+// CheckPassword 验证密码与 bcrypt 哈希是否匹配
+func CheckPassword(hash, password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}
+
+// IsBcryptHash 判断给定字符串是否为 bcrypt 哈希格式（以 $2a$/$2b$/$2y$ 开头）
+func IsBcryptHash(hash string) bool {
+	return len(hash) >= 7 && (hash[0:4] == "$2a$" || hash[0:4] == "$2b$" || hash[0:4] == "$2y$")
+}
+
+// CheckPasswordOrMigrate 兼容旧 SHA1 哈希：若为 bcrypt 则直接验证；若为 SHA1 则用 SHA1 验证并返回 true 触发前端迁移（调用方负责更新数据库）
+func CheckPasswordOrMigrate(hash, password string) (bool, bool) {
+	// hash 为空（如短信/二维码登录时无密码）视为无密码用户
+	if hash == "" {
+		return false, false
+	}
+	if IsBcryptHash(hash) {
+		return CheckPassword(hash, password), false
+	}
+	// 旧格式：SHA1
+	return hash == SHA1(password), true
 }
 
 func GetConversationId(fromId, targetId string, channelType int32) string {

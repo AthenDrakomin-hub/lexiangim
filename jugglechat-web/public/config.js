@@ -13,10 +13,10 @@
 window.LEXIANG_CONFIG = {
   // 后端API地址（不加协议前缀，代码自动加https://）
   API_HOST: 'api.yefeng.us.cc',
-  
+
   // WebSocket地址（需要加wss://前缀）
   WS_HOST: 'wss://api.yefeng.us.cc',
-  
+
   // 管理后台地址
   ADMIN_HOST: 'admin.yefeng.us.cc',
   

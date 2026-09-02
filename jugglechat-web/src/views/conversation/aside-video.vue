@@ -14,7 +14,6 @@ function onPlay(messageId){
     return utils.isEqual(video.id, messageId);
   })[0];
   if(video){
-    console.log(video, messageId) 
     if(video.paused){
       video.play();
       state.list.push(messageId);

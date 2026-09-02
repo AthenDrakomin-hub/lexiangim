@@ -110,7 +110,7 @@ func (user UserDao) UpdateBotProfile(appkey, userId, nickname, portrait, pinyin 
 }
 
 func (user UserDao) QryUsers(appkey, name string, startId, limit int64, isPositiveOrder bool) ([]*UserDao, error) {
-	return user.qryByVipLevel(int(VipLevel_Normal), appkey, name, startId, limit, isPositiveOrder)
+	return user.qryByVipLevel(-1, appkey, name, startId, limit, isPositiveOrder)
 }
 
 func (user UserDao) QryBots(appkey, name string, startId, limit int64, isPositiveOrder bool) ([]*UserDao, error) {
@@ -119,9 +119,13 @@ func (user UserDao) QryBots(appkey, name string, startId, limit int64, isPositiv
 
 func (user UserDao) qryByVipLevel(VipLevel int, appkey, name string, startId, limit int64, isPositiveOrder bool) ([]*UserDao, error) {
 	var items []*UserDao
-	whereStr := "app_key=? and vip_level=?"
-	params := []interface{}{appkey, VipLevel}
 	orderBy := "id desc"
+	whereStr := "app_key=?"
+	params := []interface{}{appkey}
+	if VipLevel >= 0 {
+		whereStr = whereStr + " and vip_level=?"
+		params = append(params, VipLevel)
+	}
 	if isPositiveOrder {
 		orderBy = "id asc"
 		whereStr = whereStr + " and id>?"

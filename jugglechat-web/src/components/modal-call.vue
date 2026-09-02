@@ -34,7 +34,6 @@ let state = reactive({
 let clocker = Clocker();
 
 juggleCall.on(CallEvent.MEMBER_JOINED, (event) => {
-  console.log('CallEvent.MEMBER_JOINED', event);
   let { target: { callId, member } } = event;
   let session = juggleCall.getSession({ callId });
   let userId = member.id;
@@ -53,7 +52,6 @@ juggleCall.on(CallEvent.MEMBER_JOINED, (event) => {
   });
 });
 juggleCall.on(CallEvent.MEMBER_QUIT, (event) => {
-  console.log('CallEvent.MEMBER_QUIT', event);
   let { target: { member, callId } } = event;
   removeUser(member);
   state.friends.push({ user_id: member.id, nickname: member.name, avatar: member.portrait, isTransferChecked: false });
@@ -70,7 +68,6 @@ juggleCall.on(CallEvent.CALL_CONNECTED, () => {
 
 juggleCall.on(CallEvent.CALL_FINISHED, (event) => {
   clocker.stop();
-  console.log('CallEvent.CALL_FINISHED', event);
   emitter.$emit(EVENT_NAME.ON_CALL_FINISHED, event)
 });
 

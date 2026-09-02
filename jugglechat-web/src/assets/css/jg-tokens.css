@@ -1,366 +1,307 @@
 /**
  * jg-tokens.css — Design Tokens for 乐享 (JuggleChat)
- *
+ * 
  * 统一前缀 --jg-，覆盖颜色、字号、行高、间距、圆角、阴影、断点。
  * 所有硬编码的值均从此文件派生，避免在各组件中重复定义。
  * 已全局导入（见 src/main.js）。
+ * 
+ * 风格：Discord 深色优先，Blurple #5865f2 品牌色
  */
 
 :root {
-  /* ── Primary Palette ────────────────────────────────────── */
-  --jg-primary: #2563eb;
-  --jg-primary-light: #dbeafe;
-  --jg-primary-lighter: #eff6ff;
-  --jg-primary-dark: #1d4ed8;
-  --jg-primary-rgb: 37, 99, 235;
+  /* ── Font Families ──────────────────────────────────────── */
+  --jg-font-family: "gg sans", "Poppins", -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  --jg-font-family-mono: "gg mono", "JetBrains Mono", "Fira Code", Consolas, Monaco, monospace;
 
+  /* ── Discord Primary Palette (Blurple) ─────────────────── */
+  --jg-primary: #5865f2;
+  --jg-primary-hover: #4752c4;
+  --jg-primary-active: color-mix(in oklab, var(--jg-primary), black 14%);
+  --jg-primary-soft: #7289da;
+  --jg-primary-light: rgba(88, 101, 242, 0.1);
+  --jg-primary-lighter: rgba(88, 101, 242, 0.3);
+  --jg-primary-rgb: 88, 101, 242;
+
+  /* ── Legacy Orange (保留，逐步废弃) ──────────────────────── */
   --jg-orange: #FF6B35;
   --jg-orange-light: #FF8F66;
   --jg-orange-dark: #E55A28;
 
   /* ── Semantic Colors ────────────────────────────────────── */
-  --jg-success: #10B981;
-  --jg-success-dark: #008000;
-  --jg-success-bg: rgba(16, 185, 129, 0.1);
-  --jg-danger: #E11D48;
-  --jg-danger-soft: #df1717df;
-  --jg-warning: #ffc107;
-  --jg-info: #0dcaf0;
+  --jg-success: #23a55a;
+  --jg-success-dark: #1a8a4a;
+  --jg-success-bg: rgba(35, 165, 90, 0.1);
+  --jg-danger: #f23f43;
+  --jg-danger-soft: rgba(242, 63, 67, 0.85);
+  --jg-danger-bg: rgba(242, 63, 67, 0.1);
+  --jg-warning: #f0b232;
+  --jg-warning-bg: rgba(240, 178, 50, 0.1);
+  --jg-info: #00a8fc;
+  --jg-info-bg: rgba(0, 168, 252, 0.1);
   --jg-text-red: #c90e0ea8;
+  --jg-streaming: #593695;
 
-  /* ── Neutral Grays ──────────────────────────────────────── */
-  --jg-gray-50: #f8fafc;
-  --jg-gray-100: #f1f5f9;
-  --jg-gray-200: #e2e8f0;
-  --jg-gray-300: #cbd5e1;
-  --jg-gray-400: #94a3b8;
-  --jg-gray-500: #485464;
-  --jg-gray-600: #475569;
-  --jg-gray-700: #334155;
-  --jg-gray-800: #1e293b;
-  --jg-gray-900: #0f172a;
+  /* ── Neutral Grays (Discord Dark) ───────────────────────── */
+  --jg-gray-50: #f2f3f5;
+  --jg-gray-100: #e3e5e8;
+  --jg-gray-200: #b5bac1;
+  --jg-gray-300: #949ba4;
+  --jg-gray-400: #80848e;
+  --jg-gray-500: #4e5058;
+  --jg-gray-600: #474747;
+  --jg-gray-700: #313338;
+  --jg-gray-800: #2b2d31;
+  --jg-gray-900: #1e1f22;
+  --jg-gray-950: #111214;
 
-  --jg-muted: #838383;
-  --jg-muted-light: #8389a0;
-  --jg-muted-dark: #7f7e82;
-  --jg-placeholder: #94a3b8;
-  --jg-disabled: #CCC;
-  --jg-divider: #f5f5f5;
-  --jg-border-subtle: #38353c2b;
-  --jg-border-light: #f0f2f5;
-  --jg-border-search: #DCDCDC;
-  --jg-border-keyword: #9dc4eb;
-  --jg-border-active: #e8e6e6;
-  --jg-border-avatar: #b6c9f2;
-  --jg-border-success: #23ff23;
-  --jg-link-active: #2563EB;
-  --jg-link-hover: #2149dc;
-  --jg-link-blue: #2149dc;
-  --jg-selected-highlight: #d6e4f3;
-  --jg-active-bg: #cce3ff;
-  --jg-footer-bg: #f2f0f0;
-  --jg-bg-page: #f7f9fa;
-  --jg-bg-chat: #f1ede7;
-  --jg-bg-input: #FAFAFA;
-  --jg-bg-search: #FFF;
-  --jg-bg-modal: #e3efff;
-  --jg-bg-hover: #f1f5f9;
-  --jg-bg-hover-blue: hsl(215deg 89% 51% / 20%);
-  --jg-bg-toast: rgb(112 117 121 / 8%);
-  --jg-bg-progress: rgb(184 186 225);
-  --jg-bg-progress-active: rgb(75 112 252);
-  --jg-bg-loading: hwb(0deg 0% 100% / 60%);
-  --jg-bg-header: #fbfbfb;
-  --jg-bg-mention: #2563EB;
-  --jg-bg-sender-name: #000d044f;
-  --jg-bg-outgoing: #316ff3;
-  --jg-bg-online: #d4d4d869;
+  /* ── Surface Colors (Dark Theme - Default) ─────────────── */
+  --jg-bg-tertiary: #1e1f22;      /* 服务器栏、最深背景 */
+  --jg-bg-secondary: #2b2d31;     /* 频道侧边栏、设置面板 */
+  --jg-bg-primary: #313338;       /* 聊天区主背景 */
+  --jg-bg-floating: #111214;      /* 悬浮弹窗、tooltip */
+  --jg-bg-hover: rgba(78, 80, 88, 0.3);  /* 行悬停 */
+  --jg-bg-selected: rgba(78, 80, 88, 0.6); /* 行选中 */
+  --jg-bg-input: #1e1f22;         /* 输入框背景 */
+  --jg-bg-modal: rgba(88, 101, 242, 0.1);
+  --jg-bg-header: #2b2d31;        /* 头部背景 */
+  --jg-bg-search: #313338;        /* 搜索框背景 */
+  --jg-bg-chat: #313338;          /* 聊天背景 */
+  --jg-bg-card: #2b2d31;          /* 卡片背景 */
+  --jg-bg-footer: #1e1f22;        /* 底部导航背景 */
+  --jg-bg-outgoing: #5865f2;      /* 出站消息气泡 */
+  --jg-bg-online: rgba(100, 255, 100, 0.3);
+  --jg-bg-mention: rgba(88, 101, 242, 0.3);
+  --jg-bg-sender-name: rgba(255, 255, 255, 0.1);
+  --jg-bg-toast: rgba(0, 0, 0, 0.8);
+  --jg-bg-progress: rgb(184, 186, 225);
+  --jg-bg-progress-active: rgb(75, 112, 252);
+  --jg-bg-loading: rgba(255, 255, 255, 0.6);
 
-  /* ── Text Colors ────────────────────────────────────────── */
-  --jg-text-primary: #000;
-  --jg-text-white: #FFF;
-  --jg-text-body: #64748b;
-  --jg-text-heading: #3b4450;
-  --jg-text-secondary: rgba(33, 37, 41, 0.75);
-  --jg-text-disabled: #565a60;
-  --jg-text-muted: #838383;
-  --jg-text-muted-light: #8389a0;
-  --jg-text-subtle: #919191;
+  /* ── Text Colors (Dark Theme) ─────────────────────────── */
+  --jg-text-header: #f2f3f5;      /* 标题 */
+  --jg-text-body: #dbdee1;        /* 正文 */
+  --jg-text-muted: #949ba4;       /* 次要文字、时间戳 */
+  --jg-text-meta: #80848e;        /* 元数据 */
+  --jg-text-primary: #f2f3f5;     /* 主文字 */
+  --jg-text-white: #ffffff;
+  --jg-text-secondary: rgba(242, 243, 245, 0.6);
+  --jg-text-disabled: #4e5058;
+  --jg-text-hint: #949ba4;
   --jg-text-keyword: #ff3b3b;
-  --jg-text-keyword-sub: #565a60;
-  --jg-text-stream-end: #008000b0;
-  --jg-text-icon: rgb(112, 117, 121);
-  --jg-text-icon-light: #bbbaba;
-  --jg-text-nav: #334155;
-  --jg-text-title: #000000ba;
-  --jg-text-sender: #ffffff;
-  --jg-text-time: #8389a0;
-  --jg-text-separator: #111b2182;
-  --jg-text-reply-anchor: var(--bs-primary-400);
-  --jg-text-reply-anchor-hover: var(--bs-primary);
-  --jg-text-reply: #000000;
-  --jg-text-code: #d63384;
-  --jg-text-blockquote: #8b949e;
-  --jg-text-link: #58a6ff;
-  --jg-text-mark: #c9d1d9;
-  --jg-text-table: var(--bs-body-color);
-  --jg-text-table-muted: var(--bs-secondary-color);
-  --jg-text-link-hover: #1e4fbc;
-  --jg-text-code-inline: #a5d6ff;
-  --jg-text-comment: #8b949e;
-  --jg-text-function: #d2a8ff;
-  --jg-text-string: #a5d6ff;
-  --jg-text-number: #79c0ff;
-  --jg-text-variable: #ffa657;
-  --jg-text-operator: #c9d1d9;
-  --jg-text-keyword-pl: #ff7b72;
-  --jg-text-punctuation: #ff7b72;
-  --jg-text-tag: #7ee787;
-  --jg-text-attribute: #7ee787;
-  --jg-text-pseudo: #ff7b72;
-  --jg-text-selector: #79c0ff;
-  --jg-text-important: #ff7b72;
-  --jg-text-builtin: #ff7b72;
-  --jg-text-regex: #a5d6ff;
-  --jg-text-property: #d2a8ff;
-  --jg-text-constant: #79c0ff;
-  --jg-text-deleted: #ffdcd7;
-  --jg-text-inserted: #aff5b4;
-  --jg-text-emphasis: #d2a8ff;
-  --jg-text-strong: #c9d1d9;
-  --jg-text-faint: #484f58;
-  --jg-text-accent: #a5d6ff;
+  --jg-text-keyword-sub: #4e5058;
+  --jg-text-stream-end: #23a55a;
+  --jg-text-icon: #949ba4;
+  --jg-text-icon-light: #80848e;
+  --jg-text-nav: #b5bac1;
+  --jg-text-title: #f2f3f5;
+  --jg-text-sender: rgba(255, 255, 255, 0.5);
+  --jg-text-time: #949ba4;
+  --jg-text-placeholder: #b5bac1;
 
-  /* ── Border Colors ──────────────────────────────────────── */
-  --jg-border: #cbd5e1;
-  --jg-border-translucent: rgba(51, 65, 85, 0.175);
-  --jg-border-dark: #30363d;
-  --jg-border-codeblock: var(--bs-dark);
-  --jg-border-table: var(--bs-border-color);
-  --jg-border-reply: #CCC;
-  --jg-border-form: #f4f5fc;
+  /* ── Border Colors ─────────────────────────────────────── */
+  --jg-border: #3f4147;
+  --jg-border-subtle: rgba(255, 255, 255, 0.06);
+  --jg-border-light: #313338;
+  --jg-border-search: #4e5058;
+  --jg-border-keyword: rgba(88, 101, 242, 0.5);
+  --jg-border-active: #5865f2;
+  --jg-border-avatar: #7289da;
+  --jg-border-success: #23a55a;
+  --jg-border-translucent: rgba(255, 255, 255, 0.08);
+  --jg-border-dark: #2b2d31;
+  --jg-border-codeblock: #1e1f22;
+  --jg-border-table: #3f4147;
+  --jg-border-reply: #4e5058;
+  --jg-border-form: #3f4147;
 
-  /* ── Font Sizes ─────────────────────────────────────────── */
-  --jg-font-size-xs: 0.625rem;    /* 10px */
-  --jg-font-size-sm: 0.75rem;     /* 12px */
-  --jg-font-size-base: 0.875rem;  /* 14px */
-  --jg-font-size-md: 0.9375rem;   /* 15px */
-  --jg-font-size-lg: 1rem;        /* 16px */
-  --jg-font-size-xl: 1.125rem;    /* 18px */
-  --jg-font-size-2xl: 1.25rem;    /* 20px */
-  --jg-font-size-3xl: 1.5rem;     /* 24px */
-  --jg-font-size-4xl: 1.75rem;    /* 28px */
-  --jg-font-size-5xl: 2rem;       /* 32px */
-  --jg-font-size-6xl: 2.25rem;    /* 36px */
-  --jg-font-size-7xl: 2.5rem;     /* 40px */
-  --jg-font-size-8xl: 2.75rem;    /* 44px */
-  --jg-font-size-9xl: 3rem;       /* 48px */
-  --jg-font-size-10xl: 3.25rem;   /* 52px */
-  --jg-font-size-icon-xs: 0.675rem;
-  --jg-font-size-icon-sm: 0.75rem;
-  --jg-font-size-icon-md: 0.875rem;
-  --jg-font-size-icon-lg: 1rem;
-  --jg-font-size-icon-xl: 1.25rem;
-  --jg-font-size-icon-2xl: 1.5rem;
-  --jg-font-size-icon-3xl: 1.75rem;
+  /* ── Legacy Colors (逐步废弃) ──────────────────────────── */
+  --jg-muted: #949ba4;
+  --jg-muted-light: #80848e;
+  --jg-muted-dark: #6d6f78;
+  --jg-placeholder: #949ba4;
+  --jg-disabled: #4e5058;
+  --jg-divider: #3f4147;
+  --jg-border-subtle-legacy: #38353c2b;
+  --jg-border-light-legacy: #313338;
+  --jg-active-bg: rgba(88, 101, 242, 0.2);
+  --jg-footer-bg: #1e1f22;
 
-  /* ── Font Weights ──────────────────────────────────────── */
+  /* ── Shadows (Discord Style) ──────────────────────────── */
+  --jg-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --jg-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --jg-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --jg-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --jg-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.7);
+  --jg-shadow-inner: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+  --jg-shadow-toast: rgba(0, 0, 0, 0.8) 0px 0px 6px;
+  --jg-shadow-panel: rgba(0, 0, 0, 0.5) 0 3px 12px;
+  --jg-shadow-raised: rgba(0, 0, 0, 0.4) 0px 2px 4px, 0 0 0 1px rgba(255, 255, 255, 0.06);
+
+  /* ── Focus Ring ────────────────────────────────────────── */
+  --jg-focus-ring: 0 0 0 3px rgba(88, 101, 242, 0.3);
+
+  /* ── Typography Tokens ─────────────────────────────────── */
+  --jg-font-size-xs: 0.75rem;     /* 12px */
+  --jg-font-size-sm: 0.875rem;    /* 14px */
+  --jg-font-size-base: 1rem;      /* 16px */
+  --jg-font-size-lg: 1.125rem;    /* 18px */
+  --jg-font-size-xl: 1.25rem;     /* 20px */
+  --jg-font-size-2xl: 1.5rem;     /* 24px */
+  --jg-font-size-3xl: 2rem;       /* 32px */
+  --jg-font-size-4xl: 3.5rem;     /* 56px */
+
   --jg-font-weight-light: 300;
   --jg-font-weight-regular: 400;
   --jg-font-weight-medium: 500;
   --jg-font-weight-semibold: 600;
   --jg-font-weight-bold: 700;
+  --jg-font-weight-extrabold: 800;
 
-  /* ── Line Heights ──────────────────────────────────────── */
-  --jg-line-height-tight: 1.25;
-  --jg-line-height-normal: 1.4;
+  --jg-line-height-tight: 1.1;
+  --jg-line-height-normal: 1.25;
+  --jg-line-height-body: 1.375;
   --jg-line-height-relaxed: 1.5;
-  --jg-line-height-snug: 1.3;
 
-  /* ── Spacing (4px scale) ──────────────────────────────── */
-  --jg-space-0: 0;
-  --jg-space-05: 0.125rem;   /* 2px */
-  --jg-space-1: 0.25rem;     /* 4px */
-  --jg-space-15: 0.375rem;   /* 6px */
-  --jg-space-2: 0.5rem;      /* 8px */
-  --jg-space-25: 0.625rem;   /* 10px */
-  --jg-space-3: 0.75rem;     /* 12px */
-  --jg-space-4: 1rem;        /* 16px */
-  --jg-space-5: 1.25rem;     /* 20px */
-  --jg-space-6: 1.5rem;      /* 24px */
-  --jg-space-7: 1.75rem;     /* 28px */
-  --jg-space-8: 2rem;        /* 32px */
-  --jg-space-10: 2.5rem;     /* 40px */
-  --jg-space-12: 3rem;       /* 48px */
-  --jg-space-14: 3.5rem;     /* 56px */
-  --jg-space-16: 4rem;       /* 64px */
-  --jg-space-20: 5rem;       /* 80px */
-  --jg-space-24: 6rem;       /* 96px */
-  --jg-space-28: 7rem;       /* 112px */
-  --jg-space-32: 8rem;       /* 128px */
-  --jg-space-36: 9rem;       /* 144px */
-  --jg-space-40: 10rem;      /* 160px */
-  --jg-space-44: 11rem;      /* 176px */
-  --jg-space-48: 12rem;      /* 192px */
-  --jg-space-56: 14rem;      /* 224px */
-  --jg-space-64: 16rem;      /* 256px */
+  --jg-letter-spacing-display: -0.02em;
+  --jg-letter-spacing-normal: 0;
+  --jg-letter-spacing-wide: 0.02em;
 
-  /* ── Border Radius ─────────────────────────────────────── */
-  --jg-radius-none: 0;
-  --jg-radius-sm: 0.125rem;    /* 2px */
-  --jg-radius-md: 0.25rem;     /* 4px */
-  --jg-radius-lg: 0.375rem;    /* 6px */
-  --jg-radius-xl: 0.5rem;      /* 8px */
-  --jg-radius-2xl: 0.75rem;    /* 12px */
-  --jg-radius-full: 9999px;
+  /* ── Spacing Tokens ────────────────────────────────────── */
+  --jg-space-05: 2px;
+  --jg-space-1: 4px;
+  --jg-space-2: 8px;
+  --jg-space-3: 12px;
+  --jg-space-4: 16px;
+  --jg-space-5: 20px;
+  --jg-space-6: 24px;
+  --jg-space-8: 32px;
+  --jg-space-10: 40px;
+  --jg-space-12: 48px;
+  --jg-space-15: 60px;
+  --jg-space-20: 80px;
+
+  /* ── Border Radius Tokens ──────────────────────────────── */
+  --jg-radius-sm: 4px;
+  --jg-radius-md: 8px;
+  --jg-radius-lg: 12px;
+  --jg-radius-xl: 16px;
+  --jg-radius-2xl: 24px;
+  --jg-radius-pill: 9999px;
   --jg-radius-circle: 50%;
 
-  /* ── Shadows ───────────────────────────────────────────── */
-  --jg-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --jg-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --jg-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --jg-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-  --jg-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  --jg-shadow-inner: inset 0 1px 2px rgba(0, 0, 0, 0.075);
-  --jg-shadow-toast: rgb(0 0 0 / 8%) 0px 0px 6px;
-  --jg-shadow-panel: #0000002e 0 3px 12px;
+  /* ── Component Sizes ───────────────────────────────────── */
+  --jg-size-xs: 24px;
+  --jg-size-sm: 32px;
+  --jg-size-md: 40px;
+  --jg-size-rg: 48px;
+  --jg-size-lg: 56px;
+  --jg-size-xl: 64px;
+  --jg-size-2xl: 80px;
+  --jg-size-3xl: 96px;
+  --jg-size-4xl: 128px;
 
-  /* ── Transitions ───────────────────────────────────────── */
-  --jg-transition-fast: 0.1s ease-out;
-  --jg-transition-base: 0.3s ease;
-  --jg-transition-slow: 0.4s ease;
+  --jg-icon-size-xs: 16px;
+  --jg-icon-size-sm: 20px;
+  --jg-icon-size-md: 24px;
+  --jg-icon-size-lg: 32px;
+  --jg-icon-size-xl: 48px;
 
-  /* ── Z-Index Scale ─────────────────────────────────────── */
-  --jg-z-dropdown: 1000;
-  --jg-z-sticky: 1020;
-  --jg-z-fixed: 1030;
-  --jg-z-modal-backdrop: 1040;
-  --jg-z-modal: 1050;
-  --jg-z-popover: 1060;
-  --jg-z-tooltip: 1070;
-  --jg-z-toast: 3000;
-  --jg-z-overlay: 999;
+  /* ── Avatar Gap ────────────────────────────────────────── */
+  --avatar-gap: 8px;
 
-  /* ── Layout Constants ───────────────────────────────────── */
-  --jg-appbar-height: 65px;
-  --jg-appbar-height-mobile: 48px;
-  --jg-appbar-height-tablet: 66px;
-  --jg-desktop-header-height: 26px;
-  --jg-footer-height: 20px;
-  --jg-footer-height-mobile: 0;
-  --jg-content-gap-x: 1.25rem;
-  --jg-content-gap-y: 0.5rem;
-  --jg-aside-width: 100%;
-  --jg-aside-head-gap-y: 1.25rem;
-  --jg-aside-item-bubbly-radius: 0.5rem;
-  --jg-aside-item-gap-y: 0.5rem;
-  --jg-aside-item-active-bg: var(--jg-gray-100);
+  /* ── Layout Dimensions ─────────────────────────────────── */
+  --jg-server-rail-width: 72px;
+  --jg-channel-sidebar-width: 240px;
+  --jg-member-sidebar-width: 240px;
+  --jg-chat-min-width: 380px;
+  --jg-appbar-height: 48px;
 
-  /* ── Breakpoints ───────────────────────────────────────── */
-  --jg-breakpoint-sm: 576px;
-  --jg-breakpoint-md: 768px;
-  --jg-breakpoint-lg: 992px;
-  --jg-breakpoint-xl: 1200px;
-  --jg-breakpoint-xxl: 1400px;
-
-  /* ── Media Sizes ───────────────────────────────────────── */
-  --jg-avatar-size-xs: 1.5rem;
-  --jg-avatar-size-sm: 1.75rem;
-  --jg-avatar-size-md: 2rem;
-  --jg-avatar-size-lg: 2.5rem;
-  --jg-avatar-size-xl: 3rem;
-  --jg-avatar-size-2xl: 3.75rem;
-  --jg-avatar-size-3xl: 6rem;
+  /* ── Animation Tokens ──────────────────────────────────── */
+  --jg-motion-fast: 80ms;
+  --jg-motion-base: 200ms;
+  --jg-motion-slow: 350ms;
+  --jg-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --jg-ease-snappy: cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
-/* ── Dark Theme Overrides ─────────────────────────────────── */
-[data-bs-theme="dark"] {
-  /* 深色模式基础变量 */
-  --jg-bg-body: #0d1117;
-  --jg-bg-input: #2d2d44;
-  --jg-bg-card: #1e1e32;
-  --jg-bg-hover: #2a2a44;
-  --jg-text-body: #e6e6e6;
-  --jg-text-muted: #a0a0b8;
-  --jg-border: #3d3d5c;
-  --jg-shadow: 0 2px 8px rgba(0,0,0,0.5);
+/* ── Light Theme Overrides ─────────────────────────────────── */
+[data-bs-theme="light"] {
+  /* Surface */
+  --jg-bg-tertiary: #e3e5e8;
+  --jg-bg-secondary: #f2f3f5;
+  --jg-bg-primary: #ffffff;
+  --jg-bg-floating: #ffffff;
+  --jg-bg-hover: rgba(0, 0, 0, 0.05);
+  --jg-bg-selected: rgba(0, 0, 0, 0.1);
+  --jg-bg-input: #f2f3f5;
+  --jg-bg-modal: rgba(88, 101, 242, 0.05);
+  --jg-bg-header: #ffffff;
+  --jg-bg-search: #f2f3f5;
+  --jg-bg-chat: #ffffff;
+  --jg-bg-card: #ffffff;
+  --jg-bg-footer: #f2f3f5;
+  --jg-bg-outgoing: #5865f2;
 
-  /* 继承原有覆盖 */
-  --jg-bg-chat: var(--jg-gray-800);
-  --jg-bg-input: var(--jg-gray-800);
-  --jg-bg-hover: var(--jg-gray-700);
-  --jg-text-body: var(--jg-gray-300);
-  --jg-text-muted: var(--jg-gray-400);
-  --jg-text-muted-light: var(--jg-gray-500);
-  --jg-border: var(--jg-border-color);
-  --jg-text-reply: var(--jg-gray-200);
-  --jg-text-reply-anchor: var(--bs-primary-500);
-  --jg-text-reply-anchor-hover: var(--bs-primary);
-  --jg-link-hover: var(--bs-primary-500);
+  /* Text */
+  --jg-text-header: #060607;
+  --jg-text-body: #2e3338;
+  --jg-text-muted: #747f8d;
+  --jg-text-meta: #80909d;
+  --jg-text-primary: #060607;
+  --jg-text-secondary: rgba(78, 84, 90, 0.6);
+  --jg-text-disabled: #b1b7bc;
+  --jg-text-hint: #747f8d;
+  --jg-text-sender: rgba(0, 0, 0, 0.4);
+  --jg-text-time: #747f8d;
+  --jg-text-placeholder: #b1b7bc;
 
-  /* 消息气泡深色模式 */
-  --jg-bg-outgoing: #1a73e8;
-  --jg-bg-sender-name: rgba(255,255,255,0.1);
+  /* Border */
+  --jg-border: #dfe1e4;
+  --jg-border-subtle: rgba(0, 0, 0, 0.06);
+  --jg-border-light: #f2f3f5;
+  --jg-border-search: #dfe1e4;
+  --jg-border-keyword: rgba(88, 101, 242, 0.3);
+  --jg-border-active: #5865f2;
+  --jg-border-avatar: #7289da;
+  --jg-border-success: #23a55a;
+  --jg-border-translucent: rgba(0, 0, 0, 0.08);
+  --jg-border-dark: #f2f3f5;
+  --jg-border-codeblock: #f2f3f5;
+  --jg-border-table: #dfe1e4;
+  --jg-border-reply: #dfe1e4;
+  --jg-border-form: #dfe1e4;
+
+  /* Shadows */
+  --jg-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --jg-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  --jg-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --jg-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+  --jg-shadow-raised: rgba(0, 0, 0, 0.15) 0px 2px 4px, 0 0 0 1px rgba(0, 0, 0, 0.05);
+
+  /* Component */
+  --jg-bg-outgoing: #5865f2;
+  --jg-bg-mention: rgba(88, 101, 242, 0.1);
+  --jg-bg-sender-name: rgba(0, 0, 0, 0.05);
+  --jg-active-bg: rgba(88, 101, 242, 0.15);
+  --jg-footer-bg: #f2f3f5;
 }
 
-
-/* ── jg-* 别名类（tyn- 迁移，对应原 Bootstrap size 体系）──────────── */
-/* jg-size-md → jg-size-md (2rem 头像默认) */
-.jg-size-md {
-  --tyn-size: var(--jg-avatar-size-md);
-  --tyn-icon-size: var(--jg-font-size-icon-md);
+/* ── Brand Primary Override (兼容旧代码) ──────────────────── */
+:root {
+  --bs-primary: #5865f2;
+  --bs-primary-rgb: 88, 101, 242;
+  --bs-primary-50: rgba(88, 101, 242, 0.1);
+  --bs-primary-100: rgba(88, 101, 242, 0.2);
+  --bs-primary-200: rgba(88, 101, 242, 0.3);
+  --bs-primary-300: #7289da;
+  --bs-primary-400: #5865f2;
+  --bs-primary-500: #5865f2;
+  --bs-primary-600: #4752c4;
+  --bs-primary-700: #3d47b5;
+  --bs-primary-800: #323aa0;
+  --bs-primary-900: #282d8a;
+  --bs-primary-dark: #282d8a;
+  --bs-primary-text-emphasis: #1a1d4a;
+  --bs-primary-bg-subtle: rgba(88, 101, 242, 0.1);
+  --bs-primary-border-subtle: rgba(88, 101, 242, 0.3);
 }
-
-/* jg-size-lg → jg-size-lg (3rem 头像大（原硬编码 48px）) */
-.jg-size-lg {
-  --tyn-size: var(--jg-avatar-size-xl);
-  --tyn-icon-size: var(--jg-font-size-icon-xl);
-}
-
-/* jg-size-rg → jg-size-rg (2.5rem 头像中大（原 bs-size-rg）) */
-.jg-size-rg {
-  --tyn-size: var(--jg-avatar-size-lg);
-  --tyn-icon-size: var(--jg-font-size-icon-lg);
-}
-
-/* jg-circle → jg-circle (50% 圆形) */
-.jg-circle {
-  --tyn-shape: var(--jg-radius-circle);
-}
-
-/* jg-size-xs → jg-size-xs (1.5rem 头像小) */
-.jg-size-xs {
-  --tyn-size: var(--jg-avatar-size-xs);
-  --tyn-icon-size: var(--jg-font-size-icon-xs);
-}
-
-/* jg-size-xl → jg-size-xl (3.75rem 头像特大) */
-.jg-size-xl {
-  --tyn-size: var(--jg-avatar-size-2xl);
-  --tyn-icon-size: var(--jg-font-size-icon-2xl);
-}
-
-/* jg-size-3xl → jg-size-3xl (6rem 头像巨（原 bs-size-3xl）) */
-.jg-size-3xl {
-  --tyn-size: var(--jg-avatar-size-3xl);
-  --tyn-icon-size: var(--jg-font-size-icon-3xl);
-}
-
-/* jg-size-sm → jg-size-sm (1.75rem 头像较小) */
-.jg-size-sm {
-  --tyn-size: var(--jg-avatar-size-sm);
-  --tyn-icon-size: var(--jg-font-size-icon-sm);
-}
-
-/* jg-size-2xl → jg-size-2xl (4.5rem 头像超大（原 bs-size-2xl）) */
-.jg-size-2xl {
-  --tyn-size: var(--jg-avatar-size-2xl);
-  --tyn-icon-size: var(--jg-font-size-icon-2xl);
-}
-
-/* jg-size-4xl → jg-size-4xl (9rem 头像最大（原 bs-size-4xl，上限 3xl）) */
-.jg-size-4xl {
-  --tyn-size: var(--jg-avatar-size-3xl);
-  --tyn-icon-size: var(--jg-font-size-icon-3xl);
-}
-

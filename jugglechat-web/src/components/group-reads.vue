@@ -17,14 +17,12 @@ let state = reactive({
 utils.extend(state, { isTop: commcon.isElementTop(props.message) });
 
 juggle.getMessageReadDetails(props.message).then((result) => {
-  console.log('getMessageReadDetails successfully', result)
   let { readMembers, unreadMembers } = result;
   utils.extend(state, {
     reads: readMembers,
     unreads: unreadMembers
   })
 }, (error) => {
-  console.log(error)
 });
 
 </script>

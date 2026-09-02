@@ -1,4 +1,4 @@
-﻿package models
+package models
 
 import "time"
 
@@ -25,6 +25,7 @@ type User struct {
 	UpdatedTime  time.Time
 	CreatedTime  time.Time
 	AppKey       string
+	VipLevel     int
 	FriendInfo   *FriendInfo
 }
 

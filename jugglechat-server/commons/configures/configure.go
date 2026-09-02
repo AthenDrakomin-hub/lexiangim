@@ -49,15 +49,33 @@ const (
 
 func InitConfigures() error {
 	cfBytes, err := os.ReadFile("conf/config.yml")
-	if err == nil {
-		var conf AppConfig
-		yaml.Unmarshal(cfBytes, &conf)
-		Config = conf
-		if Config.Port <= 0 {
-			Config.Port = 8070
-		}
-		return nil
-	} else {
+	if err != nil {
 		return err
 	}
+	var conf AppConfig
+	yaml.Unmarshal(cfBytes, &conf)
+	Config = conf
+	if Config.Port <= 0 {
+		Config.Port = 8070
+	}
+	// 环境变量覆盖（优先于配置文件，便于容器化部署注入敏感信息）
+	if v, ok := os.LookupEnv("JCHAT_MYSQL_PASSWORD"); ok && v != "" {
+		Config.Mysql.Password = v
+	}
+	if v, ok := os.LookupEnv("JCHAT_MYSQL_ADDRESS"); ok && v != "" {
+		Config.Mysql.Address = v
+	}
+	if v, ok := os.LookupEnv("JCHAT_MYSQL_DBNAME"); ok && v != "" {
+		Config.Mysql.DbName = v
+	}
+	if v, ok := os.LookupEnv("JCHAT_MYSQL_USER"); ok && v != "" {
+		Config.Mysql.User = v
+	}
+	if v, ok := os.LookupEnv("JCHAT_IM_API_DOMAIN"); ok && v != "" {
+		Config.ImApiDomain = v
+	}
+	if v, ok := os.LookupEnv("JCHAT_IM_ADMIN_DOMAIN"); ok && v != "" {
+		Config.ImApiDomain = v // 兼容命名
+	}
+	return nil
 }

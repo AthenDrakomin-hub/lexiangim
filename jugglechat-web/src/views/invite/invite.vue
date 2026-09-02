@@ -29,7 +29,7 @@ function closeHelp() {
 async function onEnter() {
   const code = state.orgCode.trim();
   if (!code) {
-    state.errorMsg = '请输入组织代码';
+    state.errorMsg = '请输入企业号';
     return;
   }
   state.loading = true;
@@ -40,7 +40,7 @@ async function onEnter() {
     const data = await res.json();
 
     if (data.code !== 0 || !data.data?.server_info_plain) {
-      state.errorMsg = '组织代码无效，请检查后重试';
+      state.errorMsg = '企业号无效，请检查后重试';
       return;
     }
 
@@ -53,7 +53,7 @@ async function onEnter() {
     }
 
     if (!serverInfo.app_key) {
-      state.errorMsg = '组织代码无效';
+      state.errorMsg = '企业号无效';
       return;
     }
 
@@ -117,7 +117,7 @@ async function onEnter() {
             type="text"
             class="lx-input"
             v-model="state.orgCode"
-            placeholder="输入组织代码"
+            placeholder="输入企业号"
             @input="onInput()"
             @keydown.enter="onEnter()"
           >
@@ -148,8 +148,8 @@ async function onEnter() {
             <circle cx="12" cy="17" r="1" fill="currentColor"/>
           </svg>
         </div>
-        <h3 class="lx-help-title">组织代码说明</h3>
-        <p class="lx-help-text">组织代码由管理员下发，不清楚请联系企业管理员。</p>
+        <h3 class="lx-help-title">企业号说明</h3>
+        <p class="lx-help-text">企业号由管理员下发，不清楚请联系企业管理员。</p>
         <button class="lx-help-confirm" @click="closeHelp">我知道了</button>
       </div>
     </div>
@@ -163,7 +163,7 @@ async function onEnter() {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(160deg, #0a3d3d 0%, #0d5c5c 35%, #118a7e 70%, #2bbbad 100%);
+  background: linear-gradient(160deg, #1a1b2e 0%, #2d2f4a 35%, #3d3f5c 70%, #4a4c6e 100%);
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
 }
@@ -178,14 +178,14 @@ async function onEnter() {
 .lx-wave-1 {
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, #00c9a7 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(88, 101, 242, 0.4) 0%, transparent 70%);
   top: -200px;
   right: -150px;
 }
 .lx-wave-2 {
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, #00e5c4 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(88, 101, 242, 0.3) 0%, transparent 70%);
   bottom: -180px;
   left: -120px;
 }
@@ -299,7 +299,7 @@ async function onEnter() {
 
 /* 深色模式邀请页面 */
 [data-bs-theme="dark"] .lx-page {
-  background: linear-gradient(160deg, #0d1117 0%, #161b22 35%, #21262d 70%, #30363d 100%);
+  background: linear-gradient(160deg, #1e1f22 0%, #2b2d31 35%, #313338 70%, #36393f 100%);
 }
 
 [data-bs-theme="dark"] .lx-logo-text {
@@ -338,7 +338,7 @@ async function onEnter() {
   background: rgba(255,255,255,0.95);
   padding: 0 20px;
   font-size: 17px;
-  color: #1a3a3a;
+  color: #dbdee1;
   text-align: center;
   letter-spacing: 3px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.1);
@@ -351,7 +351,7 @@ async function onEnter() {
 }
 .lx-input:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(0,201,167,0.4), 0 4px 16px rgba(0,0,0,0.1);
+  box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.3), 0 4px 16px rgba(0,0,0,0.1);
   transform: translateY(-1px);
 }
 .lx-error {
@@ -367,20 +367,20 @@ async function onEnter() {
   width: 100%;
   height: 56px;
   border-radius: 28px;
-  background: linear-gradient(135deg, #5eead4 0%, #2dd4bf 50%, #14b8a6 100%);
-  color: #0d3d3d;
+  background: linear-gradient(135deg, #5865f2 0%, #4752c4 100%);
+  color: #ffffff;
   font-size: 20px;
   font-weight: 700;
   letter-spacing: 4px;
   border: none;
   cursor: pointer;
-  box-shadow: 0 6px 24px rgba(20,184,166,0.5), inset 0 1px 0 rgba(255,255,255,0.5);
+  box-shadow: 0 6px 24px rgba(88, 101, 242, 0.5), inset 0 1px 0 rgba(255,255,255,0.2);
   transition: all 0.25s ease;
   text-decoration: none;
 }
 .lx-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 32px rgba(20,184,166,0.6), inset 0 1px 0 rgba(255,255,255,0.5);
+  box-shadow: 0 10px 32px rgba(88, 101, 242, 0.6), inset 0 1px 0 rgba(255,255,255,0.2);
 }
 .lx-btn:active {
   transform: translateY(0);
@@ -466,7 +466,7 @@ async function onEnter() {
   height: 56px;
   margin: 0 auto 16px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #5eead4 0%, #14b8a6 100%);
+  background: linear-gradient(135deg, #5865f2 0%, #4752c4 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -479,7 +479,7 @@ async function onEnter() {
 .lx-help-title {
   font-size: 20px;
   font-weight: 700;
-  color: #1a3a3a;
+  color: #dbdee1;
   margin: 0 0 12px;
 }
 .lx-help-text {
@@ -493,8 +493,8 @@ async function onEnter() {
   height: 48px;
   border-radius: 24px;
   border: none;
-  background: linear-gradient(135deg, #5eead4 0%, #14b8a6 100%);
-  color: #0d3d3d;
+  background: linear-gradient(135deg, #5865f2 0%, #4752c4 100%);
+  color: #ffffff;
   font-size: 16px;
   font-weight: 600;
   letter-spacing: 2px;
@@ -502,7 +502,7 @@ async function onEnter() {
   transition: all 0.25s ease;
 }
 .lx-help-confirm:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(20,184,166,0.4);
+  background: linear-gradient(135deg, #4752c4 0%, #3d47b5 100%);
+  box-shadow: 0 6px 20px rgba(88, 101, 242, 0.4);
 }
 </style>

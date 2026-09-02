@@ -239,10 +239,15 @@ func UpdatePass(ctx context.Context, req *apimodels.UpdUserPassReq) errs.IMError
 	if err != nil || user == nil {
 		return errs.IMErrorCode_APP_USER_NOT_EXIST
 	}
-	if user.LoginPass != utils.SHA1(req.Password) {
+	matched, _ := utils.CheckPasswordOrMigrate(user.LoginPass, req.Password)
+	if !matched {
 		return errs.IMErrorCode_APP_LOGIN_ERR_PASS
 	}
-	err = storage.UpdatePass(appkey, req.UserId, utils.SHA1(req.NewPassword))
+	newHash, err := utils.HashPassword(req.NewPassword)
+	if err != nil {
+		return errs.IMErrorCode_APP_DEFAULT
+	}
+	err = storage.UpdatePass(appkey, req.UserId, newHash)
 	if err != nil {
 		return errs.IMErrorCode_APP_DEFAULT
 	}

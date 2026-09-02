@@ -105,7 +105,6 @@ async function clearUnreadCount(item, index) {
     unreadIndex: latestUnreadIndex
   };
   let result = await juggle.clearUnreadcount(params);
-  console.log('clearunreadcount', params);
 }
 </script>
 

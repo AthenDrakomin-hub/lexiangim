@@ -12,7 +12,12 @@ import (
 )
 
 func QryUsers(ctx *gin.Context) {
-	appkey := ctx.Query("app_key")
+	appkey := ctx.GetString(string(ctxs.CtxKey_AppKey))
+	if appkey != "" {
+		// 应用管理员：强制使用绑定的 app_key，忽略请求参数
+	} else {
+		appkey = ctx.Query("app_key")
+	}
 	if appkey == "" {
 		ctxs.FailHttpResp(ctx, errs.AdminErrorCode_ParamError)
 		return
@@ -42,7 +47,12 @@ func QryUsers(ctx *gin.Context) {
 }
 
 func QryBots(ctx *gin.Context) {
-	appkey := ctx.Query("app_key")
+	appkey := ctx.GetString(string(ctxs.CtxKey_AppKey))
+	if appkey != "" {
+		// 应用管理员：强制使用绑定的 app_key，忽略请求参数
+	} else {
+		appkey = ctx.Query("app_key")
+	}
 	if appkey == "" {
 		ctxs.FailHttpResp(ctx, errs.AdminErrorCode_ParamError)
 		return
@@ -77,6 +87,14 @@ func BanUsers(ctx *gin.Context) {
 		ctxs.FailHttpResp(ctx, errs.AdminErrorCode_ParamError)
 		return
 	}
+	// 应用管理员强制使用绑定的 app_key
+	appkey := ctx.GetString(string(ctxs.CtxKey_AppKey))
+	if appkey == "" {
+		appkey = req.AppKey
+	} else if appkey != req.AppKey {
+		ctxs.FailHttpResp(ctx, errs.AdminErrorCode_NotPermission)
+		return
+	}
 	code := services.BanUsers(ctxs.ToCtx(ctx), &req)
 	if code != errs.AdminErrorCode_Success {
 		ctxs.FailHttpResp(ctx, code)
@@ -89,6 +107,14 @@ func UnBanUsers(ctx *gin.Context) {
 	var req models.BanUsersReq
 	if err := ctx.ShouldBindJSON(&req); err != nil || req.AppKey == "" {
 		ctxs.FailHttpResp(ctx, errs.AdminErrorCode_ParamError)
+		return
+	}
+	// 应用管理员强制使用绑定的 app_key
+	appkey := ctx.GetString(string(ctxs.CtxKey_AppKey))
+	if appkey == "" {
+		appkey = req.AppKey
+	} else if appkey != req.AppKey {
+		ctxs.FailHttpResp(ctx, errs.AdminErrorCode_NotPermission)
 		return
 	}
 	code := services.UnBanUsers(ctxs.ToCtx(ctx), &req)
@@ -112,7 +138,15 @@ func UpdateUserProfile(ctx *gin.Context) {
 		ctxs.FailHttpResp(ctx, errs.AdminErrorCode_ParamError)
 		return
 	}
-	code := services.UpdateUserProfile(req.AppKey, req.UserId, req.Nickname, req.VipLevel)
+	// 应用管理员强制使用绑定的 app_key
+	appkey := ctx.GetString(string(ctxs.CtxKey_AppKey))
+	if appkey == "" {
+		appkey = req.AppKey
+	} else if appkey != req.AppKey {
+		ctxs.FailHttpResp(ctx, errs.AdminErrorCode_NotPermission)
+		return
+	}
+	code := services.UpdateUserProfile(appkey, req.UserId, req.Nickname, req.VipLevel)
 	if code != errs.AdminErrorCode_Success {
 		ctxs.FailHttpResp(ctx, code)
 		return
@@ -131,7 +165,15 @@ func DeleteUser(ctx *gin.Context) {
 		ctxs.FailHttpResp(ctx, errs.AdminErrorCode_ParamError)
 		return
 	}
-	code := services.DeleteUser(req.AppKey, req.UserId)
+	// 应用管理员强制使用绑定的 app_key
+	appkey := ctx.GetString(string(ctxs.CtxKey_AppKey))
+	if appkey == "" {
+		appkey = req.AppKey
+	} else if appkey != req.AppKey {
+		ctxs.FailHttpResp(ctx, errs.AdminErrorCode_NotPermission)
+		return
+	}
+	code := services.DeleteUser(appkey, req.UserId)
 	if code != errs.AdminErrorCode_Success {
 		ctxs.FailHttpResp(ctx, code)
 		return
@@ -151,7 +193,15 @@ func ResetUserPassword(ctx *gin.Context) {
 		ctxs.FailHttpResp(ctx, errs.AdminErrorCode_ParamError)
 		return
 	}
-	code := services.ResetUserPassword(req.AppKey, req.UserId, req.NewPassword)
+	// 应用管理员强制使用绑定的 app_key
+	appkey := ctx.GetString(string(ctxs.CtxKey_AppKey))
+	if appkey == "" {
+		appkey = req.AppKey
+	} else if appkey != req.AppKey {
+		ctxs.FailHttpResp(ctx, errs.AdminErrorCode_NotPermission)
+		return
+	}
+	code := services.ResetUserPassword(appkey, req.UserId, req.NewPassword)
 	if code != errs.AdminErrorCode_Success {
 		ctxs.FailHttpResp(ctx, code)
 		return
