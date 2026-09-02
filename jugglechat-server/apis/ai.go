@@ -8,6 +8,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/juggleim/jugglechat-server/commons/configures"
+	"github.com/juggleim/jugglechat-server/commons/ctxs"
+	"github.com/juggleim/jugglechat-server/commons/dbcommons"
 	"github.com/juggleim/jugglechat-server/commons/errs"
 	"github.com/juggleim/jugglechat-server/commons/responses"
 	"github.com/juggleim/jugglechat-server/commons/tools"
@@ -52,12 +54,43 @@ type AgnesChoice struct {
 	Message AgnesMessage `json:"message"`
 }
 
+// UserVipLevel 用户VIP等级查询结果
+type UserVipLevel struct {
+	VipLevel int `gorm:"vip_level"`
+}
+
 // AiAnswer AI回答接口
 // 接收前端的消息数组，转换为Agnes API格式，调用Agnes API，返回AI的回复
+// VIP权限校验：只有VIP用户(vip_level=1)才能使用AI功能
 func AiAnswer(ctx *gin.Context) {
 	req := &AiAnswerRequest{}
 	if err := ctx.BindJSON(req); err != nil || len(req.Msgs) == 0 {
 		responses.ErrorHttpResp(ctx, errs.IMErrorCode_APP_REQ_BODY_ILLEGAL)
+		return
+	}
+
+	// VIP权限校验
+	userId := ctx.GetString(string(ctxs.CtxKey_RequesterId))
+	appkey := ctx.GetString(string(ctxs.CtxKey_AppKey))
+	if userId == "" {
+		responses.ErrorHttpResp(ctx, errs.IMErrorCode_APP_NOT_LOGIN)
+		return
+	}
+
+	var userVip UserVipLevel
+	err := dbcommons.GetDb().Table("users").
+		Select("vip_level").
+		Where("app_key=? and user_id=?", appkey, userId).
+		Take(&userVip).Error
+	if err != nil {
+		fmt.Printf("AI权限校验失败: userId=%s, err=%v\n", userId, err)
+		responses.ErrorHttpResp(ctx, errs.IMErrorCode_APP_FORBIDDEN)
+		return
+	}
+
+	if userVip.VipLevel != 1 {
+		fmt.Printf("AI权限不足: userId=%s, vip_level=%d\n", userId, userVip.VipLevel)
+		responses.ErrorHttpResp(ctx, errs.IMErrorCode_APP_FORBIDDEN)
 		return
 	}
 
@@ -99,7 +132,7 @@ func AiAnswer(ctx *gin.Context) {
 		"Authorization": "Bearer " + apiKey,
 	}
 
-	fmt.Printf("Calling Agnes API: url=%s, model=%s, messages=%d\n", apiUrl, agnesReq.Model, len(agnesMessages))
+	fmt.Printf("Calling Agnes API: url=%s, model=%s, messages=%d, userId=%s\n", apiUrl, agnesReq.Model, len(agnesMessages), userId)
 
 	respBody, httpCode, err := tools.HttpDo(http.MethodPost, apiUrl, headers, string(reqBody))
 	if err != nil {
