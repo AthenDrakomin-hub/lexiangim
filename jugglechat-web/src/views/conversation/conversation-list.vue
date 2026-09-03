@@ -5,7 +5,7 @@ import { useRouter } from "vue-router";
 import Conversation from "./conversation.vue";
 import None from "./none.vue";
 
-import { STORAGE, EVENT_NAME, CONVERATION_TAG_ID, CONVERSATION_TAG_TYPE } from "../../common/enum";
+import { EVENT_NAME, CONVERATION_TAG_ID, CONVERSATION_TAG_TYPE } from "../../common/enum";
 import Storage from "../../common/storage";
 import im from "../../common/im";
 import common from "../../common/common";
@@ -130,7 +130,7 @@ function updateConversation(conversation) {
   });
 }
 
-let user = Storage.get(STORAGE.USER_TOKEN);
+let user = Storage.get('user_auth_token');
 if (utils.isEmpty(user)) {
   router.replace({ name: "Login" });
 }

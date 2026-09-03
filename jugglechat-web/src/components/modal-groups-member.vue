@@ -18,7 +18,7 @@ let state = reactive({
   addList: {},
   removeList: {},
 });
-let user = Storage.get(STORAGE.USER_TOKEN);
+let user = Storage.get('user_auth_token');
 
 function onCancel() {
   emit('oncancel', {});
