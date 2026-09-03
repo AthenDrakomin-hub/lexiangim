@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { reactive, getCurrentInstance } from "vue";
 import utils from "../common/utils";
 import { useRouter } from "vue-router";
@@ -380,7 +380,7 @@ function onShowServerSetting(isShow) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(160deg, #1a1b2e 0%, #2d2f4a 35%, #3d3f5c 70%, #4a4c6e 100%);
+  background: linear-gradient(160deg, #f0f4ff 0%, #e8ecf8 35%, #dfe4f2 70%, #d5dbeb 100%);
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
 }
@@ -411,9 +411,9 @@ function onShowServerSetting(isShow) {
 .lx-bubble {
   position: absolute;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 100%);
-  border: 1px solid rgba(255,255,255,0.25);
-  box-shadow: inset 0 0 20px rgba(255,255,255,0.15), 0 4px 20px rgba(0,0,0,0.1);
+  background: radial-gradient(circle at 30% 30%, rgba(88,101,242,0.15) 0%, rgba(88,101,242,0.05) 50%, rgba(88,101,242,0.02) 100%);
+  border: 1px solid rgba(88,101,242,0.2);
+  box-shadow: inset 0 0 20px rgba(88,101,242,0.05), 0 4px 20px rgba(0,0,0,0.05);
 }
 .lx-bubble-1 { width: 100px; height: 100px; top: 6%; left: 3%; }
 .lx-bubble-2 { width: 60px; height: 60px; top: 12%; right: 8%; }
@@ -431,15 +431,15 @@ function onShowServerSetting(isShow) {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.15);
+  background: #f8fafc;
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid #e2e8f0;
   cursor: pointer;
   z-index: 20;
   transition: all 0.2s;
 }
 .lx-server-settings:hover {
-  background: rgba(255,255,255,0.25);
+  background: #e2e8f0;
 }
 
 .lx-main {
@@ -465,7 +465,7 @@ function onShowServerSetting(isShow) {
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 4px 12px rgba(88,101,242,0.15));
 }
 .lx-logo-icon svg {
   width: 100%;
@@ -474,14 +474,14 @@ function onShowServerSetting(isShow) {
 .lx-title {
   font-size: 38px;
   font-weight: 800;
-  color: #ffffff;
+  color: #1a1d2e;
   margin: 0 0 10px;
   letter-spacing: 3px;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  text-shadow: none;
 }
 .lx-subtitle {
   font-size: 16px;
-  color: rgba(255,255,255,0.8);
+  color: #4a5568;
   margin: 0;
   letter-spacing: 1px;
 }
@@ -489,13 +489,13 @@ function onShowServerSetting(isShow) {
 /* 毛玻璃卡片 */
 .lx-card {
   width: 100%;
-  background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.08) 100%);
+  background: #ffffff;
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1.5px solid rgba(255,255,255,0.3);
+  border: 1.5px solid #e2e8f0;
   border-radius: 32px;
   padding: 36px 28px 28px;
-  box-shadow: 0 16px 48px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.3);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.08);
 }
 
 .lx-form-group {
@@ -508,8 +508,8 @@ function onShowServerSetting(isShow) {
   width: 100%;
   height: 52px;
   border-radius: 26px;
-  border: 1.5px solid rgba(255,255,255,0.35);
-  background: rgba(255,255,255,0.2);
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
   padding: 0 22px;
   font-size: 16px;
   color: #ffffff;
@@ -517,13 +517,13 @@ function onShowServerSetting(isShow) {
   transition: all 0.25s ease;
 }
 .lx-input::placeholder {
-  color: rgba(255,255,255,0.6);
+  color: #9ca3af;
 }
 .lx-input:focus {
   outline: none;
-  border-color: rgba(255,255,255,0.7);
-  background: rgba(255,255,255,0.28);
-  box-shadow: 0 0 0 3px rgba(255,255,255,0.1);
+  border-color: #6b7280;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(88,101,242,0.2);
 }
 .lx-input-arrow {
   position: absolute;
@@ -531,7 +531,7 @@ function onShowServerSetting(isShow) {
   top: 50%;
   transform: translateY(-50%);
   font-size: 24px;
-  color: rgba(255,255,255,0.6);
+  color: #9ca3af;
   pointer-events: none;
   line-height: 1;
 }
@@ -549,7 +549,7 @@ function onShowServerSetting(isShow) {
 }
 .lx-forgot {
   font-size: 13px;
-  color: rgba(255,255,255,0.7);
+  color: #6b7280;
   cursor: pointer;
   transition: color 0.2s;
 }
@@ -591,7 +591,7 @@ function onShowServerSetting(isShow) {
 
 .lx-toggle {
   text-align: center;
-  color: rgba(255,255,255,0.8);
+  color: #4a5568;
   font-size: 14px;
   margin-top: 18px;
   cursor: pointer;
@@ -609,7 +609,7 @@ function onShowServerSetting(isShow) {
   flex-wrap: wrap;
   gap: 4px;
   font-size: 12px;
-  color: rgba(255,255,255,0.75);
+  color: #6b7280;
   margin-bottom: 16px;
   line-height: 1.6;
 }
@@ -637,7 +637,7 @@ function onShowServerSetting(isShow) {
 
 /* ── 深色模式登录页 ─────────────────────────────────── */
 .lx-page {
-  background: linear-gradient(160deg, #1e1f22 0%, #2b2d31 35%, #313338 70%, #36393f 100%);
+  background: linear-gradient(160deg, #f0f4ff 0%, #e8ecf8 35%, #dfe4f2 70%, #d5dbeb 100%);
 }
 
 .lx-wave-1 {
@@ -649,50 +649,50 @@ function onShowServerSetting(isShow) {
 }
 
 .lx-bubble {
-  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.01) 100%);
-  border: 1px solid rgba(255,255,255,0.08);
-  box-shadow: inset 0 0 20px rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.3);
+  background: radial-gradient(circle at 30% 30%, rgba(88,101,242,0.12) 0%, rgba(88,101,242,0.04) 50%, rgba(88,101,242,0.01) 100%);
+  border: 1px solid rgba(88,101,242,0.15);
+  box-shadow: inset 0 0 20px rgba(88,101,242,0.03), 0 4px 20px rgba(0,0,0,0.05);
 }
 
 .lx-server-settings {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
 }
 
 .lx-server-settings:hover {
-  background: rgba(255,255,255,0.15);
+  background: #f8fafc;
 }
 
 .lx-card {
-  background: linear-gradient(135deg, rgba(30,30,50,0.85) 0%, rgba(20,20,40,0.95) 100%);
+  background: #ffffff;
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1.5px solid rgba(255,255,255,0.1);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+  border: 1.5px solid #e2e8f0;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.08);
 }
 
 .lx-input {
-  border-color: rgba(255,255,255,0.15);
-  background: rgba(255,255,255,0.08);
+  border-color: #e2e8f0;
+  background: #f8fafc;
   color: #ffffff;
 }
 
 .lx-input::placeholder {
-  color: rgba(255,255,255,0.4);
+  color: #9ca3af;
 }
 
 .lx-input:focus {
-  border-color: rgba(255,255,255,0.3);
-  background: rgba(255,255,255,0.12);
-  box-shadow: 0 0 0 3px rgba(255,255,255,0.05);
+  border-color: #5865f2;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(88,101,242,0.2);
 }
 
 .lx-input-arrow {
-  color: rgba(255,255,255,0.5);
+  color: #9ca3af;
 }
 
 .lx-forgot {
-  color: rgba(255,255,255,0.6);
+  color: #9ca3af;
 }
 
 .lx-forgot:hover {
@@ -709,7 +709,7 @@ function onShowServerSetting(isShow) {
 }
 
 .lx-toggle {
-  color: rgba(255,255,255,0.7);
+  color: #6b7280;
 }
 
 .lx-toggle:hover {
@@ -717,7 +717,7 @@ function onShowServerSetting(isShow) {
 }
 
 .lx-terms-wrap {
-  color: rgba(255,255,255,0.6);
+  color: #9ca3af;
 }
 
 .lx-terms-link {
