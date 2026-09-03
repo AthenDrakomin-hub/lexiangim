@@ -51,7 +51,7 @@ function getMessages(isFirst, callback, state, props) {
       }
       if (index % 6 == 0 && index > 0) {
         let time = utils.formatTime(message.sentTime);
-        let notifyMsg = { name: 'notify', sentTime: time };
+        let notifyMsg = { name: 'notify', sentTime: time, messageId: 'notify_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9) };
         state.messages.push(notifyMsg);
       }
       if(isGroup(message)){
@@ -393,7 +393,8 @@ function insertTempConversation(query, state) {
         name: MessageType.TEXT,
         content: { content: "[新会话]" },
         sentTime: Date.now(),
-        messageIndex: -1
+        messageIndex: -1,
+        messageId: 'temp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9)
       };
       if (!utils.isEqual(index, -1)) {
         var item = conversations.splice(index, 1)[0] || {};
