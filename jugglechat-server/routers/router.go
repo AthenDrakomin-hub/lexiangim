@@ -133,6 +133,13 @@ func Route(eng *gin.Engine, prefix string) *gin.RouterGroup {
 	group.GET("/admin/ip-changes", apis.GetIpChangeNotifications)
 	group.POST("/admin/ip-changes/read", apis.MarkIpChangeRead)
 
+	// AI 配置管理（API Key、用量统计）
+	group.POST("/admin/ai-keys/add", apis.AddAiApiKey)
+	group.POST("/admin/ai-keys/update", apis.UpdateAiApiKey)
+	group.GET("/admin/ai-keys/delete", apis.DeleteAiApiKey)
+	group.GET("/admin/ai-keys/list", apis.ListAiApiKeys)
+	group.GET("/admin/ai-usage/stats", apis.GetAiUsageStats)
+
 	return group
 }
 

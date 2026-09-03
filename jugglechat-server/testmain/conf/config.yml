@@ -6,7 +6,7 @@ log:
 
 mysql:
   user: root
-  password: 123456
+  password: <your_password>
   address: localhost:3306
   name: im_db
   debug: true

@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/juggleim/jugglechat-server/commons/configures"
@@ -13,6 +15,7 @@ import (
 	"github.com/juggleim/jugglechat-server/commons/errs"
 	"github.com/juggleim/jugglechat-server/commons/responses"
 	"github.com/juggleim/jugglechat-server/commons/tools"
+	"github.com/juggleim/jugglechat-server/services"
 )
 
 // AiAnswerRequest 前端AI回答请求
@@ -47,6 +50,14 @@ type AgnesMessage struct {
 // AgnesChatResponse Agnes API响应
 type AgnesChatResponse struct {
 	Choices []AgnesChoice `json:"choices"`
+	Usage   AgnesUsage    `json:"usage"`
+}
+
+// AgnesUsage token用量
+type AgnesUsage struct {
+	PromptTokens     int `json:"prompt_tokens"`
+	CompletionTokens int `json:"completion_tokens"`
+	TotalTokens      int `json:"total_tokens"`
 }
 
 // AgnesChoice Agnes选择
@@ -94,14 +105,33 @@ func AiAnswer(ctx *gin.Context) {
 		return
 	}
 
-	// 检查Agnes API配置
-	apiKey := configures.Config.AgnesApiKey
-	apiUrl := configures.Config.AgnesApiUrl
+	// 选择 API Key（优先用户绑定 > 全局共享轮询 > config.yml 兜底）
+	var apiKey, apiUrl, model string
+	var keyId int64
+	var keyName string
+	selectedKey, keyCode := services.SelectApiKeyForUser(appkey, userId)
+	if keyCode == errs.IMErrorCode_SUCCESS && selectedKey != nil {
+		apiKey = selectedKey.ApiKey
+		apiUrl = selectedKey.ApiUrl
+		model = selectedKey.Model
+		keyId = selectedKey.Id
+		keyName = selectedKey.Name
+	} else {
+		// 回退到 config.yml 全局配置
+		apiKey = configures.Config.AgnesApiKey
+		apiUrl = configures.Config.AgnesApiUrl
+		model = configures.Config.AgnesModel
+	}
 	if apiKey == "" || apiUrl == "" {
 		fmt.Printf("Agnes API not configured: apiKey=%s, apiUrl=%s\n", apiKey, apiUrl)
 		responses.ErrorHttpResp(ctx, errs.IMErrorCode_APP_NOT_EXISTED)
 		return
 	}
+	if model == "" {
+		model = "agnes-free"
+	}
+
+	startTime := time.Now()
 
 	// 转换消息格式（前端格式 -> Agnes格式）
 	agnesMessages := make([]AgnesMessage, 0, len(req.Msgs))
@@ -121,7 +151,7 @@ func AiAnswer(ctx *gin.Context) {
 
 	// 构建Agnes API请求
 	agnesReq := AgnesChatRequest{
-		Model:    configures.Config.AgnesModel,
+		Model:    model,
 		Messages: agnesMessages,
 	}
 	reqBody, _ := json.Marshal(agnesReq)
@@ -135,14 +165,21 @@ func AiAnswer(ctx *gin.Context) {
 	fmt.Printf("Calling Agnes API: url=%s, model=%s, messages=%d, userId=%s\n", apiUrl, agnesReq.Model, len(agnesMessages), userId)
 
 	respBody, httpCode, err := tools.HttpDo(http.MethodPost, apiUrl, headers, string(reqBody))
+	durationMs := time.Since(startTime).Milliseconds()
 	if err != nil {
 		fmt.Printf("Agnes API call error: %v\n", err)
+		if keyId > 0 {
+			services.RecordAiUsage(appkey, userId, keyId, keyName, 0, 0, 0, 1, err.Error(), durationMs)
+		}
 		responses.ErrorHttpResp(ctx, errs.IMErrorCode_APP_REQ_BODY_ILLEGAL)
 		return
 	}
 
 	if httpCode != http.StatusOK {
 		fmt.Printf("Agnes API returned non-200: code=%d, body=%s\n", httpCode, respBody)
+		if keyId > 0 {
+			services.RecordAiUsage(appkey, userId, keyId, keyName, 0, 0, 0, 1, "HTTP "+strconv.Itoa(httpCode), durationMs)
+		}
 		responses.ErrorHttpResp(ctx, errs.IMErrorCode_APP_REQ_BODY_ILLEGAL)
 		return
 	}
@@ -163,6 +200,15 @@ func AiAnswer(ctx *gin.Context) {
 
 	answer := agnesResp.Choices[0].Message.Content
 	fmt.Printf("Agnes API answer: %s\n", answer)
+
+	// 记录成功用量（含token统计）
+	if keyId > 0 {
+		services.RecordAiUsage(appkey, userId, keyId, keyName,
+			agnesResp.Usage.PromptTokens,
+			agnesResp.Usage.CompletionTokens,
+			agnesResp.Usage.TotalTokens,
+			0, "", durationMs)
+	}
 
 	// 返回响应
 	responses.SuccessHttpResp(ctx, AiAnswerResponse{
