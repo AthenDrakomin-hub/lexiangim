@@ -35,9 +35,6 @@
 .jg-icon-message:before {
   content: '\e6aa';
 }
-.jg-icon-settings:before {
-  content: '\e634';
-}
 .jg-icon-logout:before {
   content: '\e6a4';
 }
@@ -83,9 +80,6 @@
 .jg-icon-edit-a::after{
   content: '\e62a';
 }
-.jg-icon-emoji:before {
-  content: '\e66b';
-}
 .jg-icon-more:before {
   content: '\e607';
 }
@@ -95,14 +89,8 @@
 .jg-icon-subtract:before {
   content: '\e633';
 }
-.jg-icon-send:before {
-  content: '\e6c4';
-}
 .jg-icon-file:before {
   content: '\e7b5';
-}
-.jg-icon-video:before {
-  content: '\e79f';
 }
 .jg-icon-recall:before {
   content: '\e62d';
@@ -353,11 +341,6 @@
   content: '\e661';
   color: #ff0000;
 }
-.jg-icon-hot::after{
-  content: '\e661\e661';
-  color: #ff0000;
-}
-
 .jg-icon-radio::before{
   content: '\e669';
 }

@@ -2,7 +2,7 @@
 const props = defineProps(['message']);
 const emit = defineEmits(['']);
 
-import { reactive, watch } from "vue";
+import { reactive, watch, onUnmounted } from "vue";
 import utils from "../common/utils";
 import im from "../common/im";
 import messageUtils from "./message-utils";
@@ -66,6 +66,8 @@ function getContent(content){
   return state.renderedContent || content;
 }
 
+
+onUnmounted(() => { if(interval) clearInterval(interval); });
 </script>
 
 <template>

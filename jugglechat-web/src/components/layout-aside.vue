@@ -1,6 +1,6 @@
 <script setup>
 const props = defineProps(['title']);
-import { reactive, getCurrentInstance, watch } from "vue";
+import { reactive, getCurrentInstance, watch, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import utils from "../common/utils";
 import common from "../common/common";
@@ -90,19 +90,19 @@ function onConversationChanged({ conversations }){
     });
   });
 }
-juggle.on(Event.CONVERSATION_CHANGED, onConversationChanged);
-juggle.on(Event.CONVERSATION_ADDED, onConversationChanged);
+__on(Event.CONVERSATION_CHANGED, onConversationChanged);
+__on(Event.CONVERSATION_ADDED, onConversationChanged);
 
 utils.extend(state, { user });
 
-emitter.$on(EVENT_NAME.UN_UNATHORIZED, () => {
+__emitOn(EVENT_NAME.UN_UNATHORIZED, () => {
   Storage.remove(STORAGE.USER_TOKEN);
   let juggle = im.getCurrent();
   juggle.disconnect();
   router.replace({ name: 'Login' });
 });
 
-juggle.on(Event.STATE_CHANGED, ({ state: status }) => {
+__on(Event.STATE_CHANGED, ({ state: status }) => {
   if (ConnectionState.CONNECTED == status) {
     juggle.getConversation({ conversationId: SYS_CONVERSATION_FRIEND, conversationType: ConversationType.SYSTEM }).then(({ conversation }) => {
       let index = utils.find(state.settingMenus, (menu) => { 
@@ -132,7 +132,7 @@ function onMenuClick(menu){
   router.push({ name: menu.name });
 }
 
-emitter.$on(EVENT_NAME.ON_USER_INFO_UPDATE, ({ user }) => {
+__emitOn(EVENT_NAME.ON_USER_INFO_UPDATE, ({ user }) => {
   utils.extend(state.user, user);
 });
 
@@ -196,6 +196,8 @@ watch(useRouterCurrent, (value) => {
     selectMenu(menu);
   }
 });
+
+onUnmounted(() => { __cleanup.forEach(function(fn){try{fn()}catch(e){}}); });
 </script>
 
 <template>

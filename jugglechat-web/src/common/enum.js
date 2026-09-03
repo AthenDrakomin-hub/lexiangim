@@ -219,7 +219,7 @@ let SETTING_CARDS = [
     ] 
   },
   { tag: 5, 
-    isAdmin: true,
+    isVip: true,
     menus: [ 
     { name: '账号多开', icon: 'config', event: ASIDE_MENU_TYPE.ADMIN_MULTI_ACCOUNT },
     { name: 'IP监控', icon: 'operate', event: ASIDE_MENU_TYPE.ADMIN_IP_MONITOR },

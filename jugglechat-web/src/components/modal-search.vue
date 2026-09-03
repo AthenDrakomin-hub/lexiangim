@@ -1,6 +1,6 @@
 <script setup>
 import { DialogRoot, DialogOverlay, DialogContent } from "reka-ui";
-import { reactive, watch, nextTick } from "vue";
+import { reactive, watch, nextTick, onUnmounted } from "vue";
 import utils from '@/common/utils';
 import im from "@/common/im";
 import common from "@/common/common";
@@ -28,7 +28,7 @@ function onSearch(){
   }, 100)
 }
 function search({ content }){
-  let { juggle } = window;
+  let juggle = im.getCurrent();
   let params = {
     keywords: [content],
     page: 1,
@@ -66,10 +66,14 @@ function onNavChat(){
   state.content = '';
 }
 
+function escapeHtml(str){
+  return str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
 function getContent(item){
   let content = im.msgShortFormat(item);
   content = common.htmlToContent(content);
-  content = content.replaceAll(state.content, `<span class="jg-keyword">${state.content}<span>`);
+  let safeKeyword = escapeHtml(state.content);
+  content = content.replaceAll(state.content, `<span class="jg-keyword">${safeKeyword}</span>`);
   return content;
 }
 watch(() => state.content, (val) => {
@@ -77,6 +81,7 @@ watch(() => state.content, (val) => {
     onShowResult(false);
   }
 });
+onUnmounted(() => { if(timer) clearTimeout(timer); });
 watch(() => props.isShow, () => {
   if(props.isShow){
     state.content = '';
@@ -93,7 +98,7 @@ watch(() => props.isShow, () => {
               <div class="form-group">
                 <div class="form-control-wrap">
                   <div class="jg-search-icon wr jg-icon-search"></div>
-                  <input type="text" class="form-control" v-model="state.content" placeholder="Search Chat" autocomplete="off" @keydown.enter="onSearch" @input="onSearch"/>
+                  <input type="text" class="form-control" v-model="state.content" placeholder="搜索聊天记录" autocomplete="off" @keydown.enter="onSearch" @input="onSearch"/>
                 </div>
               </div>
 

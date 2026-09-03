@@ -20,11 +20,7 @@ let routes = [{
       name: 'Contacts',
       component: () => import('@/views/contacts/contacts.vue'),
     },
-    {
-      path: '/setting',
-      name: 'Setting',
-      component: () => import('@/views/setting/setting.vue'),
-    }
+    // /setting 旧版页面已废弃，设置功能统一由侧边栏头像面板提供
   ],
 },
 {
@@ -64,8 +60,12 @@ router.beforeEach((to, from, next) => {
   if (user.id && utils.isEqual(to.name, 'Login')) {
     return next({ name: 'ConversationList' });
   }
-  // 未登录用户访问邀请、登录或404页，正常放行
-  if (!user.id && (utils.isEqual(to.name, 'Invite') || utils.isEqual(to.name, 'Login') || utils.isEqual(to.name, '404'))) {
+  // 未登录用户访问未知路由，直接跳邀请页
+  if (!user.id && utils.isEqual(to.name, 'notFound')) {
+    return next({ name: 'Invite' });
+  }
+  // 未登录用户访问邀请、登录页，正常放行
+  if (!user.id && (utils.isEqual(to.name, 'Invite') || utils.isEqual(to.name, 'Login'))) {
     return next();
   }
   // 未登录访问受保护页面，跳转到邀请页

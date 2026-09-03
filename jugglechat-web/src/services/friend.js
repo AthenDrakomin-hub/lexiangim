@@ -63,6 +63,15 @@ function confirm({ sponsor_id, is_agree }){
     })
   });
 }
+function setDisplayName({ friendId, displayName }){
+  return request(SERVER_PATH.FRIEND_SET_DISPLAY_NAME, {
+    method: 'POST',
+    body: utils.toJSON({
+      friend_id: friendId,
+      friend_display_name: displayName
+    })
+  });
+}
 export default {
   add,
   remove,
@@ -70,5 +79,6 @@ export default {
   getNewList,
   getBots,
   confirm,
+  setDisplayName,
   get,
 }

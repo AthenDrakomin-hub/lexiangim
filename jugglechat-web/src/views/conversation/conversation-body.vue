@@ -1,7 +1,7 @@
 <script setup>
 import im from "../../common/im";
 import common from "../../common/common";
-import { reactive, watch, nextTick, getCurrentInstance } from "vue";
+import { reactive, watch, nextTick, getCurrentInstance, onUnmounted } from "vue";
 import utils from "../../common/utils";
 import emitter from "../../common/emmit";
 import { EVENT_NAME } from "../../common/enum";
@@ -106,6 +106,8 @@ async function clearUnreadCount(item, index) {
   };
   let result = await juggle.clearUnreadcount(params);
 }
+
+onUnmounted(() => { try { var el = context.refs.conversations; if(el && __bodyScrollHandler) el.removeEventListener('scroll', __bodyScrollHandler); } catch(e){} });
 </script>
 
 <template>

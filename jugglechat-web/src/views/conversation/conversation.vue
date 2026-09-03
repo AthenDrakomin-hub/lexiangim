@@ -7,7 +7,7 @@ import Mention from "../../components/mention.vue";
 import Transfer from "../../components/transfer-panel.vue";
 import Reply from "../../components/reply.vue";
 import ConversationAsider from "./conversation-aside.vue";
-import { reactive, shallowRef, watch, nextTick, getCurrentInstance, ref } from "vue";
+import { reactive, shallowRef, watch, nextTick, getCurrentInstance, ref, onUnmounted } from "vue";
 import { preview } from 'vue3-image-preview';
 import im from "../../common/im";
 
@@ -16,6 +16,7 @@ import Text from '../../components/message-text.vue';
 import StreamText from '../../components/message-stream-text.vue';
 import File from '../../components/message-file.vue';
 import ImageMessage from '../../components/message-image.vue';
+import VoiceMessage from '../../components/message-voice.vue';
 import Video from '../../components/message-video.vue';
 import Merge from '../../components/message-merge.vue';
 import Known from '../../components/message-unknown.vue';
@@ -39,7 +40,15 @@ import emitter from "../../common/emmit";
 import { Group, AI } from "../../services/index";
 import { DynamicScroller, DynamicScrollerItem } from "vue-virtual-scroller";
 import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
-import { throttle } from 'lodash-es';
+
+// 轻量节流函数，替代 lodash-es 中的 throttle
+function throttle(fn, delay) {
+  let timer = null;
+  return function (...args) {
+    if (timer) return;
+    timer = setTimeout(() => { fn.apply(this, args); timer = null; }, delay);
+  };
+}
 
 const props = defineProps(['conversation']);
 const emit = defineEmits(["ondraft", "onclearmsg", "onquitgroup", "ontop", "ondisturb", "onback"]);
@@ -53,9 +62,21 @@ let { MessageType, Event, ConversationType, MentionType, SentState, MediaType } 
 
 let context = getCurrentInstance();
 
+// ===== 事件监听清理机制（修复 .once() 切换会话后失效 + 内存泄漏） =====
+const __cleanupFns = [];
+function listen(event, handler) { juggle.on(event, handler); __cleanupFns.push(() => juggle.off(event, handler)); }
+function listenEmitter(event, handler) { emitter.$on(event, handler); __cleanupFns.push(() => emitter.$off(event, handler)); }
+let __scrollHandler = null;
+let __focusoutHandler = null;
+// ================================================================
+
 let state = reactive({
   isShowAside: false,
   isShowEmoji: false,
+  isRecording: false,
+  recordingTime: 0,
+  mediaRecorder: null,
+  audioChunks: [],
   isShowTransfer: false,
   isShowTransferMember: false,
   isShowGroupMute: false,
@@ -90,7 +111,7 @@ let state = reactive({
   loadError: null,
 });
 
-juggle.once(Event.MESSAGE_RECEIVED, (message) => {
+listen(Event.MESSAGE_RECEIVED, (message) => {
   if (conversationTools.isSameConversation(message, state)) {
     let index = utils.find(state.messages, (msg) => {
       return utils.isEqual(msg.messageId, message.messageId)
@@ -111,7 +132,7 @@ juggle.once(Event.MESSAGE_RECEIVED, (message) => {
   }
 });
 
-juggle.once(Event.STREAM_APPENDED, ({ message }) => {
+listen(Event.STREAM_APPENDED, ({ message }) => {
   if (conversationTools.isSameConversation(message, state)) {
     let msg = findMsgById(message) || {};
     if(utils.isEmpty(msg)){
@@ -121,7 +142,7 @@ juggle.once(Event.STREAM_APPENDED, ({ message }) => {
     utils.extend(msg.streamMsg, { isEnd: false, streams })
   }
 });
-juggle.once(Event.STREAM_COMPLETED, ({ message }) => {
+listen(Event.STREAM_COMPLETED, ({ message }) => {
   if (conversationTools.isSameConversation(message, state)) {
     let msg = findMsgById(message) || {};
     if(utils.isEmpty(msg)){
@@ -138,7 +159,7 @@ function findMsgById(msg){
   return state.messages[index];
 }
 
-juggle.once(Event.MESSAGE_UPDATED, (notify) => {
+listen(Event.MESSAGE_UPDATED, (notify) => {
   if (conversationTools.isSameConversation(notify, state)) {
     let index = utils.find(state.messages, (msg) => {
       return utils.isEqual(msg.messageId, notify.messageId)
@@ -150,7 +171,7 @@ juggle.once(Event.MESSAGE_UPDATED, (notify) => {
   }
 });
 
-juggle.once(Event.MESSAGE_REACTION_CHANGED, (notify) => {
+listen(Event.MESSAGE_REACTION_CHANGED, (notify) => {
   if (conversationTools.isSameConversation(notify, state)) {
     let index = utils.find(state.messages, (msg) => {
       return utils.isEqual(msg.messageId, notify.messageId)
@@ -177,7 +198,7 @@ juggle.once(Event.MESSAGE_REACTION_CHANGED, (notify) => {
   }
 });
 
-juggle.once(Event.MESSAGE_REMOVED, (notify) => {
+listen(Event.MESSAGE_REMOVED, (notify) => {
   if (conversationTools.isSameConversation(notify, state)) {
     let { messages } = notify;
     utils.forEach(messages, (item) => {
@@ -189,7 +210,7 @@ juggle.once(Event.MESSAGE_REMOVED, (notify) => {
   }
 });
 
-juggle.once(Event.MESSAGE_RECALLED, (notify) => {
+listen(Event.MESSAGE_RECALLED, (notify) => {
   if (conversationTools.isSameConversation(notify, state)) {
     let index = utils.find(state.messages, (msg) => {
       return utils.isEqual(msg.messageId, notify.content.messageId)
@@ -198,7 +219,7 @@ juggle.once(Event.MESSAGE_RECALLED, (notify) => {
   }
 });
 
-juggle.once(Event.MESSAGE_SET_TOP, async ({ message, isTop, operator }) => {
+listen(Event.MESSAGE_SET_TOP, async ({ message, isTop, operator }) => {
   if (conversationTools.isSameConversation(message, state)) {
     let { conversationId, conversationType, messageId } = message;
     juggle.getMessagesByIds({ conversationType, conversationId, messageIds: [messageId] }).then(({ messages = [] }) => {
@@ -209,7 +230,7 @@ juggle.once(Event.MESSAGE_SET_TOP, async ({ message, isTop, operator }) => {
   }
 });
 
-juggle.once(Event.MESSAGE_READ, (notify) => {
+listen(Event.MESSAGE_READ, (notify) => {
   if (conversationTools.isSameConversation(notify, state)) {
     let { messages } = notify;
     utils.forEach(messages, (result) => {
@@ -233,14 +254,14 @@ juggle.once(Event.MESSAGE_READ, (notify) => {
   }
 });
 
-emitter.$on(EVENT_NAME.SEND_MESSAGE, (msg) => {
+listenEmitter(EVENT_NAME.SEND_MESSAGE, (msg) => {
   state.messages.unshift(msg);
 });
 
 let canscroll = true;
 nextTick(() => {
   let { messages } = context.refs;
-  messages.addEventListener("scroll", throttle(() => {
+  __scrollHandler = throttle(() => {
     if (canscroll) {
       let scrollTop = messages.scrollTop;
       // if (utils.isEqual(scrollTop, 0)) {
@@ -264,10 +285,11 @@ nextTick(() => {
         });
       }
     }
-  }, 100));
+  }, 100);
+  messages.addEventListener("scroll", __scrollHandler);
 })
 
-emitter.$on(EVENT_NAME.ON_GROUP_MEMBER_ADDED, ({ members }) => {
+listenEmitter(EVENT_NAME.ON_GROUP_MEMBER_ADDED, ({ members }) => {
   let { mentionMembers } = state;
   utils.forEach(members, (member) => {
     let _member = utils.clone(member);
@@ -280,7 +302,7 @@ emitter.$on(EVENT_NAME.ON_GROUP_MEMBER_ADDED, ({ members }) => {
   });
 });
 
-emitter.$on(EVENT_NAME.ON_GROUP_MEMBER_REMOVED, ({ members }) => {
+listenEmitter(EVENT_NAME.ON_GROUP_MEMBER_REMOVED, ({ members }) => {
   let { mentionMembers } = state;
   utils.forEach(members, (member) => {
     let index = utils.find(mentionMembers, (_member) => {
@@ -392,6 +414,38 @@ function onMentionSelected(index) {
   utils.extend(state, { isShowMention: false, selectMentionIndex: 0, mentions, content });
 }
 let isSending = false;
+// ===== 语音消息 =====
+let __recordTimer = null;
+async function onStartVoiceRecord(){
+  if(state.isRecording) return;
+  try {
+    let stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    state.audioChunks = [];
+    state.mediaRecorder = new MediaRecorder(stream);
+    state.mediaRecorder.ondataavailable = (e) => { if(e.data.size > 0) state.audioChunks.push(e.data); };
+    state.mediaRecorder.onstop = () => { stream.getTracks().forEach(t => t.stop()); onSendVoiceMessage(); };
+    state.mediaRecorder.start();
+    state.isRecording = true;
+    state.recordingTime = 0;
+    __recordTimer = setInterval(() => { state.recordingTime++; if(state.recordingTime >= 60){ onStopVoiceRecord(); } }, 1000);
+    context.proxy.$toast({ text: '正在录音，松开发送', icon: 'success' });
+  } catch(e) { context.proxy.$toast({ text: '无法访问麦克风，请检查权限', icon: 'error' }); }
+}
+function onStopVoiceRecord(){
+  if(!state.isRecording) return;
+  state.isRecording = false;
+  if(__recordTimer){ clearInterval(__recordTimer); __recordTimer = null; }
+  if(state.mediaRecorder && state.mediaRecorder.state !== 'inactive'){ state.mediaRecorder.stop(); }
+}
+function onSendVoiceMessage(){
+  if(state.audioChunks.length === 0 || state.recordingTime < 1){ context.proxy.$toast({ text: '录音时间太短', icon: 'error' }); return; }
+  let blob = new Blob(state.audioChunks, { type: 'audio/webm' });
+  let file = new File([blob], 'voice_' + Date.now() + '.webm', { type: 'audio/webm' });
+  let { conversation: { conversationId, conversationType } } = props;
+  let msg = { conversation: { conversationId, conversationType }, content: { url: URL.createObjectURL(blob), duration: state.recordingTime, file: file } };
+  juggle.sendVoiceMessage(msg, { onbefore: (message) => { message.sentTime = Date.now(); message.sentState = SentState.SENDING; state.messages.unshift(message); } }).then(({ sentTime, messageId }) => { let index = utils.findIndex(state.messages, (m) => utils.isEqual(m.messageId, messageId)); if(index > -1){ utils.extend(state.messages[index], { sentTime, sentState: SentState.SUCCESS }); } }).catch((err) => { context.proxy.$toast({ text: '语音发送失败', icon: 'error' }); });
+}
+
 function onSend() {
   let { selectMentionIndex, mentions, isShowMention, content } = state
   if (utils.isEmpty(content)) {
@@ -465,7 +519,7 @@ function onSend() {
   
   onShowEmoji(false);
   scrollBottom();
-  juggle.sendMessage(msg,  {
+  im.sendWithRetry(msg,  {
     onbefore: (message) => {
       message.sentTime = Date.now();
       message.sentState = SentState.SENDING;
@@ -499,6 +553,13 @@ function onFileClick(e){
 }
 function onFileChange(e) {
   let file = e.target.files[0];
+  if(!file) return;
+  const MAX_FILE_SIZE = 50 * 1024 * 1024;
+  if(file.size > MAX_FILE_SIZE){
+    context.proxy.$toast({ text: "文件不能超过 50MB", icon: "error" });
+    e.target.value = "";
+    return;
+  }
   let { conversation: { conversationId, conversationType } } = props;
   let message = {
     conversationType: conversationType,
@@ -800,9 +861,10 @@ nextTick(() => {
     inputFocus()
   }
   let { messageInput } = context.refs;
-  messageInput.addEventListener("focusout", function(){
+  __focusoutHandler = function(){
     window.scrollTo(0,0)
-  }); 
+  };
+  messageInput.addEventListener("focusout", __focusoutHandler);
 })
 
 function inputFocus(){
@@ -812,7 +874,7 @@ function inputFocus(){
 function onResendMessage({ message }){
   let index = utils.find(state.messages, (m) => { return utils.isEqual(m.tid, message.tid)});
   let _msg = state.messages[index];
-  juggle.sendMessage(message,  {
+  im.sendWithRetry(message,  {
     onbefore: () => {
       let _msg = state.messages[index];
       _msg.sentState = SentState.SENDING;      
@@ -914,6 +976,21 @@ watch(() => state.content, (val) => {
   }
 });
 
+
+// ===== 组件卸载时清理所有事件监听器 =====
+onUnmounted(() => {
+  __cleanupFns.forEach(fn => { try { fn(); } catch(e) {} });
+  __cleanupFns.length = 0;
+  try {
+    let msgs = context.refs.messages;
+    if (msgs && __scrollHandler) msgs.removeEventListener("scroll", __scrollHandler);
+  } catch(e) {}
+  try {
+    let input = context.refs.messageInput;
+    if (input && __focusoutHandler) input.removeEventListener("focusout", __focusoutHandler);
+  } catch(e) {}
+});
+// ========================================
 </script>
 <template>
   <div class="tyn-main tyn-chat-content aside-collapsed"
@@ -974,7 +1051,7 @@ watch(() => state.content, (val) => {
       <WithoutMessage v-if="state.isFinished"></WithoutMessage>
       <DynamicScroller
         :items="state.messages"
-        :min-item-size="80"
+        :min-item-size="80" :max-item-size="500"
         key-field="messageId"
         class="tyn-reply"
       >
@@ -1004,6 +1081,16 @@ watch(() => state.content, (val) => {
                   @onpinned="onPinned">
                 </Text>
 
+                <VoiceMessage v-else-if="utils.isEqual(message.name, MessageType.VOICE)" :message="message"
+                  @onrecall="onRecall"
+                  @ontransfer="onShowTransfer"
+                  @onreply="onReply"
+                  @onreaction="onReaction"
+                  @onfav="onFav"
+                  @onpinned="onPinned"
+                  @onretry="onResendMessage">
+                </VoiceMessage>
+
                 <ImageMessage v-else-if="utils.isEqual(message.name, MessageType.IMAGE)" :message="message"
                   @onrecall="onRecall"
                   @onpreview="onPreviewImage"
@@ -1011,16 +1098,14 @@ watch(() => state.content, (val) => {
                   @onreply="onReply"
                   @onreaction="onReaction"
                   @onfav="onFav"
-                  @onpinned="onPinned">
-                </ImageMessage>
+                  `@onpinned="onPinned">`r`n                  @onretry="onResendMessage">`r`n                `</ImageMessage>
 
                 <File v-else-if="utils.isEqual(message.name, MessageType.FILE)" :message="message"
                   @onrecall="onRecall"
                   @ontransfer="onShowTransfer"
                   @onreply="onReply"
                   @onfav="onFav"
-                  @onpinned="onPinned">
-                </File>
+                  `@onpinned="onPinned">`r`n                  @onretry="onResendMessage">`r`n                `</File>
 
                 <Video v-else-if="utils.isEqual(message.name, MessageType.VIDEO)" :message="message"
                   @onrecall="onRecall"
@@ -1028,8 +1113,7 @@ watch(() => state.content, (val) => {
                   @onreply="onReply"
                   @onreaction="onReaction"
                   @onfav="onFav"
-                  @onpinned="onPinned">
-                </Video>
+                  `@onpinned="onPinned">`r`n                  @onretry="onResendMessage">`r`n                `</Video>
 
                 <Merge v-else-if="utils.isEqual(message.name, MessageType.MERGE)" :message="message"
                   @onrecall="onRecall"

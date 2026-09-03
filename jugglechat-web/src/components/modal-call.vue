@@ -24,6 +24,7 @@ let state = reactive({
   activeCallId: '',
   callTime: '00:00:00',
   isMuteSpeaker: false,
+
   isMuteMic: false,
   session: {},
   friends: [],
@@ -217,10 +218,6 @@ function onMinWindow(isMin){
               <div class="jcall-tool-icon wr jg-icon-speaker"  :class="{ 'jc-tool-active': !state.isMuteSpeaker }"></div>
               <div class="jcall-tool-label"  :class="{ 'jc-tool-active': !state.isMuteSpeaker }">{{ state.isMuteSpeaker ? '扬声器已关闭' : '扬声器已打开'}}</div>
             </div>
-            <!-- <div class="jcall-tool" @click="on">
-              <div class="jcall-tool-icon wr jg-icon-camera-mute"></div>
-              <div class="jcall-tool-label">摄像头</div>
-            </div> -->
             <div class="jcall-tool" v-if="state.session.isMultiCall" @click="onInvite(true)">
               <div class="jcall-tool-icon wr jg-icon-rtc-add jc-tool-active"></div>
               <div class="jcall-tool-label jc-tool-active">邀请成员</div>

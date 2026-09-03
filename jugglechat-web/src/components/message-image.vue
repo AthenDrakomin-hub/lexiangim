@@ -133,7 +133,7 @@ function onRetry(){
         </div>
         <div class="jg-message-senttime" v-if="props.message.sentTime">{{ utils.formatTimetoHM(props.message.sentTime) }}</div>
         <div v-if="props.message.sentState == 3" class="jg-msg-retry" @click.stop="onRetry">
-          <span class="wr jg-icon-retry"></span>
+          <JgIcon name="retry" />
           <span>发送失败，点击重试</span>
         </div>
       </div>

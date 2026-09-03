@@ -9,6 +9,7 @@ import './assets/css/app.css';
 import './assets/css/custom.css';
 // import './assets/css/h5.css'; // 纯桌面端应用，注释掉移动端样式
 import Toast from './components/toast';
+import JgIcon from './components/JgIcon.vue';
 import Modal from './components/modal-confirm';
 
 // if(location.search == '?debug'){
@@ -29,6 +30,7 @@ async function init() {
     }
   });
   Toast.install(app);
+  app.component('JgIcon', JgIcon);
   Modal.install(app);
   await setupRouter(app);
   app.mount('#app');

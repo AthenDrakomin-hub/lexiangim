@@ -101,6 +101,7 @@ function onRemoveFriend(){
           <div class="tyn-media-row">
             <div class="tyn-media-col" v-if="!utils.isEqual(props.current.type, CONTACT_TYPE.NEW_FRIEND) || (utils.isEqual(props.current.type, CONTACT_TYPE.NEW_FRIEND) && utils.isEqual(props.current.status, FRIEND_APPLY_STATUS.ACCEPTED))">
               <div class="wr jg-icon-message btn btn-light jg-size-md w-100 contact-send-msg" @click="onConversation">发起会话</div>
+              <div class="wr jg-icon-edit btn btn-light jg-size-md w-100" @click="onShowRemarkEdit" v-if="utils.isEqual(props.current.type, ConversationType.PRIVATE)">设置备注</div>
               <div class="wr jg-icon-message btn btn-light jg-size-md w-100 jg-warn-bg" @click="onRemoveFriend" v-if="utils.isEqual(props.current.type, ConversationType.PRIVATE)" >删除好友</div>
             </div>
             <div class="tyn-media-col" v-else-if="!props.current.isOneSelf && utils.isEqual(props.current.status, FRIEND_APPLY_STATUS.APPLYING)">
@@ -108,6 +109,22 @@ function onRemoveFriend(){
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+  <!-- 备注编辑弹窗 -->
+  <div class="jg-modal-overlay" v-if="remarkState.isShowEdit" @click.self="remarkState.isShowEdit = false">
+    <div class="jg-modal-container" style="max-width:400px;">
+      <div class="jg-modal-header">
+        <div class="jg-modal-title">设置备注</div>
+        <button class="jg-modal-close" @click="remarkState.isShowEdit = false">✕</button>
+      </div>
+      <div class="jg-modal-body">
+        <input type="text" class="jg-modal-input" v-model="remarkState.remark" placeholder="请输入备注名" maxlength="20" />
+      </div>
+      <div class="jg-modal-footer">
+        <button class="jg-modal-btn jg-modal-btn-cancel" @click="remarkState.isShowEdit = false">取消</button>
+        <button class="jg-modal-btn jg-modal-btn-confirm" @click="onSaveRemark">保存</button>
       </div>
     </div>
   </div>

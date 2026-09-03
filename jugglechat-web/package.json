@@ -13,7 +13,6 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "clipboard.js": "^1.0.1",
     "comlink": "^4.4.2",
     "event-source-polyfill": "^1.0.31",
     "html2canvas": "^1.4.1",
@@ -31,11 +30,14 @@
     "vue3-image-preview": "^0.2.7"
   },
   "devDependencies": {
+    "@iconify-json/ic": "^1.2.4",
     "@vitejs/plugin-legacy": "^6.0.0",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vitejs/plugin-vue-jsx": "^3.0.0",
     "husky": "^9.1.6",
+    "playwright": "^1.62.1",
     "terser": "^5.37.0",
+    "unplugin-icons": "^23.0.1",
     "vite": "^4.1.4"
   }
 }

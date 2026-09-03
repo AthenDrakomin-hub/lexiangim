@@ -6,7 +6,8 @@
   font-weight: 400;
   font-style: normal;
   font-display: swap;
-  src: url('../fonts/Poppins-Regular.woff') format('woff'),
+  src: url('../fonts/Poppins-Regular.woff2') format('woff2'),
+       url('../fonts/Poppins-Regular.woff') format('woff'),
        url('../fonts/Poppins-Regular.ttf') format('truetype');
 }
 @font-face {
@@ -14,7 +15,8 @@
   font-weight: 500;
   font-style: normal;
   font-display: swap;
-  src: url('../fonts/Poppins-Medium.woff') format('woff'),
+  src: url('../fonts/Poppins-Medium.woff2') format('woff2'),
+       url('../fonts/Poppins-Medium.woff') format('woff'),
        url('../fonts/Poppins-Medium.ttf') format('truetype');
 }
 @font-face {
@@ -22,7 +24,8 @@
   font-weight: 600;
   font-style: normal;
   font-display: swap;
-  src: url('../fonts/Poppins-SemiBold.woff') format('woff'),
+  src: url('../fonts/Poppins-SemiBold.woff2') format('woff2'),
+       url('../fonts/Poppins-SemiBold.woff') format('woff'),
        url('../fonts/Poppins-SemiBold.ttf') format('truetype');
 }
 @font-face {
@@ -30,7 +33,8 @@
   font-weight: 700;
   font-style: normal;
   font-display: swap;
-  src: url('../fonts/Poppins-Bold.woff') format('woff'),
+  src: url('../fonts/Poppins-Bold.woff2') format('woff2'),
+       url('../fonts/Poppins-Bold.woff') format('woff'),
        url('../fonts/Poppins-Bold.ttf') format('truetype');
 }
 
@@ -74,19 +78,16 @@ body {
   background-position: 54%; */
   position: relative;
 }
-.tyn-root::after{
+.tyn-root::after {
+  /* 已移除：改为纯色 Discord 背景，不再使用涂鸦图案 */
   content: "";
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  background-image: url(../images/cover/bg-chat.png);
-  background-position: top right;
-  background-size: 510px auto;
-  background-repeat: repeat;
-  mix-blend-mode: overlay;
-  opacity: 0.48;
+  /* background-image: url(../images/cover/bg-chat.png); */
+  background-color: var(--jg-bg-primary, #313338);
   z-index: -1;
 }
 .tyn-root::before{
@@ -334,6 +335,10 @@ body {
   min-width: 62px;
 }
 .jg-asider-footer-item{
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -341,9 +346,7 @@ body {
   font-size: var(--jg-font-size-xs);
   font-weight: 600;
   cursor: pointer;
-  height: 40px;
-  width: 40px;
-  color: #7f7e82;
+  color: var(--jg-text-muted);
   position: relative;
 }
 
@@ -363,7 +366,7 @@ body {
   border-radius: var(--jg-radius-circle);
 }
 .jg-footer-active{
-  color: #0000ffe8;
+  color: var(--jg-primary);
 }
 
 .tyn-aside-search {
@@ -950,7 +953,7 @@ body {
   --reply-text: #000000;
   --reply-anchor-text: var(--bs-primary-400);
   --reply-anchor-hover: var(--bs-primary);
-  --outgoing-message-bg: #316ff3;
+  --outgoing-message-bg: #5865f2;
   --outgoing-message-text: var(--bs-white);
   --radius-large: .5rem;
   --radius-small: .25rem;
@@ -990,7 +993,7 @@ body {
   font-size: var(--jg-font-size-xs);
   font-weight: 500;
   text-align: center;
-  color: #111b2182;
+  color: rgba(0,0,0,0.51);
   margin: 1rem 0;
 }
 
@@ -1100,7 +1103,7 @@ body {
   left: auto;
   right: -17px;
   top: 11px;
-  color: #effcde;
+  color: var(--jg-text-white);
 }
 .outgoing .tyn-reply-text {
   color: #111b21;
@@ -1110,7 +1113,7 @@ body {
 /* 深色模式出站消息气泡 - 使用品牌蓝色 */
 [data-bs-theme="dark"] .outgoing .tyn-reply-text {
   color: #ffffff;
-  background: #1a73e8;
+  background: #5865f2;
 }
 .outgoing .tyn-reply-text::before{
   --chat: #d9fdd3;
@@ -1126,7 +1129,7 @@ body {
 
 /* 深色模式出站消息气泡箭头 */
 [data-bs-theme="dark"] .outgoing .tyn-reply-text::before {
-  --chat: #1a73e8;
+  --chat: #5865f2;
 }
 .tyn-reply-link {
   display: flex;
@@ -1957,15 +1960,15 @@ body {
   margin-bottom: 12px;
 }
 .jg-modal-header .title{
-  color: #242325;
+  color: var(--jg-text-header);
   font-weight: 700;
   font-size: var(--jg-font-size-lg);
 }
 .jg-modal-add::before{
-  color: #069806;
+  color: var(--jg-success);
 }
 .jg-modal-add:hover{
-  color: #242325 !important;
+  color: var(--jg-text-header) !important;
 }
 
 .tyn-common-aside {
@@ -2009,7 +2012,7 @@ body {
 }
 .tyn-common-header .title{
   font-size: var(--jg-font-size-lg);
-  color: #2b2a2a;
+  color: var(--jg-text-body);
   font-weight: 600;
 }
 .tyn-common-header .close{
@@ -2035,7 +2038,7 @@ body {
   /* 消息气泡深色模式 */
   --reply-bg: #2d2d44;
   --reply-text: #e6e6e6;
-  --outgoing-message-bg: #1a73e8;
+  --outgoing-message-bg: #5865f2;
   --outgoing-message-text: #ffffff;
 }
 
@@ -2053,7 +2056,7 @@ body {
 
 /* 深色模式出站消息 */
 [data-bs-theme="dark"] .outgoing .tyn-reply-text {
-  background: #1a73e8;
+  background: #5865f2;
   color: #ffffff;
 }
 

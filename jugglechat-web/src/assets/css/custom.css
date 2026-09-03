@@ -390,7 +390,7 @@
   padding: 0;
 }
 .tny-message{
-  transition: background 0.4s ease;
+  transition: background 0.15s ease;
   /* background: hsl(215deg 89% 51% / 20%);; */
 }
 .tny-message:hover{
@@ -604,7 +604,7 @@
   left: 50%;
   top: -100%;
   transform: translate(-50%, -10%);
-  transition: all .4s ease;
+  transition: all 0.15s ease;
   display: flex;
   align-items: center;
   border-radius: var(--jg-radius-md);
@@ -1210,7 +1210,7 @@
 }
 
 .emoji {
-  background: url(../images/emoji-sprite.png) transparent;
+  background: url(../images/emoji-sprite.webp) transparent;
   background-repeat: no-repeat;
   width: 30px;
   height: 30px;
@@ -1546,7 +1546,7 @@
 }
 .jg-conversation-tool{
   margin-right: var(--jg-space-25);
-  color: #242325;
+  color: var(--jg-text-body);
   cursor: pointer;
   font-size: var(--jg-font-size-sm);
   font-weight: 700;

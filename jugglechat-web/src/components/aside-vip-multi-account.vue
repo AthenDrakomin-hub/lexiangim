@@ -1,6 +1,6 @@
 <template>
   <Asider :isShow="isShow" title="账号多开" @oncancel="onCancel">
-    <div class="admin-multi-account">
+    <div class="vip-multi-account">
       <div class="section-header">
         <span class="title">已保存账号</span>
         <button class="btn-add" @click="showAddDialog = true">+ 添加账号</button>
@@ -57,7 +57,7 @@
 <script setup>
 import { reactive, onMounted } from "vue";
 import Asider from "./aside.vue";
-import Admin from "../services/adminservice";
+import Vip from "../services/vipservice";
 import utils from "../common/utils";
 import emitter from "../common/emmit";
 import { EVENT_NAME, STORAGE } from "../common/enum";
@@ -79,7 +79,7 @@ onMounted(() => {
 
 async function loadAccounts() {
   try {
-    state.accounts = await Admin.getMultiAccounts();
+    state.accounts = await Vip.getMultiAccounts();
   } catch (e) {
     console.error("加载多开账号失败", e);
   }
@@ -92,7 +92,7 @@ async function onAdd() {
   }
   state.adding = true;
   try {
-    let success = await Admin.addMultiAccount(state.addForm.userId, state.addForm.token);
+    let success = await Vip.addMultiAccount(state.addForm.userId, state.addForm.token);
     if (success) {
       utils.toast("添加成功");
       state.showAddDialog = false;
@@ -110,7 +110,7 @@ async function onAdd() {
 
 async function onSwitch(acc) {
   try {
-    let data = await Admin.switchMultiAccount(acc.sub_user_id);
+    let data = await Vip.switchMultiAccount(acc.sub_user_id);
     if (data && data.token) {
       // 保存新的用户信息
       let user = Storage.get(STORAGE.USER_TOKEN);
@@ -133,7 +133,7 @@ async function onSwitch(acc) {
 async function onRemove(acc) {
   if (!confirm(`确定要移除账号 ${acc.nickname || acc.sub_user_id} 吗？`)) return;
   try {
-    let success = await Admin.removeMultiAccount(acc.sub_user_id);
+    let success = await Vip.removeMultiAccount(acc.sub_user_id);
     if (success) {
       utils.toast("移除成功");
       loadAccounts();
@@ -151,7 +151,7 @@ function onCancel() {
 </script>
 
 <style scoped>
-.admin-multi-account {
+.vip-multi-account {
   padding: 16px;
 }
 .section-header {

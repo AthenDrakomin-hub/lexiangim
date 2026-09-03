@@ -12,7 +12,6 @@ import im from "../common/im";
 import messageUtils from "./message-utils";
 import { REG_EXP, MESSAGE_OP_TYPE } from "../common/enum";
 import ReactionEmoji from "../components/emoji-reaction.vue"
-import Clipboard from 'clipboard.js';
 import common from "../common/common";
 import { formatMarkdownAsync } from "../common/markdown-worker";
 
@@ -51,7 +50,7 @@ let context = getCurrentInstance();
 
 function onCopy(){
   let { content } = props.message;
-  Clipboard.copy(content.content, utils.noop, utils.noop);
+  navigator.clipboard.writeText(content.content);
   context.proxy.$toast({
     text: `已复制`,
     icon: 'success'
@@ -194,7 +193,7 @@ function onRetry(){
         <div class="wr message-state message-send-loading message-sending" v-if="props.message.sentState == 1"></div>
         <div class="wr jg-icon-failed message-state message-failed" v-if="props.message.sentState == 3" @click.stop="onResend"></div>
         <div v-if="props.message.sentState == 3" class="jg-msg-retry" @click.stop="onRetry">
-          <span class="wr jg-icon-retry"></span>
+          <JgIcon name="retry" />
           <span>发送失败，点击重试</span>
         </div>
 

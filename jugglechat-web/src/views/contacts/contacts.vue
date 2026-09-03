@@ -3,7 +3,7 @@ import utils from "../../common/utils";
 import ContactDetail from "./detail.vue";
 import AsiderContactDetail from "../../components/aside-contact-detail.vue";
 import AsiderFriendAdd from "../../components/aside-friend-add.vue";
-import ModalGroups from "../../components/modal-groups.vue";
+import AsiderGroupAddMember from "../../components/aside-group-add-member.vue";
 import { useRouter } from "vue-router";
 import Dropmenu from "./dropmenu.vue";
 import { reactive, getCurrentInstance, watch } from "vue";
@@ -327,7 +327,7 @@ getFriends();
   </div>
   <AsiderContactDetail :is-show="state.isShowDetail && utils.isMobile()" :current="state.current" @onadded="onAddFriend" @onremoved="onRemoveFriend" @oncancel="onShowDetail(false)"></AsiderContactDetail>
   <AsiderFriendAdd :is-show="state.isShowAddFriend" @oncancel="onShowAddFriend(false)"></AsiderFriendAdd>
-  <ModalGroups :is-show="state.isShowCreateGroup" @oncancel="onShowCreateGroup(false)"></ModalGroups>
+  <AsiderGroupAddMember :is-show="state.isShowCreateGroup" :conversation="null" :members="[]" :right="false" @oncancel="onShowCreateGroup(false)" @onconfirm="onGroupCreated"></AsiderGroupAddMember>
 </template>
 
 <style scoped>

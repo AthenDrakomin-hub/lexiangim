@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, watch, nextTick, getCurrentInstance, ref } from "vue";
+import { reactive, watch, nextTick, getCurrentInstance, ref, onUnmounted } from "vue";
 import utils from "../common/utils";
 import common from "../common/common";
 import emitter from "../common/emmit";
@@ -113,6 +113,8 @@ watch(() => props.isShow, () => {
   }
 })
 
+
+onUnmounted(() => { if(favmsgs.value && __favScrollHandler) favmsgs.value.removeEventListener('scroll', __favScrollHandler); });
 </script>
 
 <template>
