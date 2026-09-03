@@ -22,5 +22,19 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  build: {
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vue-vendor': ['vue', 'vue-router', 'vue-demi'],
+          'juggleim-sdk': ['./src/libs/juggleim-es-1.8.0.js'],
+          'markdown': ['markdown-it'],
+          'media-utils': ['html2canvas', 'qrcode', 'qiniu-js', 'v-viewer'],
+          'virtual-scroller': ['vue-virtual-scroller'],
+        }
+      }
+    }
   }
 })
