@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
 import Storage from "../../common/storage";
@@ -163,7 +163,7 @@ async function onEnter() {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(160deg, #1a1b2e 0%, #2d2f4a 35%, #3d3f5c 70%, #4a4c6e 100%);
+  background: linear-gradient(160deg, #f0f4ff 0%, #e8ecf8 35%, #dfe4f2 70%, #d5dbeb 100%);
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
 }
@@ -194,9 +194,9 @@ async function onEnter() {
 .lx-bubble {
   position: absolute;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 100%);
-  border: 1px solid rgba(255,255,255,0.25);
-  box-shadow: inset 0 0 20px rgba(255,255,255,0.15), 0 4px 20px rgba(0,0,0,0.1);
+  background: radial-gradient(circle at 30% 30%, rgba(88,101,242,0.15) 0%, rgba(88,101,242,0.05) 50%, rgba(88,101,242,0.02) 100%);
+  border: 1px solid rgba(88,101,242,0.2);
+  box-shadow: inset 0 0 20px rgba(88,101,242,0.05), 0 4px 20px rgba(0,0,0,0.05);
 }
 .lx-bubble-1 { width: 90px; height: 90px; top: 8%; left: 5%; }
 .lx-bubble-2 { width: 50px; height: 50px; top: 15%; right: 12%; }
@@ -242,12 +242,12 @@ async function onEnter() {
 .lx-logo-text {
   font-size: 32px;
   font-weight: 700;
-  color: #ffffff;
+  color: #1a1d2e;
   letter-spacing: 2px;
 }
 .lx-subtitle {
   font-size: 18px;
-  color: rgba(255,255,255,0.85);
+  color: #4a5568;
   margin: 0;
   letter-spacing: 3px;
   font-weight: 400;
@@ -257,13 +257,13 @@ async function onEnter() {
 .lx-card {
   position: relative;
   width: 100%;
-  background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.08) 100%);
+  background: #ffffff;
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1.5px solid rgba(255,255,255,0.3);
+  border: 1.5px solid #e2e8f0;
   border-radius: 28px;
   padding: 40px 32px 32px;
-  box-shadow: 0 16px 48px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.3);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.08);
   text-align: center;
 }
 
@@ -275,9 +275,9 @@ async function onEnter() {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  border: 1.5px solid rgba(255,255,255,0.4);
-  background: rgba(255,255,255,0.1);
-  color: rgba(255,255,255,0.8);
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+  color: #64748b;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -286,9 +286,9 @@ async function onEnter() {
   padding: 0;
 }
 .lx-help-btn:hover {
-  background: rgba(255,255,255,0.25);
-  color: #ffffff;
-  border-color: rgba(255,255,255,0.6);
+  background: #e2e8f0;
+  color: #1e293b;
+  border-color: #cbd5e1;
   transform: scale(1.08);
 }
 
@@ -298,33 +298,33 @@ async function onEnter() {
 }
 
 /* 深色模式邀请页面 */
-[data-bs-theme="dark"] .lx-page {
-  background: linear-gradient(160deg, #1e1f22 0%, #2b2d31 35%, #313338 70%, #36393f 100%);
+.lx-page {
+  background: linear-gradient(160deg, #f0f4ff 0%, #e8ecf8 35%, #dfe4f2 70%, #d5dbeb 100%);
 }
 
-[data-bs-theme="dark"] .lx-logo-text {
-  color: #ffffff;
+.lx-logo-text {
+  color: #1a1d2e;
 }
 
-[data-bs-theme="dark"] .lx-subtitle {
-  color: rgba(255,255,255,0.7);
+.lx-subtitle {
+  color: #6b7280;
 }
 
-[data-bs-theme="dark"] .lx-card {
-  background: linear-gradient(135deg, rgba(30,30,50,0.85) 0%, rgba(20,20,40,0.95) 100%);
-  border: 1.5px solid rgba(255,255,255,0.1);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+.lx-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.08);
 }
 
-[data-bs-theme="dark"] .lx-help-btn {
-  border-color: rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.6);
+.lx-help-btn {
+  border-color: #e2e8f0;
+  background: #f8fafc;
+  color: #64748b;
 }
 
-[data-bs-theme="dark"] .lx-help-btn:hover {
-  background: rgba(255,255,255,0.15);
-  color: #ffffff;
+.lx-help-btn:hover {
+  background: #e2e8f0;
+  color: #1e293b;
 }
 
 .lx-input-wrap {
@@ -338,7 +338,7 @@ async function onEnter() {
   background: rgba(255,255,255,0.95);
   padding: 0 20px;
   font-size: 17px;
-  color: #dbdee1;
+  color: #1e293b;
   text-align: center;
   letter-spacing: 3px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.1);
@@ -424,7 +424,7 @@ async function onEnter() {
 }
 
 /* 深色模式帮助弹窗 */
-[data-bs-theme="dark"] .lx-help-modal-content {
+.lx-help-modal-content {
   background: var(--jg-bg-card);
   box-shadow: 0 24px 64px rgba(0,0,0,0.5);
 }
@@ -453,7 +453,7 @@ async function onEnter() {
 }
 
 /* 深色模式关闭按钮悬停 */
-[data-bs-theme="dark"] .lx-help-close:hover {
+.lx-help-close:hover {
   background: var(--jg-bg-hover);
   color: var(--jg-text-body);
 }

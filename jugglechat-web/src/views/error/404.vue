@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { useRouter } from "vue-router";
 const router = useRouter();
 function goHome() {
@@ -28,7 +28,7 @@ function goHome() {
 }
 
 /* 深色模式 404 页面背景 */
-[data-bs-theme="dark"] .error-404-page {
+.error-404-page {
   background: linear-gradient(180deg, #0d1117 0%, #161b22 100%);
 }
 
@@ -60,7 +60,7 @@ function goHome() {
 }
 
 /* 深色模式 404 标题 */
-[data-bs-theme="dark"] .error-404-title {
+.error-404-title {
   color: var(--jg-text-body);
 }
 
@@ -71,7 +71,7 @@ function goHome() {
 }
 
 /* 深色模式 404 描述 */
-[data-bs-theme="dark"] .error-404-desc {
+.error-404-desc {
   color: var(--jg-text-muted);
 }
 .error-404-btn {

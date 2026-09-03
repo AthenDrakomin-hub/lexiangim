@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { reactive, ref, onUnmounted } from "vue";
 import utils from "../common/utils";
 import messageUtils from "./message-utils";
@@ -145,10 +145,10 @@ onUnmounted(() => {
   opacity: 0.8;
   flex-shrink: 0;
 }
-[data-bs-theme="dark"] .jg-voice-message {
+.jg-voice-message {
   background: #374151;
 }
-[data-bs-theme="dark"] .jg-voice-message:hover {
+.jg-voice-message:hover {
   background: #4b5563;
 }
 </style>

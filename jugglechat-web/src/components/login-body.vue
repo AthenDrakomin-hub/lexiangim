@@ -636,34 +636,34 @@ function onShowServerSetting(isShow) {
 }
 
 /* ── 深色模式登录页 ─────────────────────────────────── */
-[data-bs-theme="dark"] .lx-page {
+.lx-page {
   background: linear-gradient(160deg, #1e1f22 0%, #2b2d31 35%, #313338 70%, #36393f 100%);
 }
 
-[data-bs-theme="dark"] .lx-wave-1 {
+.lx-wave-1 {
   background: radial-gradient(circle, rgba(88, 101, 242, 0.4) 0%, transparent 70%);
 }
 
-[data-bs-theme="dark"] .lx-wave-2 {
+.lx-wave-2 {
   background: radial-gradient(circle, rgba(88, 101, 242, 0.3) 0%, transparent 70%);
 }
 
-[data-bs-theme="dark"] .lx-bubble {
+.lx-bubble {
   background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.01) 100%);
   border: 1px solid rgba(255,255,255,0.08);
   box-shadow: inset 0 0 20px rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.3);
 }
 
-[data-bs-theme="dark"] .lx-server-settings {
+.lx-server-settings {
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.12);
 }
 
-[data-bs-theme="dark"] .lx-server-settings:hover {
+.lx-server-settings:hover {
   background: rgba(255,255,255,0.15);
 }
 
-[data-bs-theme="dark"] .lx-card {
+.lx-card {
   background: linear-gradient(135deg, rgba(30,30,50,0.85) 0%, rgba(20,20,40,0.95) 100%);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
@@ -671,64 +671,64 @@ function onShowServerSetting(isShow) {
   box-shadow: 0 16px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
-[data-bs-theme="dark"] .lx-input {
+.lx-input {
   border-color: rgba(255,255,255,0.15);
   background: rgba(255,255,255,0.08);
   color: #ffffff;
 }
 
-[data-bs-theme="dark"] .lx-input::placeholder {
+.lx-input::placeholder {
   color: rgba(255,255,255,0.4);
 }
 
-[data-bs-theme="dark"] .lx-input:focus {
+.lx-input:focus {
   border-color: rgba(255,255,255,0.3);
   background: rgba(255,255,255,0.12);
   box-shadow: 0 0 0 3px rgba(255,255,255,0.05);
 }
 
-[data-bs-theme="dark"] .lx-input-arrow {
+.lx-input-arrow {
   color: rgba(255,255,255,0.5);
 }
 
-[data-bs-theme="dark"] .lx-forgot {
+.lx-forgot {
   color: rgba(255,255,255,0.6);
 }
 
-[data-bs-theme="dark"] .lx-forgot:hover {
+.lx-forgot:hover {
   color: rgba(255,255,255,0.9);
 }
 
-[data-bs-theme="dark"] .lx-btn {
+.lx-btn {
   background: linear-gradient(135deg, #5865f2 0%, #4752c4 100%);
   box-shadow: 0 6px 24px rgba(88, 101, 242, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-[data-bs-theme="dark"] .lx-btn:hover {
+.lx-btn:hover {
   box-shadow: 0 10px 32px rgba(88, 101, 242, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-[data-bs-theme="dark"] .lx-toggle {
+.lx-toggle {
   color: rgba(255,255,255,0.7);
 }
 
-[data-bs-theme="dark"] .lx-toggle:hover {
+.lx-toggle:hover {
   color: #ffffff;
 }
 
-[data-bs-theme="dark"] .lx-terms-wrap {
+.lx-terms-wrap {
   color: rgba(255,255,255,0.6);
 }
 
-[data-bs-theme="dark"] .lx-terms-link {
+.lx-terms-link {
   color: #5865f2;
 }
 
-[data-bs-theme="dark"] .lx-terms-checkbox input {
+.lx-terms-checkbox input {
   accent-color: #5865f2;
 }
 
-[data-bs-theme="dark"] .lx-error {
+.lx-error {
   color: #ff8a80;
 }
 </style>

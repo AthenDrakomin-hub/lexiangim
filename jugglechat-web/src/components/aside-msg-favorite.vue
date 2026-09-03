@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { reactive, watch, nextTick, getCurrentInstance, ref, onUnmounted } from "vue";
 import utils from "../common/utils";
 import common from "../common/common";
@@ -223,7 +223,7 @@ onUnmounted(() => { if(favmsgs.value && __favScrollHandler) favmsgs.value.remove
 }
 
 /* 深色模式空状态标题 */
-[data-bs-theme="dark"] .jg-empty-title {
+.jg-empty-title {
   color: var(--jg-text-body);
 }
 
@@ -235,7 +235,7 @@ onUnmounted(() => { if(favmsgs.value && __favScrollHandler) favmsgs.value.remove
 }
 
 /* 深色模式空状态描述 */
-[data-bs-theme="dark"] .jg-empty-desc {
+.jg-empty-desc {
   color: var(--jg-text-muted);
 }
 
@@ -258,7 +258,7 @@ onUnmounted(() => { if(favmsgs.value && __favScrollHandler) favmsgs.value.remove
 }
 
 /* 深色模式加载旋转器 */
-[data-bs-theme="dark"] .jg-loading-spinner {
+.jg-loading-spinner {
   border-color: var(--jg-border);
 }
 
@@ -268,7 +268,7 @@ onUnmounted(() => { if(favmsgs.value && __favScrollHandler) favmsgs.value.remove
 }
 
 /* 深色模式加载文本 */
-[data-bs-theme="dark"] .jg-loading-text {
+.jg-loading-text {
   color: var(--jg-text-muted);
 }
 
@@ -283,7 +283,7 @@ onUnmounted(() => { if(favmsgs.value && __favScrollHandler) favmsgs.value.remove
 }
 
 /* 深色模式加载更多 */
-[data-bs-theme="dark"] .jg-load-more {
+.jg-load-more {
   color: var(--jg-text-muted);
 }
 .jg-load-more .jg-loading-spinner {

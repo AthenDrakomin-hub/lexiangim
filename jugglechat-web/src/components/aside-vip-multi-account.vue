@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Asider :isShow="isShow" title="账号多开" @oncancel="onCancel">
     <div class="vip-multi-account">
       <div class="section-header">
@@ -167,7 +167,7 @@ function onCancel() {
 }
 
 /* 深色模式标题 */
-[data-bs-theme="dark"] .section-header .title {
+.section-header .title {
   color: var(--jg-text-body);
 }
 
@@ -188,7 +188,7 @@ function onCancel() {
 }
 
 /* 深色模式空提示 */
-[data-bs-theme="dark"] .empty-tip {
+.empty-tip {
   color: var(--jg-text-muted);
 }
 .empty-tip .sub {
@@ -210,7 +210,7 @@ function onCancel() {
 }
 
 /* 深色模式账户项 */
-[data-bs-theme="dark"] .account-item {
+.account-item {
   background: var(--jg-bg-card);
 }
 
@@ -220,7 +220,7 @@ function onCancel() {
 }
 
 /* 深色模式活跃账户项 */
-[data-bs-theme="dark"] .account-item.active {
+.account-item.active {
   background: var(--jg-bg-hover);
 }
 .account-avatar {

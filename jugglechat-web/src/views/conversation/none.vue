@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { reactive } from "vue";
 const props = defineProps(['conversation']);
 const emit = defineEmits(["ondraft"]);
@@ -38,13 +38,13 @@ let state = reactive({
   color: #94a3b8;
   margin: 0;
 }
-[data-bs-theme="dark"] .intro-text {
+.intro-text {
   color: #f1f5f9;
 }
-[data-bs-theme="dark"] .intro-desc {
+.intro-desc {
   color: #64748b;
 }
-[data-bs-theme="dark"] .jg-chat-none-bg {
+.jg-chat-none-bg {
   background-color: #1e293b;
 }
 </style>

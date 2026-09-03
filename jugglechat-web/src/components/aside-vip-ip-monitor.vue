@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Asider :isShow="isShow" title="IP在线状态" @oncancel="onCancel">
     <div class="vip-ip-monitor">
       <!-- 搜索栏 -->
@@ -190,7 +190,7 @@ function onCancel() {
 }
 
 /* 深色模式空提示 */
-[data-bs-theme="dark"] .empty-tip {
+.empty-tip {
   color: var(--jg-text-muted);
 }
 
@@ -211,7 +211,7 @@ function onCancel() {
 }
 
 /* 深色模式用户项 */
-[data-bs-theme="dark"] .user-item {
+.user-item {
   background: var(--jg-bg-card);
 }
 
@@ -220,7 +220,7 @@ function onCancel() {
 }
 
 /* 深色模式用户项悬停 */
-[data-bs-theme="dark"] .user-item:hover {
+.user-item:hover {
   background: var(--jg-bg-hover);
 }
 .user-avatar {

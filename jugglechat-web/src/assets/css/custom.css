@@ -1,4 +1,4 @@
-@import './iconfont.css';
+﻿@import './iconfont.css';
 @import './jg-icon-aliases.css';
 @import './custom_chat.css';
 @import './custom_header.css';
@@ -399,7 +399,7 @@
 }
 
 /* 深色模式消息选中效果 */
-[data-bs-theme="dark"] .tny-message:hover {
+.tny-message:hover {
   background: var(--jg-bg-hover);
 }
 .tyn-modal.show{
@@ -789,7 +789,7 @@
 }
 
 /* 深色模式底部导航 */
-[data-bs-theme="dark"] .jg-footer {
+.jg-footer {
   border-top-color: var(--jg-border);
   color: var(--jg-text-muted);
 }
@@ -813,7 +813,7 @@
 }
 
 /* 深色模式侧边栏工具按钮 */
-[data-bs-theme="dark"] .jg-asider-tools .btn {
+.jg-asider-tools .btn {
   background-color: rgba(255,255,255,0.08);
 }
 .tyn-header-btn{
@@ -833,7 +833,7 @@
 }
 
 /* 深色模式搜索框组 */
-[data-bs-theme="dark"] .jg-asider-seach-box .form-group {
+.jg-asider-seach-box .form-group {
   border-color: rgba(255,255,255,0.15) !important;
   background: var(--jg-bg-input);
 }
@@ -847,7 +847,7 @@
 }
 
 /* 深色模式搜索图标 */
-[data-bs-theme="dark"] .jg-asider-seach-box .jg-search-icon::before {
+.jg-asider-seach-box .jg-search-icon::before {
   color: rgba(255,255,255,0.5);
 }
 .jg-asider-seach-box .form-control-wrap{
@@ -868,7 +868,7 @@
 }
 
 /* 深色模式工具栏搜索框 */
-[data-bs-theme="dark"] .jg-asider-tools .form-control-wrap {
+.jg-asider-tools .form-control-wrap {
   border-color: rgba(255,255,255,0.1);
   background: var(--jg-bg-input);
 }
@@ -922,7 +922,7 @@
 }
 
 /* 深色模式搜索框 */
-[data-bs-theme="dark"] .jg-search-rs-box {
+.jg-search-rs-box {
   background-color: var(--jg-bg-card);
   border: 1px solid var(--jg-border);
 }
@@ -967,7 +967,7 @@
 }
 
 /* 深色模式搜索预览框 */
-[data-bs-theme="dark"] .jg-search-preview-box {
+.jg-search-preview-box {
   background-color: var(--jg-bg-card);
   box-shadow: var(--jg-shadow);
 }
@@ -2183,7 +2183,7 @@
 }
 
 /* 深色模式底部工具 */
-[data-bs-theme="dark"] .jg-footer-tool {
+.jg-footer-tool {
   background-color: rgba(255,255,255,0.08);
 }
 .jg-footer-top-box .jg-footer-tool:first-child{

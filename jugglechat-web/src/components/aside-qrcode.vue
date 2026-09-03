@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { reactive, watch, getCurrentInstance } from "vue";
 import utils from "../common/utils";
 import { Group, User } from "../services";
@@ -130,7 +130,7 @@ watch(() => props.isShow, () => {
 }
 
 /* 深色模式加载文本 */
-[data-bs-theme="dark"] .jg-loading-text {
+.jg-loading-text {
   color: var(--jg-text-muted);
 }
 
@@ -146,7 +146,7 @@ watch(() => props.isShow, () => {
 }
 
 /* 深色模式错误文本 */
-[data-bs-theme="dark"] .jg-error-text {
+.jg-error-text {
   color: var(--jg-text-muted);
 }
 @keyframes spin {

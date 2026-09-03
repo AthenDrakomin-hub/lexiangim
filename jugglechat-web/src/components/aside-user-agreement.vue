@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { reactive, watch, getCurrentInstance } from "vue";
 import utils from "../common/utils";
 import { Group, User } from "../services";
@@ -198,7 +198,7 @@ watch(() => props.isShow, () => {
 }
 
 /* 深色模式协议文本 */
-[data-bs-theme="dark"] .jg-agreement-text {
+.jg-agreement-text {
   color: var(--jg-text-body);
 }
 
@@ -229,7 +229,7 @@ watch(() => props.isShow, () => {
 }
 
 /* 深色模式空状态文本 */
-[data-bs-theme="dark"] .jg-empty-text {
+.jg-empty-text {
   color: var(--jg-text-muted);
 }
 </style>

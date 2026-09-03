@@ -1,4 +1,4 @@
-@media (max-width: 768px) {  
+﻿@media (max-width: 768px) {  
   .tyn-root::after,
   .tyn-root::before{
     position: fixed;
@@ -136,7 +136,7 @@
   }
 
   /* 深色模式 H5 标题 */
-  [data-bs-theme="dark"] .jg-h5header-title {
+  .jg-h5header-title {
     color: var(--jg-text-body);
   }
   .jg-message-senttime,

@@ -1,4 +1,4 @@
-/** 01. FONTS */
+﻿/** 01. FONTS */
 
 /* Poppins — 英文/数字主字体（本地加载） */
 @font-face {
@@ -301,7 +301,7 @@ body {
 }
 
 /* 深色模式侧边栏背景 */
-[data-bs-theme="dark"] .tyn-aside {
+.tyn-aside {
   background-image: none;
   background: var(--jg-bg-card);
 }
@@ -351,11 +351,11 @@ body {
 }
 
 /* 深色模式底部导航项 */
-[data-bs-theme="dark"] .jg-asider-footer-item {
+.jg-asider-footer-item {
   color: var(--jg-text-muted);
 }
 
-[data-bs-theme="dark"] .jg-footer-active {
+.jg-footer-active {
   color: #5865f2;
 }
 .jg-asider-footer-item .nav-unreadcount{
@@ -395,7 +395,7 @@ body {
 }
 
 /* 深色模式活跃项 */
-[data-bs-theme="dark"] .tyn-aside-item.active {
+.tyn-aside-item.active {
   background: var(--jg-bg-hover);
 }
 .jg-aside-item-bubbly {
@@ -412,7 +412,7 @@ body {
 }
 
 /* 深色模式会话列表背景 */
-[data-bs-theme="dark"] .tyn-aside-body {
+.tyn-aside-body {
   background-image: none;
   background: #2b2d31;
 }
@@ -998,7 +998,7 @@ body {
 }
 
 /* 深色模式分隔线 */
-[data-bs-theme="dark"] .tyn-reply-separator {
+.tyn-reply-separator {
   color: rgba(255,255,255,0.4);
 }
 
@@ -1012,7 +1012,7 @@ body {
 }
 
 /* 深色模式分隔项 */
-[data-bs-theme="dark"] .tyn-separator-item {
+.tyn-separator-item {
   background: var(--jg-bg-card);
   color: var(--jg-text-muted);
 }
@@ -1111,7 +1111,7 @@ body {
 }
 
 /* 深色模式出站消息气泡 - 使用品牌蓝色 */
-[data-bs-theme="dark"] .outgoing .tyn-reply-text {
+.outgoing .tyn-reply-text {
   color: #ffffff;
   background: #5865f2;
 }
@@ -1128,7 +1128,7 @@ body {
 }
 
 /* 深色模式出站消息气泡箭头 */
-[data-bs-theme="dark"] .outgoing .tyn-reply-text::before {
+.outgoing .tyn-reply-text::before {
   --chat: #5865f2;
 }
 .tyn-reply-link {
@@ -2034,7 +2034,7 @@ body {
 }
 
 /* ── 深色模式额外覆盖 ───────────────────────────────────── */
-[data-bs-theme="dark"] {
+{
   /* 消息气泡深色模式 */
   --reply-bg: #2d2d44;
   --reply-text: #e6e6e6;
@@ -2055,244 +2055,244 @@ body {
 }
 
 /* 深色模式出站消息 */
-[data-bs-theme="dark"] .outgoing .tyn-reply-text {
+.outgoing .tyn-reply-text {
   background: #5865f2;
   color: #ffffff;
 }
 
 /* 输入框深色模式 */
-[data-bs-theme="dark"] .tyn-chat-form-enter {
+.tyn-chat-form-enter {
   background: var(--jg-bg-input);
   color: var(--jg-text-body);
 }
 
-[data-bs-theme="dark"] .tyn-chat-form-input {
+.tyn-chat-form-input {
   background: var(--jg-bg-input);
   color: var(--jg-text-body);
   border-color: var(--jg-border);
 }
 
 /* 聊天头部深色模式 */
-[data-bs-theme="dark"] .tyn-chat-head {
+.tyn-chat-head {
   background: var(--jg-bg-card);
   border-bottom-color: var(--jg-border);
 }
 
 /* 弹窗深色模式 */
-[data-bs-theme="dark"] .modal-content {
+.modal-content {
   background: var(--jg-bg-card);
   color: var(--jg-text-body);
   border-color: var(--jg-border);
 }
 
-[data-bs-theme="dark"] .modal-header {
+.modal-header {
   border-bottom-color: var(--jg-border);
 }
 
-[data-bs-theme="dark"] .modal-footer {
+.modal-footer {
   border-top-color: var(--jg-border);
 }
 
-[data-bs-theme="dark"] .modal-body {
+.modal-body {
   color: var(--jg-text-body);
 }
 
 /* 搜索框深色模式 */
-[data-bs-theme="dark"] .jg-search-rs-box {
+.jg-search-rs-box {
   background: var(--jg-bg-card);
   border-color: var(--jg-border);
 }
 
-[data-bs-theme="dark"] .jg-search-preview-box {
+.jg-search-preview-box {
   background: var(--jg-bg-card);
 }
 
 /* 会话列表项深色模式 */
-[data-bs-theme="dark"] .tyn-aside-body {
+.tyn-aside-body {
   background: var(--jg-bg-card);
 }
 
-[data-bs-theme="dark"] .tyn-aside-item.active {
+.tyn-aside-item.active {
   background: var(--jg-bg-hover);
 }
 
-[data-bs-theme="dark"] .tyn-aside-item:hover {
+.tyn-aside-item:hover {
   background: var(--jg-bg-hover);
 }
 
 /* 联系人页面深色模式 */
-[data-bs-theme="dark"] .jg-contact-action-btn:hover {
+.jg-contact-action-btn:hover {
   background: var(--jg-bg-hover);
 }
 
-[data-bs-theme="dark"] .jg-empty-title {
+.jg-empty-title {
   color: var(--jg-text-body);
 }
 
-[data-bs-theme="dark"] .jg-empty-desc {
+.jg-empty-desc {
   color: var(--jg-text-muted);
 }
 
 /* 设置页深色模式 */
-[data-bs-theme="dark"] .jg-header-user-signature {
+.jg-header-user-signature {
   color: var(--jg-text-muted);
 }
 
 /* 头像背景深色模式 */
-[data-bs-theme="dark"] .jg-topitem-avatar {
+.jg-topitem-avatar {
   background-color: rgba(255,255,255,0.1);
 }
 
 /* 分隔线深色模式 */
-[data-bs-theme="dark"] .tyn-aside-head {
+.tyn-aside-head {
   border-bottom-color: var(--jg-border);
 }
 
-[data-bs-theme="dark"] .tyn-aside-toplist {
+.tyn-aside-toplist {
   border-bottom-color: var(--jg-border);
 }
 
 /* 代码块深色模式 */
-[data-bs-theme="dark"] .tyn-code-block-title {
+.tyn-code-block-title {
   color: var(--jg-text-body);
   border-bottom-color: var(--jg-border);
   background: rgba(0,0,0,0.2);
 }
 
 /* Toast 深色模式 */
-[data-bs-theme="dark"] .jg-toast {
+.jg-toast {
   background: var(--jg-bg-card);
   border-color: var(--jg-border);
   color: var(--jg-text-body);
 }
 
 /* 滚动条深色模式 */
-[data-bs-theme="dark"] ::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background-color: rgba(255,255,255,0.15);
 }
 
 /* 通用文本颜色确保对比度 */
-[data-bs-theme="dark"] .tyn-media-col .content {
+.tyn-media-col .content {
   color: var(--jg-text-muted);
 }
 
-[data-bs-theme="dark"] .tyn-media-col .meta {
+.tyn-media-col .meta {
   color: var(--jg-text-muted);
 }
 
 /* 表单控件深色模式 */
-[data-bs-theme="dark"] .form-control {
+.form-control {
   background-color: var(--jg-bg-input);
   border-color: var(--jg-border);
   color: var(--jg-text-body);
 }
 
-[data-bs-theme="dark"] .form-control::placeholder {
+.form-control::placeholder {
   color: var(--jg-text-muted);
 }
 
-[data-bs-theme="dark"] .form-select {
+.form-select {
   background-color: var(--jg-bg-input);
   border-color: var(--jg-border);
   color: var(--jg-text-body);
 }
 
 /* 导航标签深色模式 */
-[data-bs-theme="dark"] .nav-tabs-line .nav-link {
+.nav-tabs-line .nav-link {
   color: var(--jg-text-body);
 }
 
-[data-bs-theme="dark"] .nav-tabs-line .nav-link:hover {
+.nav-tabs-line .nav-link:hover {
   color: var(--jg-primary);
 }
 
-[data-bs-theme="dark"] .nav-tabs-line .nav-link.active {
+.nav-tabs-line .nav-link.active {
   color: var(--jg-primary);
   border-bottom-color: var(--jg-primary);
 }
 
 /* 底部导航栏深色模式 */
-[data-bs-theme="dark"] .tyn-aside-footer {
+.tyn-aside-footer {
   background: var(--jg-bg-card);
   border-top-color: var(--jg-border);
 }
 
 /* 应用栏深色模式 */
-[data-bs-theme="dark"] .tyn-appbar {
+.tyn-appbar {
   background: var(--jg-bg-card);
   border-right-color: var(--jg-border);
 }
 
 /* 桌面标题栏深色模式 */
-[data-bs-theme="dark"] .tyn-desktop-header {
+.tyn-desktop-header {
   background-color: var(--jg-bg-card);
   border-bottom-color: var(--jg-border);
 }
 
-[data-bs-theme="dark"] .tyn-desktop-nav a {
+.tyn-desktop-nav a {
   color: var(--jg-text-body);
 }
 
 /* 登录页深色模式 - 通过 JS 切换背景 */
-[data-bs-theme="dark"] .lx-page {
+.lx-page {
   background: linear-gradient(160deg, #0d1117 0%, #161b22 35%, #21262d 70%, #30363d 100%);
 }
 
-[data-bs-theme="dark"] .lx-title {
+.lx-title {
   color: #ffffff;
   text-shadow: 0 2px 12px rgba(0,0,0,0.5);
 }
 
-[data-bs-theme="dark"] .lx-subtitle {
+.lx-subtitle {
   color: rgba(255,255,255,0.7);
 }
 
-[data-bs-theme="dark"] .lx-card {
+.lx-card {
   background: linear-gradient(135deg, rgba(30,30,50,0.8) 0%, rgba(20,20,40,0.9) 100%);
   border: 1.5px solid rgba(255,255,255,0.1);
   box-shadow: 0 16px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
-[data-bs-theme="dark"] .lx-input {
+.lx-input {
   border-color: rgba(255,255,255,0.15);
   background: rgba(255,255,255,0.08);
   color: #ffffff;
 }
 
-[data-bs-theme="dark"] .lx-input::placeholder {
+.lx-input::placeholder {
   color: rgba(255,255,255,0.4);
 }
 
-[data-bs-theme="dark"] .lx-input:focus {
+.lx-input:focus {
   border-color: rgba(255,255,255,0.3);
   background: rgba(255,255,255,0.12);
 }
 
-[data-bs-theme="dark"] .lx-forgot {
+.lx-forgot {
   color: rgba(255,255,255,0.6);
 }
 
-[data-bs-theme="dark"] .lx-toggle {
+.lx-toggle {
   color: rgba(255,255,255,0.7);
 }
 
-[data-bs-theme="dark"] .lx-terms-wrap {
+.lx-terms-wrap {
   color: rgba(255,255,255,0.6);
 }
 
-[data-bs-theme="dark"] .lx-terms-link {
+.lx-terms-link {
   color: #5865f2;
 }
 
 /* 侧边栏工具深色模式 */
-[data-bs-theme="dark"] .jg-asider-tools .btn {
+.jg-asider-tools .btn {
   background-color: rgba(255,255,255,0.08);
 }
 
-[data-bs-theme="dark"] .jg-asider-seach-box .form-control-wrap {
+.jg-asider-seach-box .form-control-wrap {
   border-color: rgba(255,255,255,0.1);
 }
 
-[data-bs-theme="dark"] .jg-asider-seach-box .jg-search-icon::before {
+.jg-asider-seach-box .jg-search-icon::before {
   color: rgba(255,255,255,0.5);
 }

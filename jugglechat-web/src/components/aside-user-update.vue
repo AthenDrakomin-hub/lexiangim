@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { reactive, watch, getCurrentInstance } from "vue";
 import utils from "../common/utils";
 import common from "../common/common";
@@ -210,7 +210,7 @@ function onUploadAvatar(e) {
 }
 
 /* 深色模式头像上传 */
-[data-bs-theme="dark"] .form-avatar-upload {
+.form-avatar-upload {
   background: var(--jg-bg-input);
   border-color: var(--jg-border);
 }
@@ -221,7 +221,7 @@ function onUploadAvatar(e) {
 }
 
 /* 深色模式头像上传悬停 */
-[data-bs-theme="dark"] .form-avatar-upload:hover {
+.form-avatar-upload:hover {
   background: var(--jg-bg-hover);
 }
 
@@ -232,7 +232,7 @@ function onUploadAvatar(e) {
 }
 
 /* 深色模式上传图标 */
-[data-bs-theme="dark"] .form-avatar-upload-icon {
+.form-avatar-upload-icon {
   color: var(--jg-text-muted);
 }
 .form-avatar-uploading {

@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import utils from "../../common/utils";
 import ContactDetail from "./detail.vue";
 import AsiderContactDetail from "../../components/aside-contact-detail.vue";
@@ -355,7 +355,7 @@ getFriends();
 }
 
 /* 深色模式联系人操作按钮 */
-[data-bs-theme="dark"] .jg-contact-action-btn:hover {
+.jg-contact-action-btn:hover {
   background: var(--jg-bg-hover);
 }
 
@@ -370,7 +370,7 @@ getFriends();
 }
 
 /* 深色模式联系人签名 */
-[data-bs-theme="dark"] .jg-contact-signature {
+.jg-contact-signature {
   color: var(--jg-text-muted);
 }
 .jg-contact-empty {
@@ -394,7 +394,7 @@ getFriends();
 }
 
 /* 深色模式空状态标题 */
-[data-bs-theme="dark"] .jg-empty-title {
+.jg-empty-title {
   color: var(--jg-text-body);
 }
 
@@ -406,7 +406,7 @@ getFriends();
 }
 
 /* 深色模式空状态描述 */
-[data-bs-theme="dark"] .jg-empty-desc {
+.jg-empty-desc {
   color: var(--jg-text-muted);
 }
 </style>

@@ -1,4 +1,4 @@
-.tyn-chat{
+﻿.tyn-chat{
   --content-gap-y: 0.5rem;
 }
 
@@ -38,7 +38,7 @@
   color: var(--jg-primary);
 }
 
-[data-bs-theme="dark"] .jg-msg-retry-btn:hover {
+.jg-msg-retry-btn:hover {
   background: var(--jg-bg-hover-blue);
   color: var(--jg-primary-light);
 }

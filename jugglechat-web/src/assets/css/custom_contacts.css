@@ -1,4 +1,4 @@
-.contact_dp_show{
+﻿.contact_dp_show{
   position: absolute; 
   inset: 0px 0px auto auto; 
   margin: 0px; 
@@ -71,11 +71,11 @@
 }
 
 /* 深色模式好友添加按钮 */
-[data-bs-theme="dark"] .m-friend-add-btn .jg-icon-add {
+.m-friend-add-btn .jg-icon-add {
   background-color: rgba(37, 99, 235, 0.2);
 }
 
-[data-bs-theme="dark"] .m-friend-add-btn .jg-icon-add:hover {
+.m-friend-add-btn .jg-icon-add:hover {
   background-color: var(--jg-primary);
   color: var(--jg-text-white);
 }

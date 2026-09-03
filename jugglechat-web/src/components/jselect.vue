@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { reactive, watch } from "vue";
 import utils from "../common/utils";
 
@@ -165,17 +165,17 @@ watch(() => props.current, () => {
 }
 
 /* 深色模式 */
-[data-bs-theme="dark"] .jg-select-trigger {
+.jg-select-trigger {
   background: var(--jg-bg-input, #1f2937);
   border-color: var(--jg-border-color, #374151);
 }
 
-[data-bs-theme="dark"] .jg-select-dropdown {
+.jg-select-dropdown {
   background: var(--jg-bg-card, #1f2937);
   border-color: var(--jg-border-color, #374151);
 }
 
-[data-bs-theme="dark"] .jg-select-option:hover {
+.jg-select-option:hover {
   background: var(--jg-bg-hover, #374151);
 }
 </style>

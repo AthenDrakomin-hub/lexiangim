@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Asider :isShow="isShow" title="IP变动通知" @oncancel="onCancel">
     <div class="vip-ip-changes">
       <!-- 未读统计 -->
@@ -186,7 +186,7 @@ function onCancel() {
 }
 
 /* 深色模式空提示 */
-[data-bs-theme="dark"] .empty-tip {
+.empty-tip {
   color: var(--jg-text-muted);
 }
 .notification-list {
@@ -205,7 +205,7 @@ function onCancel() {
 }
 
 /* 深色模式通知项 */
-[data-bs-theme="dark"] .notification-item {
+.notification-item {
   background: var(--jg-bg-card);
 }
 
@@ -215,7 +215,7 @@ function onCancel() {
 }
 
 /* 深色模式未读通知 */
-[data-bs-theme="dark"] .notification-item.unread {
+.notification-item.unread {
   background: var(--jg-bg-hover);
 }
 
@@ -224,7 +224,7 @@ function onCancel() {
 }
 
 /* 深色模式通知项悬停 */
-[data-bs-theme="dark"] .notification-item:hover {
+.notification-item:hover {
   background: var(--jg-bg-hover);
 }
 .notif-icon {
