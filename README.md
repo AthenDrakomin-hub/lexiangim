@@ -1,6 +1,6 @@
 # 乐享 IM v1.0.0 - 即时通讯平台
 
-> 乐享，让沟通更快乐。基于 JuggleIM 深度二开的全链路即时通讯平台，支持千人在线。
+> 沟通无界，协同有度。基于 JuggleIM 深度二开的全链路即时通讯平台，支持千人在线。
 
 ## 项目简介
 
@@ -19,11 +19,11 @@
 
 | 层级 | 技术 | 说明 |
 |------|------|------|
-| 核心IM服务 | Go 1.22 + Gin | im-server，单体集成模式 |
-| 业务服务 | Go 1.22 + Gin | jugglechat-server，集成在 im-server 中 |
+| 核心IM服务 | Go 1.26 + Gin | im-server，单体集成模式 |
+| 业务服务 | Go 1.26 + Gin | jugglechat-server，集成在 im-server 中 |
 | 用户端前端 | Vue 3.2 + Vite 4 + Reka-UI | jugglechat-web，支持 PWA |
 | 管理后台 | Go + Vue 3 + Element UI | imserver-console，前后端一体 |
-| 数据库 | MySQL 8.0 | jim_db，80+ 表 |
+| 数据库 | MySQL 8.0 | jim_db，67 张核心表 + 11 个版本化迁移脚本 |
 | 消息存储 | MySQL / MongoDB | 可配置，默认 MySQL |
 | 缓存 | KVDB (badger) | 本地键值存储 |
 | 实时通信 | WebSocket | 自定义 IM 协议 |
@@ -143,7 +143,7 @@ npm run dev
 ### 开发配置
 
 - **前端 API 地址**：通过 `.env.development` 配置，默认 `127.0.0.1:9003`
-- **appkey**：默认 `YFbrDwnGG3JVRubC`（乐享应用），可在前端设置中修改
+- **appkey**：生产 `LXIM2026PROD001`（乐享应用），可在前端设置中修改；上游 JuggleIM 默认值为 `YFbrDwnGG3JVRubC`，仅作参考
 - **数据库**：`im-server/launcher/conf/config.yml`，默认 `127.0.0.1:3306/jim_db`
 - **测试管理员**：`admin / 123456`（管理后台），`testadmin01 / 123456`（客户端应用内管理员）
 
@@ -166,6 +166,17 @@ npm run dev
                       → 管理后台(admin.yefeng.us.cc) → Nginx → im-server容器(8090)
 服务器内部: Docker Compose (im-server + MySQL)，数据卷持久化
 ```
+
+### 前端部署双模式
+
+项目支持两种前端部署模式，可根据场景选择：
+
+| 模式 | 说明 | 适用场景 | 缓存策略 |
+|------|------|----------|----------|
+| **模式一：Cloudflare Pages（生产）** | 前端构建产物推送到 `lexiang-web-deploy` 仓库，Cloudflare Pages 全球 CDN 托管 | 生产环境，全球访问加速 | 静态资源 30 天缓存（Vite hash 文件名） |
+| **模式二：后端内嵌（全合一）** | `jugglechat-web` 构建产物复制到 `jugglechat-server/routers/webim/`，通过 `//go:embed` 编译进 im-server 二进制，访问 `http://host:9003/` 直接使用 | 开发/演示/内网部署，无需单独前端服务 | 静态资源 `no-cache`（`webimload.go` 强制不缓存） |
+
+> 模式二的内嵌资源更新方式：在 `jugglechat-web` 执行 `npm run build` 后，将 `dist/` 内容复制到 `jugglechat-server/routers/webim/`，重新编译 im-server 即可。
 
 ### 仓库结构
 
@@ -242,9 +253,10 @@ git push
 ## 品牌信息
 
 - **品牌名**：乐享
-- **Slogan**：乐享，让沟通更快乐
+- **Slogan**：沟通无界，协同有度
 - **品牌色**：`#2563EB`（蓝色）
-- **appkey**：`YFbrDwnGG3JVRubC`
+- **appkey**：`LXIM2026PROD001`
+- **组织代码**：1688
 - **定位**：年轻人的快乐社交平台
 
 ## 常见问题
