@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { reactive, getCurrentInstance } from "vue";
 import utils from "../common/utils";
 import { useRouter } from "vue-router";
@@ -61,7 +61,11 @@ function validateConfirmPassword(pwd, confirm) {
 }
 
 function getApiBase() {
-  return `https://${CONFIG.API}/jim`;
+  let protocol = location.protocol;
+  if (protocol === 'file:') {
+    protocol = 'https:';
+  }
+  return protocol + '//' + CONFIG.API + '/jim';
 }
 
 function onLogin() {

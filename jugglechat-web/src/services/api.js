@@ -1,4 +1,4 @@
-import { CONFIG } from '../config'
+﻿import { CONFIG } from '../config'
 import utils from '../common/utils'
 let SERVER_PATH = {
   USER_SENDCODE: 'sms/send',
@@ -17,6 +17,7 @@ let SERVER_PATH = {
   FRIEND_LIST: 'friends/list',
   FRIEND_NEW_LIST: 'friends/applications',
   FRIEND_CONFIRM: 'friends/confirm',
+  FRIEND_SET_DISPLAY_NAME: 'friends/setdisplayname',
   FRIEND_BOTS: 'bots/list',
   
   GROUP_CREATE: 'groups/add',
@@ -37,11 +38,11 @@ let SERVER_PATH = {
   AI_ANSWER: 'ai/answer',
 };
 utils.forEach(SERVER_PATH, (url, name) => {
-  let protoclName = location.protocol;
-  if(protoclName == 'file:'){
-    protoclName = 'https:';
+  let protocolName = location.protocol;
+  if(protocolName == 'file:'){
+    protocolName = 'https:';
   }
-  SERVER_PATH[name] = `${protoclName}//${CONFIG.API}/jim/${url}`;
+  SERVER_PATH[name] = `${protocolName}//${CONFIG.API}/jim/${url}`;
 });
 
 export default SERVER_PATH;

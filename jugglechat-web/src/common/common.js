@@ -1,4 +1,4 @@
-import utils from "./utils";
+﻿import utils from "./utils";
 import { User, Group, Friend } from "../services/index";
 import html2canvas from 'html2canvas';
 import im from './im';
@@ -33,13 +33,25 @@ function getAvatars(){
     '/avatars/avatar-8.png',
   ];
 }
-function getAvatar(){
+function getAvatar(seed){
   let avatars = getAvatars();
-    let index = Math.floor(Math.random() * avatars.length);
-    return avatars[index];
+  let index;
+  if (seed) {
+    let hash = 0;
+    for (let i = 0; i < seed.length; i++) {
+      hash = ((hash << 5) - hash) + seed.charCodeAt(i);
+      hash |= 0;
+    }
+    index = Math.abs(hash) % avatars.length;
+  } else {
+    index = Math.floor(Math.random() * avatars.length);
+  }
+  return avatars[index];
 }
 
 let textAvatars = {};
+let __textAvatarCount = 0;
+const MAX_TEXT_AVATARS = 500;
 function getTextAvatar(name, option = {}){
   let avatar = textAvatars[name];
   if(avatar){
@@ -98,7 +110,6 @@ let groupAvatars = [
   { avatar: 'https://file.lwoowl.cn/36dc-db4c.png?attname=36dc-db4c.png' },  
 ];
 common.createGroupAvatar(groupAvatars, ({url}) => {
-  console.log(url)
 })
 */
 function createGroupAvatar(members, callback){
