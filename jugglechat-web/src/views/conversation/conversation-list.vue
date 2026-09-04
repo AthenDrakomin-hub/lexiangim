@@ -148,6 +148,25 @@ im.connect(user, {
     getConversations(isFirst, CONVERATION_TAG_ID.ALL);
     conversationTools.getTops(state);
     utils.extend(state.currentUser, user);
+    
+    // 根据路由参数获取指定会话（从通讯录/好友详情发起聊天）
+    try {
+      const currentQuery = router.currentRoute.value.query;
+      if (currentQuery && currentQuery.type && currentQuery.id) {
+        const convType = parseInt(currentQuery.type);
+        const convId = currentQuery.id;
+        juggle.getConversation({ conversationType: convType, conversationId: convId }).then(({ conversation }) => {
+          if (conversation) {
+            onConversationChanged({ conversations: [conversation], state });
+            state.currentConversation = conversation;
+          }
+        }).catch(() => {
+          // 会话不存在时忽略，用户可从列表选择
+        });
+      }
+    } catch (e) {
+      console.warn('获取路由指定会话失败', e);
+    }
   },
   error: () => {
     router.replace({ name: "Login" });
