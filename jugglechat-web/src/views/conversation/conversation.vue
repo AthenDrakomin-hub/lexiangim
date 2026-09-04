@@ -286,7 +286,7 @@ nextTick(() => {
       }
     }
   }, 100);
-  messages.addEventListener("scroll", __scrollHandler);
+  if (messages) { messages.addEventListener("scroll", __scrollHandler); }
 })
 
 listenEmitter(EVENT_NAME.ON_GROUP_MEMBER_ADDED, ({ members }) => {
@@ -864,12 +864,12 @@ nextTick(() => {
   __focusoutHandler = function(){
     window.scrollTo(0,0)
   };
-  messageInput.addEventListener("focusout", __focusoutHandler);
+  if (messageInput) { messageInput.addEventListener("focusout", __focusoutHandler); }
 })
 
 function inputFocus(){
   let { messageInput } = context.refs;
-  messageInput.focus();
+  if (messageInput) { messageInput.focus(); }
 }
 function onResendMessage({ message }){
   let index = utils.find(state.messages, (m) => { return utils.isEqual(m.tid, message.tid)});

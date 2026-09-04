@@ -67,6 +67,32 @@ function onRemoveFriend(){
     emit('onremoved', { item: props.current })
   });
 }
+
+// 备注编辑功能
+const remarkState = reactive({
+  isShowEdit: false,
+  remark: ''
+});
+
+function onShowRemarkEdit(){
+  remarkState.remark = props.current.remark || props.current.user?.nickname || '';
+  remarkState.isShowEdit = true;
+}
+
+function onSaveRemark(){
+  let { id, user } = props.current;
+  let friendId = id || user?.user_id;
+  Friend.updateRemark({ friend_id: friendId, remark: remarkState.remark }).then(({ code }) => {
+    if(!utils.isEqual(code, RESPONSE.SUCCESS)){
+      return context.proxy.$toast({ text: `保存备注失败：${code}`, icon: 'error' });
+    }
+    context.proxy.$toast({ text: '备注已保存', icon: 'success' });
+    remarkState.isShowEdit = false;
+    emitter.$emit(EVENT_NAME.ON_USER_INFO_UPDATE, { user: { ...user, remark: remarkState.remark } });
+  }).catch(() => {
+      return context.proxy.$toast({ text: `保存备注失败：${code}`, icon: 'error' });
+  });
+}
 </script>
 <template>
   <div class="tyn-main tyn-content-inner">

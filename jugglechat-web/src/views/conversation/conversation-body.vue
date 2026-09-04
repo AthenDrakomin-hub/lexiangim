@@ -58,7 +58,7 @@ function onShowDropmenu(e) {
 let canscroll = true;
 nextTick(() => {
   let { conversations } = context.refs;
-  conversations.addEventListener("scroll", () => {
+  if (conversations) { conversations.addEventListener("scroll", () => {
     let scrollTop = conversations.scrollTop;
     let scrollHeight = conversations.scrollHeight;
     let rectHeight = conversations.getBoundingClientRect().height;
@@ -70,7 +70,7 @@ nextTick(() => {
         canscroll = true;
       }});
     }
-  });
+  });}
 });
 
 // function onConversation(item, index) {
