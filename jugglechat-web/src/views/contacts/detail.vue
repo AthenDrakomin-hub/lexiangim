@@ -24,7 +24,16 @@ function onConversation(){
     type = CONTACT_TYPE.FRIEND;
   }
 
-  router.replace({ name: 'ConversationList', query: {  type, id } });
+  // 先获取会话，再通过全局事件传递，避免hash模式下query参数被清除
+  im.getCurrent().getConversation({ conversationType: type, conversationId: id }).then(({ conversation }) => {
+    router.replace({ name: 'ConversationList' });
+    setTimeout(() => {
+      emitter.$emit(EVENT_NAME.ON_CONVERSATION_SEARCH_NAV, { conversation });
+    }, 100);
+  }).catch(() => {
+    // 获取失败时直接跳转，用户可从列表选择
+    router.replace({ name: 'ConversationList' });
+  });
 }
 function onAddFriend(isAgree){
   let user = props.current.user;
