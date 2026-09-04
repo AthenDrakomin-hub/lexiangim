@@ -28,6 +28,11 @@ let { ConversationType, Event, ConnectionState } = juggle;
 let { _value: { path } } = router.currentRoute;
 let user = Storage.get(STORAGE.USER_TOKEN);
 
+// 事件监听清理机制
+const __cleanupFns = [];
+function listen(event, handler) { juggle.on(event, handler); __cleanupFns.push(() => juggle.off(event, handler)); }
+function listenEmitter(event, handler) { emitter.$on(event, handler); __cleanupFns.push(() => emitter.$off(event, handler)); }
+
 let state = reactive({
   settingMenus: [
     { id: `${Date.now()}`, title: '消息', type: 'top', icon: 'message', event: ASIDE_MENU_TYPE.MESSAGE, name: 'ConversationList', isActive: utils.isEqual(path, '/conversation') },
@@ -90,19 +95,19 @@ function onConversationChanged({ conversations }){
     });
   });
 }
-__on(Event.CONVERSATION_CHANGED, onConversationChanged);
-__on(Event.CONVERSATION_ADDED, onConversationChanged);
+listen(Event.CONVERSATION_CHANGED, onConversationChanged);
+listen(Event.CONVERSATION_ADDED, onConversationChanged);
 
 utils.extend(state, { user });
 
-__emitOn(EVENT_NAME.UN_UNATHORIZED, () => {
+listenEmitter(EVENT_NAME.UN_UNATHORIZED, () => {
   Storage.remove(STORAGE.USER_TOKEN);
   let juggle = im.getCurrent();
   juggle.disconnect();
   router.replace({ name: 'Login' });
 });
 
-__on(Event.STATE_CHANGED, ({ state: status }) => {
+listen(Event.STATE_CHANGED, ({ state: status }) => {
   if (ConnectionState.CONNECTED == status) {
     juggle.getConversation({ conversationId: SYS_CONVERSATION_FRIEND, conversationType: ConversationType.SYSTEM }).then(({ conversation }) => {
       let index = utils.find(state.settingMenus, (menu) => { 
@@ -132,7 +137,7 @@ function onMenuClick(menu){
   router.push({ name: menu.name });
 }
 
-__emitOn(EVENT_NAME.ON_USER_INFO_UPDATE, ({ user }) => {
+listenEmitter(EVENT_NAME.ON_USER_INFO_UPDATE, ({ user }) => {
   utils.extend(state.user, user);
 });
 
@@ -197,7 +202,7 @@ watch(useRouterCurrent, (value) => {
   }
 });
 
-onUnmounted(() => { __cleanup.forEach(function(fn){try{fn()}catch(e){}}); });
+onUnmounted(() => { __cleanupFns.forEach(function(fn){try{fn()}catch(e){}}); });
 </script>
 
 <template>
