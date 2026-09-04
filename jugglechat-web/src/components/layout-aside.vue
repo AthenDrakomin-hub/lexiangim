@@ -233,7 +233,7 @@ onUnmounted(() => { __cleanupFns.forEach(function(fn){try{fn()}catch(e){}}); });
       <li class="jg-footer-tool" v-for="menu in state.settingMenus">
         <div class="jg-asider-footer-item" @click="onMenuClick(menu)" :class="[menu.isActive ? 'jg-footer-active' : '']">
           <div class="nav-unreadcount" v-if="menu.unreadCount > 0">{{ menu.unreadCount }}</div>
-          <div class="icon wr" :class="{ ['wr-' + menu.icon]: true }"></div>
+          <div class="icon jg-icon" :class="{ ['jg-icon-' + menu.icon]: true }"></div>
           <div class="name">{{ menu.title }}</div>
         </div>
       </li>
