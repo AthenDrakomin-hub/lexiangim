@@ -26,14 +26,26 @@ function onConversation(){
 
   // 构造会话对象，保存到sessionStorage，确保组件初始化后能读取到
   const conversationType = parseInt(type) || 1;
+  const conversationTitle = props.current.user?.remark_name || props.current.user?.nickname || props.current.user?.login_account || id;
   const conversation = {
     conversationType: conversationType,
     conversationId: id,
-    title: props.current.user?.remark_name || props.current.user?.nickname || props.current.user?.login_account || id,
+    conversationTitle: conversationTitle,
+    conversationPortrait: props.current.user?.portrait || '',
     isTop: false,
     unreadCount: 0,
-    lastMessage: null,
-    timestamp: Date.now()
+    isActive: true,
+    draft: '',
+    tags: [{ id: 1 }],
+    latestMessage: {
+      messageType: 1,
+      content: '',
+      sentTime: Date.now(),
+      searchableContent: ''
+    },
+    shortName: '',
+    f_time: '',
+    sortTime: Date.now()
   };
   sessionStorage.setItem('pending_conversation', JSON.stringify(conversation));
   router.replace({ name: 'ConversationList' });
