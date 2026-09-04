@@ -1,4 +1,4 @@
-﻿/** 01. FONTS */
+/** 01. FONTS */
 
 /* Poppins — 英文/数字主字体（本地加载） */
 @font-face {
@@ -2233,56 +2233,6 @@ body {
   color: var(--jg-text-body);
 }
 
-/* 登录页深色模式 - 通过 JS 切换背景 */
-.lx-page {
-  background: linear-gradient(160deg, #0d1117 0%, #161b22 35%, #21262d 70%, #30363d 100%);
-}
-
-.lx-title {
-  color: #ffffff;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
-}
-
-.lx-subtitle {
-  color: rgba(255,255,255,0.7);
-}
-
-.lx-card {
-  background: linear-gradient(135deg, rgba(30,30,50,0.8) 0%, rgba(20,20,40,0.9) 100%);
-  border: 1.5px solid rgba(255,255,255,0.1);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
-}
-
-.lx-input {
-  border-color: rgba(255,255,255,0.15);
-  background: rgba(255,255,255,0.08);
-  color: #ffffff;
-}
-
-.lx-input::placeholder {
-  color: rgba(255,255,255,0.4);
-}
-
-.lx-input:focus {
-  border-color: rgba(255,255,255,0.3);
-  background: rgba(255,255,255,0.12);
-}
-
-.lx-forgot {
-  color: rgba(255,255,255,0.6);
-}
-
-.lx-toggle {
-  color: rgba(255,255,255,0.7);
-}
-
-.lx-terms-wrap {
-  color: rgba(255,255,255,0.6);
-}
-
-.lx-terms-link {
-  color: #5865f2;
-}
 
 /* 侧边栏工具深色模式 */
 .jg-asider-tools .btn {

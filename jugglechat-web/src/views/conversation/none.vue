@@ -35,16 +35,10 @@ let state = reactive({
 }
 .intro-desc {
   font-size: 14px;
-  color: #94a3b8;
+  color: #64748b;
   margin: 0;
 }
-.intro-text {
-  color: #f1f5f9;
-}
-.intro-desc {
-  color: #64748b;
-}
 .jg-chat-none-bg {
-  background-color: #1e293b;
+  background-color: #f8fafc;
 }
 </style>

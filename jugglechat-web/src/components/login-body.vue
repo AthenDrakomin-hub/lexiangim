@@ -512,7 +512,7 @@ function onShowServerSetting(isShow) {
   background: #f8fafc;
   padding: 0 22px;
   font-size: 16px;
-  color: #ffffff;
+  color: #1e293b;
   box-sizing: border-box;
   transition: all 0.25s ease;
 }
@@ -554,7 +554,7 @@ function onShowServerSetting(isShow) {
   transition: color 0.2s;
 }
 .lx-forgot:hover {
-  color: #ffffff;
+  color: #1e293b;
 }
 
 .lx-btn {
@@ -565,7 +565,7 @@ function onShowServerSetting(isShow) {
   height: 54px;
   border-radius: 27px;
   background: linear-gradient(135deg, #5865f2 0%, #4752c4 100%);
-  color: #ffffff;
+  color: #1e293b;
   font-size: 19px;
   font-weight: 700;
   letter-spacing: 4px;
@@ -598,7 +598,7 @@ function onShowServerSetting(isShow) {
   transition: color 0.2s;
 }
 .lx-toggle:hover {
-  color: #ffffff;
+  color: #1e293b;
   text-decoration: underline;
 }
 
@@ -635,100 +635,4 @@ function onShowServerSetting(isShow) {
   text-decoration: underline;
 }
 
-/* ── 深色模式登录页 ─────────────────────────────────── */
-.lx-page {
-  background: linear-gradient(160deg, #f0f4ff 0%, #e8ecf8 35%, #dfe4f2 70%, #d5dbeb 100%);
-}
-
-.lx-wave-1 {
-  background: radial-gradient(circle, rgba(88, 101, 242, 0.4) 0%, transparent 70%);
-}
-
-.lx-wave-2 {
-  background: radial-gradient(circle, rgba(88, 101, 242, 0.3) 0%, transparent 70%);
-}
-
-.lx-bubble {
-  background: radial-gradient(circle at 30% 30%, rgba(88,101,242,0.12) 0%, rgba(88,101,242,0.04) 50%, rgba(88,101,242,0.01) 100%);
-  border: 1px solid rgba(88,101,242,0.15);
-  box-shadow: inset 0 0 20px rgba(88,101,242,0.03), 0 4px 20px rgba(0,0,0,0.05);
-}
-
-.lx-server-settings {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-}
-
-.lx-server-settings:hover {
-  background: #f8fafc;
-}
-
-.lx-card {
-  background: #ffffff;
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1.5px solid #e2e8f0;
-  box-shadow: 0 16px 48px rgba(0,0,0,0.08);
-}
-
-.lx-input {
-  border-color: #e2e8f0;
-  background: #f8fafc;
-  color: #ffffff;
-}
-
-.lx-input::placeholder {
-  color: #9ca3af;
-}
-
-.lx-input:focus {
-  border-color: #5865f2;
-  background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(88,101,242,0.2);
-}
-
-.lx-input-arrow {
-  color: #9ca3af;
-}
-
-.lx-forgot {
-  color: #9ca3af;
-}
-
-.lx-forgot:hover {
-  color: rgba(255,255,255,0.9);
-}
-
-.lx-btn {
-  background: linear-gradient(135deg, #5865f2 0%, #4752c4 100%);
-  box-shadow: 0 6px 24px rgba(88, 101, 242, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
-.lx-btn:hover {
-  box-shadow: 0 10px 32px rgba(88, 101, 242, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
-.lx-toggle {
-  color: #6b7280;
-}
-
-.lx-toggle:hover {
-  color: #ffffff;
-}
-
-.lx-terms-wrap {
-  color: #9ca3af;
-}
-
-.lx-terms-link {
-  color: #5865f2;
-}
-
-.lx-terms-checkbox input {
-  accent-color: #5865f2;
-}
-
-.lx-error {
-  color: #ff8a80;
-}
 </style>
