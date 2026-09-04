@@ -28,11 +28,16 @@ function onConversation(){
 
   // 先获取会话，再通过全局事件传递，避免hash模式下query参数被清除
   im.getCurrent().getConversation({ conversationType: type, conversationId: id }).then(({ conversation }) => {
+    console.log('发起会话 - 获取会话成功:', conversation);
+    // 保存到sessionStorage，确保组件初始化后能读取到
+    sessionStorage.setItem('pending_conversation', JSON.stringify(conversation));
     router.replace({ name: 'ConversationList' });
     setTimeout(() => {
+      console.log('发起会话 - 触发全局事件');
       emitter.$emit(EVENT_NAME.ON_CONVERSATION_SEARCH_NAV, { conversation });
-    }, 100);
-  }).catch(() => {
+    }, 500);
+  }).catch((err) => {
+    console.error('发起会话 - 获取会话失败:', err);
     router.replace({ name: 'ConversationList' });
   });
 }

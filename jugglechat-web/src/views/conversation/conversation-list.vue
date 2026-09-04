@@ -167,6 +167,22 @@ im.connect(user, {
     } catch (e) {
       console.warn('获取路由指定会话失败', e);
     }
+    
+    // 从sessionStorage读取待处理的会话（从通讯录/好友详情发起聊天）
+    try {
+      const pendingConv = sessionStorage.getItem('pending_conversation');
+      if (pendingConv) {
+        const conversation = JSON.parse(pendingConv);
+        console.log('从sessionStorage恢复待处理会话:', conversation);
+        sessionStorage.removeItem('pending_conversation');
+        if (conversation && conversation.conversationId) {
+          state.currentConversation = conversation;
+          onConversationChanged({ conversations: [conversation], state });
+        }
+      }
+    } catch (e) {
+      console.warn('读取待处理会话失败:', e);
+    }
   },
   error: () => {
     router.replace({ name: "Login" });
