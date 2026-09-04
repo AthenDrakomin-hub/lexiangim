@@ -97,9 +97,10 @@ function onHideTopDrop(conversation) {
   });
 }
 function onConversation(conversation){
-  if(!conversationTools.isSame(state.currentConversation, conversation)){
-    state.currentConversation = conversation;
-  }
+  console.log('onConversation被调用:', conversation);
+  console.log('当前currentConversation:', state.currentConversation);
+  state.currentConversation = conversation;
+  console.log('更新后的currentConversation:', state.currentConversation);
 }
 emitter.$on(EVENT_NAME.ON_CONVERSATION_RESET, () => {
   state.currentConversation = {};
