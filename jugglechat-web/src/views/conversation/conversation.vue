@@ -1004,6 +1004,10 @@ onUnmounted(() => {
   } catch(e) {}
 });
 // ========================================
+console.log('[Conversation] setup函数执行完毕');
+console.log('[Conversation] state.currentConversation:', state.currentConversation ? '存在' : 'undefined');
+console.log('[Conversation] state.currentConversation.conversationId:', state.currentConversation ? state.currentConversation.conversationId : 'undefined');
+console.log('[Conversation] state.messages长度:', state.messages ? state.messages.length : 'undefined');
 </script>
 <template>
   <div class="tyn-main tyn-chat-content aside-collapsed"
