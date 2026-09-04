@@ -440,7 +440,7 @@ function onTagConversationChanged({ removes, adds, tag }){
     </div>
     <ModalGroupMember :is-show="state.isShowGroupMemberManager" @oncancel="onShowGroupMemberManager(false)" @onconfirm="onTagConversationChanged" :tag="state.currentTag"></ModalGroupMember>
     <None v-if="utils.isEmpty(state.currentConversation)"></None>
-    <Conversation :conversation="state.currentConversation" v-if="!utils.isEmpty(state.currentConversation) || utils.isMobile()" 
+    <Conversation :conversation="state.currentConversation" v-if="state.currentConversation && state.currentConversation.conversationId" 
       @ondraft="onDraft" 
       @ontop="onSetConversationTop" 
       @ondisturb="onConversationDisturb"
