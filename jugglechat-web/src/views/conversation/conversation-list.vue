@@ -154,27 +154,7 @@ im.connect(user, {
     conversationTools.getTops(state);
     utils.extend(state.currentUser, user);
     
-    // 根据路由参数获取指定会话（从通讯录/好友详情发起聊天）
-    try {
-      const currentQuery = router.currentRoute.value.query;
-      if (currentQuery && currentQuery.type && currentQuery.id) {
-        const convType = parseInt(currentQuery.type);
-        const convId = currentQuery.id;
-        const getConvPromise = juggle.getConversation({ conversationType: convType, conversationId: convId });
-        if (getConvPromise && typeof getConvPromise.then === 'function') {
-          getConvPromise.then(({ conversation }) => {
-            if (conversation) {
-              onConversationChanged({ conversations: [conversation], state });
-              state.currentConversation = conversation;
-            }
-          }).catch(() => {
-            // 会话不存在时忽略，用户可从列表选择
-          });
-        }
-      }
-    } catch (e) {
-      console.warn('获取路由指定会话失败', e);
-    }
+    // 路由参数获取会话方案已移除（hash模式下路由参数不可靠，改用sessionStorage方案）
     
     // 从sessionStorage读取待处理的会话（从通讯录/好友详情发起聊天）
     try {
@@ -447,8 +427,8 @@ function onTagConversationChanged({ removes, adds, tag }){
       <!-- <H5TBar></H5TBar> -->
     </div>
     <ModalGroupMember :is-show="state.isShowGroupMemberManager" @oncancel="onShowGroupMemberManager(false)" @onconfirm="onTagConversationChanged" :tag="state.currentTag"></ModalGroupMember>
-    <None v-if="!state.currentConversation || !state.currentConversation.conversationId"></None>
-    <Conversation :conversation="state.currentConversation"
+    <None v-if="utils.isEmpty(state.currentConversation)"></None>
+    <Conversation :conversation="state.currentConversation" v-if="!utils.isEmpty(state.currentConversation) || utils.isMobile()" 
       @ondraft="onDraft" 
       @ontop="onSetConversationTop" 
       @ondisturb="onConversationDisturb"
