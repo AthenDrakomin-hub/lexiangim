@@ -53,12 +53,25 @@ function throttle(fn, delay) {
 const props = defineProps(['conversation']);
 const emit = defineEmits(["ondraft", "onclearmsg", "onquitgroup", "ontop", "ondisturb", "onback"]);
 
+console.log('[Conversation] setup开始, props.conversation:', props.conversation);
+console.log('[Conversation] props.conversation类型:', typeof props.conversation);
+console.log('[Conversation] props.conversation keys:', props.conversation ? Object.keys(props.conversation) : 'null/undefined');
+
 let TimelineMessage = shallowRef(Timeline);
 let WithoutMessage = shallowRef(Without);
 
 
 let juggle = im.getCurrent();
+console.log('[Conversation] juggle:', juggle ? '存在' : 'undefined');
+console.log('[Conversation] juggle keys:', juggle ? Object.keys(juggle).slice(0, 10) : 'null/undefined');
+
+if (!juggle) {
+  console.error('[Conversation] juggle是undefined，组件无法正常初始化');
+  juggle = { MessageType: {}, Event: {}, ConversationType: {}, MentionType: {}, SentState: {}, MediaType: {} };
+}
+
 let { MessageType, Event, ConversationType, MentionType, SentState, MediaType } = juggle;
+console.log('[Conversation] 解构成功')
 
 let context = getCurrentInstance();
 
