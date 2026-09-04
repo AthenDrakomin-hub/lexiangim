@@ -8,7 +8,7 @@ const context = getCurrentInstance();
 const appKey = router.currentRoute.value.params.app_key;
 
 // 业务后端 API 地址（根据实际部署修改）
-const JIM_API = 'https://api.lexiangim.com/jim';
+const JIM_API = '/jim';
 
 const state = reactive({
   loading: false,
