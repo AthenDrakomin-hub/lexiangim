@@ -71,7 +71,9 @@ if (!juggle) {
 }
 
 let { MessageType, Event, ConversationType, MentionType, SentState, MediaType } = juggle;
-console.log('[Conversation] 解构成功')
+console.log('[Conversation] 解构成功');
+
+try {
 
 let context = getCurrentInstance();
 
@@ -1008,6 +1010,10 @@ console.log('[Conversation] setup函数执行完毕');
 console.log('[Conversation] state.currentConversation:', state.currentConversation ? '存在' : 'undefined');
 console.log('[Conversation] state.currentConversation.conversationId:', state.currentConversation ? state.currentConversation.conversationId : 'undefined');
 console.log('[Conversation] state.messages长度:', state.messages ? state.messages.length : 'undefined');
+} catch (e) {
+  console.error('[Conversation] setup函数抛出异常:', e);
+  console.error('[Conversation] 异常堆栈:', e.stack);
+}
 </script>
 <template>
   <div class="tyn-main tyn-chat-content aside-collapsed"
