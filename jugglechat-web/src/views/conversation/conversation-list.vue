@@ -106,7 +106,11 @@ emitter.$on(EVENT_NAME.ON_CONVERSATION_RESET, () => {
   state.currentConversation = {};
 });
 emitter.$on(EVENT_NAME.ON_CONVERSATION_SEARCH_NAV, ({ conversation }) => {
+  console.log('ON_CONVERSATION_SEARCH_NAV事件触发:', conversation);
+  console.log('设置前currentConversation:', state.currentConversation);
   state.currentConversation = conversation;
+  console.log('设置后currentConversation:', state.currentConversation);
+  console.log('currentConversation.conversationId:', state.currentConversation.conversationId);
   onConversationChanged({ conversations: [conversation], state });
 });
 emitter.$on(EVENT_NAME.ON_GROUP_CREATED, ({ conversation }) => {
