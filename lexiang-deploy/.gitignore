@@ -1,0 +1,31 @@
+# 乐享 IM 部署仓库 - Git忽略文件
+
+# 环境变量（严禁提交实际密码）
+.env
+.env.local
+.env.*.local
+
+# Docker
+docker-compose.override.yml
+
+# 日志
+*.log
+logs/
+
+# 临时文件
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# 备份文件
+*.bak
+*.backup
+backup*.sql
+backup*.sql.gz
+
+# 注意: im-server-linux 二进制需要提交（这是预编译部署仓库的核心）
+# 不要忽略 im-server/im-server-linux

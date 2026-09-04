@@ -70,8 +70,6 @@ tmp_*.py
 screenshot-*.png
 test-results/
 ui-test-results.json
-# 本地嵌套部署副本（独立仓库，不纳入源码库）
-lexiang-deploy/
 
 # ---------- SQL 版本化文件（必须入库，覆盖上方 *.sql） ----------
 !im-server/sql/*.sql

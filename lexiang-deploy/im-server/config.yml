@@ -1,0 +1,46 @@
+# ============================================================
+# 乐享 IM Server - 生产环境配置
+# 注意: MySQL 地址使用容器名 mysql (Docker 内部 DNS)
+# ============================================================
+
+defaultPort: 9003
+
+nodeName: prod-node-01
+nodeHost: im-server  # 容器内主机名
+msgStoreEngine: mysql
+
+log:
+  logPath: ./logs
+  logName: jim-info
+  logExpireHours: 168  # 保留7天
+
+kvdb:
+  isOpen: true
+
+mysql:
+  user: lexiang
+  password: Lexiang2024User
+  address: mysql:3306  # Docker 容器名
+  name: jim_db
+
+mongodb:
+  address: 127.0.0.1:27017
+  name: jim_msgs
+
+apiGateway:
+  httpPort: 9001
+
+connectManager:
+  wsPort: 9003
+
+adminGateway:
+  httpPort: 8090
+
+# ============================================================
+# Agnes AI 配置（免费大模型API）
+# 注册地址: https://platform.agnes-ai.com/settings/apiKeys
+# 文档: https://wiki.agnes-ai.com/
+# ============================================================
+agnesApiKey: ""          # Agnes API Key（必填，在平台创建密钥后填入）
+agnesApiUrl: "https://apihub.agnes-ai.com/v1/chat/completions"  # Agnes API地址
+agnesModel: "agnes-2.5-flash"  # 模型名称（agnes-2.5-flash / agnes-2.5-pro-alpha）

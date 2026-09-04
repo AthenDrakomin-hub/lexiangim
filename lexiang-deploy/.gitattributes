@@ -1,0 +1,2 @@
+im-server/im-server-linux filter=lfs diff=lfs merge=lfs -text
+im-server/imserver-console-linux filter=lfs diff=lfs merge=lfs -text

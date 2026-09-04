@@ -1,0 +1,112 @@
+# ============================================================
+# 乐享 IM - Docker Compose 预编译版本
+# 使用场景: 服务器网络不佳，无法下载Go依赖时
+# 前置: 本地编译 im-server-linux 并上传到 im-server/ 目录
+# 启动: docker compose -f docker-compose.prebuilt.yml up -d
+# ============================================================
+
+services:
+  # ---------- MySQL 数据库 ----------
+  mysql:
+    image: mysql:8.0
+    container_name: lexiang-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-jim_db}
+      MYSQL_USER: ${MYSQL_USER:-lexiang}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      TZ: Asia/Shanghai
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --max-connections=1000
+      - --innodb-buffer-pool-size=1G
+      - --innodb-log-file-size=256M
+      - --innodb-flush-log-at-trx-commit=2
+      - --sync-binlog=0
+      - --slow-query-log=1
+      - --long-query-time=2
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "127.0.0.1:3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - lexiang-net
+
+  # ---------- IM Server (预编译二进制) ----------
+  im-server:
+    build:
+      context: ./im-server
+      dockerfile: Dockerfile.prebuilt
+    container_name: lexiang-im-server
+    restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./im-server/config.yml:/app/conf/config.yml:ro
+      - im_logs:/app/logs
+      - im_kvdb:/app/kvdb_data
+    ports:
+      - "127.0.0.1:9001:9001"
+      - "127.0.0.1:9003:9003"
+      - "127.0.0.1:8090:8090"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:9003/jim/serverinfos"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    networks:
+      - lexiang-net
+
+  # ---------- MinIO 对象存储（头像/文件/图片）----------
+  minio:
+    image: minio/minio:latest
+    container_name: lexiang-minio
+    restart: always
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-lexiang}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-LexiangMinio2024}
+      TZ: Asia/Shanghai
+    volumes:
+      - minio_data:/data
+    ports:
+      - "127.0.0.1:9000:9000"   # API端口
+    # MinIO 控制台端口默认不对外映射，如需访问可临时启用:
+    # - "127.0.0.1:9006:9001"
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    networks:
+      - lexiang-net
+
+# ---------- 数据卷 ----------
+volumes:
+  mysql_data:
+    driver: local
+  im_logs:
+    driver: local
+  im_kvdb:
+    driver: local
+  minio_data:
+    driver: local
+
+# ---------- 网络 ----------
+networks:
+  lexiang-net:
+    driver: bridge
