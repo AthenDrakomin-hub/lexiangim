@@ -1,0 +1,1 @@
+System.register(["./index-legacy-ca01dafe.js"],function(e,s){"use strict";var t,i,n;return{setters:[e=>{t=e.o,i=e.a,n=e.aN}],execute:function(){e("default",{__name:"login",setup:e=>(e,s)=>(t(),i(n,{"is-login":!0,"is-add":!1,"is-show":!0}))})}}});

@@ -6,7 +6,7 @@ import utils from "../common/utils";
 import common from "../common/common";
 
 const props = defineProps(['isShow', 'message']);
-const emit = defineEmits(["onrecall", "onmodify", "ontransfer", "onreply", "onhide", "onremove", "oncopy", "onpinned", "onfav"]);
+const emit = defineEmits(["onrecall", "onmodify", "ontransfer", "onreply", "onhide", "onremove", "oncopy", "onpinned", "onfav", "ontranslate"]);
 
 let juggle = im.getCurrent();
 let { MessageType } = juggle;
@@ -38,6 +38,11 @@ watch(() => props.isShow, (value) => {
         <li class="tyn-list-link">
           <a href="#" class="wr wr-copy" @click.stop="emit('oncopy')" v-if="utils.isEqual(props.message.name, MessageType.TEXT)">
             <span>复制消息</span>
+          </a>
+        </li>
+        <li class="tyn-list-link">
+          <a href="#" class="wr wr-translate" @click.stop="emit('ontranslate')" v-if="utils.isEqual(props.message.name, MessageType.TEXT)">
+            <span>翻译消息</span>
           </a>
         </li>
         <li class="tyn-list-link">

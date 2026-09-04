@@ -76,13 +76,6 @@ function getMemory({ id }){
     return utils.isEqual(group.user_id, id);
   })[0] || { user_id: id };
 }
-function setDisplayName(params){
-  return request(SERVER_PATH.GROUP_SET_DISPLAY_NAME, {
-    method: 'POST',
-    body: utils.toJSON(params)
-  });
-}
-
 
 function setNotice(params){
   return request(SERVER_PATH.GROUP_SET_NOTICE, {
@@ -125,6 +118,51 @@ function getQrCode({ group_id }){
     method: 'GET'
   });
 }
+
+function addAdmin({ group_id, member_ids }){
+  return request(SERVER_PATH.GROUP_ADMIN_ADD, {
+    method: 'POST',
+    body: utils.toJSON({ group_id, member_ids })
+  });
+}
+
+function removeAdmin({ group_id, member_ids }){
+  return request(SERVER_PATH.GROUP_ADMIN_DEL, {
+    method: 'POST',
+    body: utils.toJSON({ group_id, member_ids })
+  });
+}
+
+function getAdminList({ group_id }){
+  let url = `${SERVER_PATH.GROUP_ADMIN_LIST}?group_id=${group_id}`;
+  return request(url, { method: 'GET' });
+}
+
+function setMemberMute({ group_id, member_ids, is_mute, mute_end_at }){
+  let body = { group_id, member_ids, is_mute: Number(is_mute) };
+  if (mute_end_at) body.mute_end_at = mute_end_at;
+  return request(SERVER_PATH.GROUP_MEMBER_MUTE, {
+    method: 'POST',
+    body: utils.toJSON(body)
+  });
+}
+
+function setVerifyType({ group_id, verify_type }){
+  return request(SERVER_PATH.GROUP_SET_VERIFY_TYPE, {
+    method: 'POST',
+    body: utils.toJSON({ group_id, verify_type: Number(verify_type) })
+  });
+}
+
+function setManagement({ group_id, group_top_msg_right }){
+  let body = { group_id };
+  if (group_top_msg_right !== undefined) body.group_top_msg_right = group_top_msg_right;
+  return request(SERVER_PATH.GROUP_MANAGEMENT_SET, {
+    method: 'POST',
+    body: utils.toJSON(body)
+  });
+}
+
 export default {
   create,
   quit,
@@ -134,11 +172,16 @@ export default {
   get,
   getMemory,
   update,
-  setDisplayName,
   setNotice,
   getNotice,
   setGroupHisVerify,
   setMute,
   transfer,
   getQrCode,
+  addAdmin,
+  removeAdmin,
+  getAdminList,
+  setMemberMute,
+  setVerifyType,
+  setManagement,
 }

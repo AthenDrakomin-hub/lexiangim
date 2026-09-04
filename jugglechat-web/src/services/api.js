@@ -17,7 +17,7 @@ let SERVER_PATH = {
   FRIEND_LIST: 'friends/list',
   FRIEND_NEW_LIST: 'friends/applications',
   FRIEND_CONFIRM: 'friends/confirm',
-  FRIEND_BOTS: 'bots/list',
+  FRIEND_BOTS: 'telegrambots/list',
   
   GROUP_CREATE: 'groups/add',
   GROUP_UPDATE: 'groups/update',
@@ -26,15 +26,19 @@ let SERVER_PATH = {
   GROUP_MEMBER_REMOVE: 'groups/members/del',
   GROUP_QUIT: 'groups/quit',
   GROUP_GET: 'groups/info',
-  GROUP_SET_DISPLAY_NAME: 'groups/setdisplayname',
   GROUP_SET_NOTICE: 'groups/setgrpannouncement',
   GROUP_GET_NOTICE: 'groups/getgrpannouncement',
   GROUP_SET_HIS_VERIFY_TYPE: 'groups/management/sethismsgvisible',
   GROUP_SET_MUTE: 'groups/management/setmute',
   GROUP_TRANSFER_OWNER: 'groups/management/chgowner',
   GROUP_QRCODE: 'groups/qrcode',
-
-  AI_ANSWER: 'assistants/answer',
+  GROUP_ADMIN_ADD: 'groups/management/administrators/add',
+  GROUP_ADMIN_DEL: 'groups/management/administrators/del',
+  GROUP_ADMIN_LIST: 'groups/management/administrators/list',
+  GROUP_MEMBER_MUTE: 'groups/management/setgrpmembersmute',
+  GROUP_SET_VERIFY_TYPE: 'groups/management/setgrpverifytype',
+  GROUP_MANAGEMENT_SET: 'groups/management/set',
+  TRANSLATE: 'translate',
 };
 utils.forEach(SERVER_PATH, (url, name) => {
   let protoclName = location.protocol;

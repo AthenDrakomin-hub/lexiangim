@@ -1,11 +1,13 @@
 import User from './user';
 import Friend from './friend';
 import Group from './group';
-import AI from './ai';
+import Translate from './translate';
+import Admin from './adminservice';
 
 export {
   User,
   Friend,
   Group,
-  AI,
+  Translate,
+  Admin,
 }

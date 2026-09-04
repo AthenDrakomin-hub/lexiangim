@@ -1,6 +1,6 @@
-<script setup>
+﻿<script setup>
 const props = defineProps(['message', 'isRead']);
-const emit = defineEmits(["onrecall", "onmodify", 'ontransfer', 'onreply', 'onreaction', 'onresend', 'onpinned', 'onfav']);
+const emit = defineEmits(["onrecall", "onmodify", 'ontransfer', 'onreply', 'onreaction', 'onresend', 'onpinned', 'onfav', 'ontranslate']);
 
 import { reactive, watch, getCurrentInstance } from "vue";
 import GroupReads from "./group-reads.vue";

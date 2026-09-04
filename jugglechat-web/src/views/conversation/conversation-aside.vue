@@ -39,8 +39,15 @@ let state = reactive({
   currentGroupId: '',
   group: {},
   groupName: props.conversation.conversationTitle,
-  groupDisplayName: '',
   groupNoticeContent: '',
+  groupVerifyType: 0,
+  adminIds: [],
+  memberContextMenu: {
+    show: false,
+    x: 0,
+    y: 0,
+    member: null
+  },
 
   switches: [
     { uid: ASIDER_SETTING_SWITCH.TOP, title: '会话置顶', isOpen: false, isShow: true },
@@ -148,27 +155,6 @@ function onSaveGroup(){
   Group.update(group);
 }
 
-function onSaveGroupDisplayName(){
-  let { conversationId } = props.conversation;
-  let { groupDisplayName  } = state;
-  let params = {
-    group_id: conversationId,
-    grp_display_name: groupDisplayName
-  };
-  Group.setDisplayName(params).then((result) => {
-    let { code } = result;
-    if(!utils.isEqual(code, RESPONSE.SUCCESS)){
-      return context.proxy.$toast({
-        text: `修改失败：${code}`,
-        icon: 'error'
-      });
-    }
-    context.proxy.$toast({
-      text: `保存成功`,
-      icon: 'success'
-    });
-  });
-}
 function onUpdateNotice({ content }){
   let { conversationId } = props.conversation;
   state.groupNoticeContent = content;
@@ -306,6 +292,74 @@ function onShowTranslator(isShow){
 function onShowGroupQrCode(isShow){
   state.isShowGroupQrcode = isShow;
 }
+
+// 成员右键菜单
+function onShowMemberContextMenu(e, member){
+  e.preventDefault();
+  let role = state.group.my_role || 0;
+  if (role <= GROUP_ROLE.MEMBER) return;
+  state.memberContextMenu = {
+    show: true,
+    x: e.clientX,
+    y: e.clientY,
+    member
+  };
+}
+function onHideMemberContextMenu(){
+  state.memberContextMenu.show = false;
+}
+function isMemberAdmin(member){
+  return state.adminIds.indexOf(member.id) > -1;
+}
+function onToggleAdmin(member){
+  let { conversationId } = props.conversation;
+  let isAdmin = isMemberAdmin(member);
+  let action = isAdmin ? Group.removeAdmin({ group_id: conversationId, member_ids: [member.id] }) : Group.addAdmin({ group_id: conversationId, member_ids: [member.id] });
+  action.then((result) => {
+    let { code } = result;
+    if (!utils.isEqual(code, RESPONSE.SUCCESS)) {
+      return context.proxy.$toast({ text: `操作失败：${code}`, icon: 'error' });
+    }
+    context.proxy.$toast({ text: isAdmin ? '已取消管理员' : '已设为管理员', icon: 'success' });
+    loadAdminList();
+  });
+  onHideMemberContextMenu();
+}
+function onToggleMemberMute(member){
+  let { conversationId } = props.conversation;
+  let isMuted = member.is_mute;
+  Group.setMemberMute({ group_id: conversationId, member_ids: [member.id], is_mute: !isMuted }).then((result) => {
+    let { code } = result;
+    if (!utils.isEqual(code, RESPONSE.SUCCESS)) {
+      return context.proxy.$toast({ text: `操作失败：${code}`, icon: 'error' });
+    }
+    member.is_mute = !isMuted;
+    context.proxy.$toast({ text: isMuted ? '已解除禁言' : '已禁言该成员', icon: 'success' });
+  });
+  onHideMemberContextMenu();
+}
+function loadAdminList(){
+  let { conversationId } = props.conversation;
+  Group.getAdminList({ group_id: conversationId }).then((result) => {
+    let { code, data } = result;
+    if (utils.isEqual(code, RESPONSE.SUCCESS) && data) {
+      state.adminIds = utils.map(data.list || data, (item) => item.member_id || item.user_id || item.id);
+    }
+  });
+}
+function onChangeVerifyType(e){
+  let { conversationId } = props.conversation;
+  let verifyType = Number(e.target.value);
+  Group.setVerifyType({ group_id: conversationId, verify_type: verifyType }).then((result) => {
+    let { code } = result;
+    if (!utils.isEqual(code, RESPONSE.SUCCESS)) {
+      state.groupVerifyType = state.groupVerifyType;
+      return context.proxy.$toast({ text: `设置失败：${code}`, icon: 'error' });
+    }
+    state.groupVerifyType = verifyType;
+    context.proxy.$toast({ text: '设置成功', icon: 'success' });
+  });
+}
 watch(() => props.conversation, (conversation) => {
   state.groupName = conversation.conversationTitle;
 });
@@ -319,7 +373,7 @@ watch(() => props.isShow, () => {
   
   if(props.isShow && isGroup){
     let { group_management: { group_his_msg_visible, group_mute } } = props.group;
-    utils.extend(state, { members: props.members, group: props.group, groupDisplayName: props.group.grp_display_name || '' });
+    utils.extend(state, { members: props.members, group: props.group });
     let role = props.group.my_role || 0;
     let isShow = role > GROUP_ROLE.MEMBER;
     
@@ -333,6 +387,10 @@ watch(() => props.isShow, () => {
         state.groupNoticeContent = content;
       }
     });
+    loadAdminList();
+    if (props.group.group_management) {
+      state.groupVerifyType = props.group.group_management.group_verify_type || 0;
+    }
   }else{
     updateSwitchValue(ASIDER_SETTING_SWITCH.HISTORY, false, { isShow: false });
     updateSwitchValue(ASIDER_SETTING_SWITCH.BAN, false, { isShow: false });
@@ -347,9 +405,12 @@ watch(() => props.isShow, () => {
   <Asider :is-show="props.isShow" :title="'会话详情'" @oncancel="onCancel" :right="1">
     <div class="tyn-media-group tyn-media-vr tyn-media-center">
       <div class="tyn-aside-members">
-        <div class="tyn-aside-member" v-for="member in state.members">
+        <div class="tyn-aside-member" v-for="member in state.members" @contextmenu.prevent="onShowMemberContextMenu($event, member)">
           <div class="tyn-media jg-size-md tyn-chat-aside-avatar"
-            :style="{ 'background-image': 'url(' + member.portrait + ')' }"></div>
+            :style="{ 'background-image': 'url(' + member.portrait + ')' }">
+            <span v-if="isMemberAdmin(member)" class="jg-admin-badge">管</span>
+            <span v-if="member.is_mute" class="jg-mute-badge">禁</span>
+          </div>
           <div class="tyn-aside-member-name">{{ member.name }}</div>
         </div>
         <div class="tyn-aside-member" @click="onShowFriendAdd(true)">
@@ -379,16 +440,17 @@ watch(() => props.isShow, () => {
               <div class="tyn-title-overline text-none jg-group-notice-line">{{ state.groupNoticeContent || '未设置群公告' }}</div>
             </div>
           </li>
-          <li class="jg-aside-li">
-            <div class="tyn-aside-title">我在本群的昵称</div>
-            <div class="tyn-media-row jg-df-row">
-              <input type="text" class="tyn-title-overline text-none" v-model="state.groupDisplayName" placeholder="仅在本群可见" @keydown.enter="onSaveGroupDisplayName()"/>
-              <div class="wr jg-df-modify-icon"></div>
-            </div>
-          </li>
           <li class="jg-aside-li jg-aside-bli" v-if="state.group.my_role == GROUP_ROLE.OWNER" @click="onShowTransferGroupOwner(true)">
             <div class="tyn-aside-title">转让群主</div>
             <span class="tyn-aside-icon wr wr-right"></span>
+          </li>
+          <li class="jg-aside-li jg-aside-bli" v-if="state.group.my_role >= GROUP_ROLE.MANGENT">
+            <div class="tyn-aside-title">加群验证</div>
+            <select class="jg-verify-select" :value="state.groupVerifyType" @change="onChangeVerifyType">
+              <option :value="0">允许任何人加入</option>
+              <option :value="1">需要管理员同意</option>
+              <option :value="2">不允许任何人加入</option>
+            </select>
           </li>
           <li class="jg-bottom-line"></li>
         </ul>
@@ -477,4 +539,66 @@ watch(() => props.isShow, () => {
     :uid="props.conversation.conversationId"
     @oncancel="onShowGroupQrCode(false)">
     </AsiderQrCode>
+
+  <!-- 成员右键菜单 -->
+  <teleport to="body">
+    <div v-if="state.memberContextMenu.show" class="jg-member-context-menu"
+      :style="{ left: state.memberContextMenu.x + 'px', top: state.memberContextMenu.y + 'px' }"
+      @click.stop>
+      <div class="jg-context-menu-item" v-if="state.group.my_role == GROUP_ROLE.OWNER" @click="onToggleAdmin(state.memberContextMenu.member)">
+        {{ isMemberAdmin(state.memberContextMenu.member) ? '取消管理员' : '设为管理员' }}
+      </div>
+      <div class="jg-context-menu-item" v-if="state.group.my_role >= GROUP_ROLE.MANGENT" @click="onToggleMemberMute(state.memberContextMenu.member)">
+        {{ state.memberContextMenu.member.is_mute ? '解除禁言' : '禁言该成员' }}
+      </div>
+      <div class="jg-context-menu-item jg-context-menu-danger" v-if="state.group.my_role >= GROUP_ROLE.MANGENT" @click="onHideMemberContextMenu()">
+        取消
+      </div>
+    </div>
+  </teleport>
 </template>
+
+<style scoped>
+.jg-admin-badge, .jg-mute-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  font-size: 10px;
+  line-height: 16px;
+  text-align: center;
+  color: #fff;
+}
+.jg-admin-badge { background: #f5a623; }
+.jg-mute-badge { background: #e74c3c; }
+.jg-verify-select {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+  background: #fff;
+}
+.jg-member-context-menu {
+  position: fixed;
+  z-index: 9999;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  min-width: 120px;
+  overflow: hidden;
+}
+.jg-context-menu-item {
+  padding: 10px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #333;
+}
+.jg-context-menu-item:hover {
+  background: #f5f5f5;
+}
+.jg-context-menu-danger {
+  color: #e74c3c;
+}
+</style>

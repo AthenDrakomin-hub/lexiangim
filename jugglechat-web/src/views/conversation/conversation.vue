@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import Emoji from "../../components/emoji.vue"
 import ModalTransfer from "../../components/modal-transfer.vue";
 import ModalImgSender from "../../components/modal-img-sender.vue";
@@ -35,7 +35,7 @@ import Storage from "../../common/storage";
 import { TRANSFER_TYPE, MSG_NAME, EVENT_NAME, MESSAGE_OP_TYPE, STORAGE, RESPONSE } from "../../common/enum";
 import common from "../../common/common";
 import emitter from "../../common/emmit";
-import { Group, AI } from "../../services/index";
+import { Group, Translate } from "../../services/index";
 import { DynamicScroller, DynamicScrollerItem } from "vue-virtual-scroller";
 import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
 
@@ -66,7 +66,6 @@ let state = reactive({
   isShowMention: false,
   isShowMobileBack: true,
   isShowReply: false,
-  isAsking: false,
   currentReplyMessage: {},
   members: [],
   msgOpType: MESSAGE_OP_TYPE.TRANSLATE,
@@ -797,6 +796,25 @@ function onFav({ message }){
     return context.proxy.$toast({ text: `收藏成功`, icon: 'success' });
   })
 }
+function onTranslate({ message }){
+  let text = message.content || '';
+  if (!text) return;
+  Translate.translate({ text }).then((result) => {
+    let { code, data } = result;
+    if (code !== 0 || !data) {
+      return context.proxy.$toast({ text: '翻译失败', icon: 'error' });
+    }
+    let translated = data.translated_text || data.result || data.text || JSON.stringify(data);
+    context.proxy.$showModal({
+      title: '翻译结果',
+      content: translated,
+      onCancel: () => {},
+      onConfirm: () => {}
+    });
+  }).catch(() => {
+    context.proxy.$toast({ text: '翻译失败', icon: 'error' });
+  });
+}
 function onUnpinned(){
   let { pinnedMessage } = state;
   if(utils.isEmpty(pinnedMessage)){
@@ -820,40 +838,6 @@ function onQuitGroup(){
 function onBanGroup(isMute){
   state.isShowGroupMute = isMute;
   state.group.group_management.group_mute = isMute;
-}
-function onAskAI(){
-  if(state.isAsking){
-    return;
-  }
-  state.isAsking = true;
-  let { messages } = state;
-  let msgs = [];
-  for(let i = 0; i < messages.length; i++){
-    let message = messages[i];
-    if(utils.isEqual(message.name, MessageType.TEXT)){
-      let { sender, content, sentTime } = message;
-      msgs.push({ 
-        sender_id: sender.id,
-        content: content.content,
-        msg_time: sentTime
-      });
-    }
-    if(msgs.length >= 3){
-      break;
-    }
-  }
-  if(utils.isEqual(msgs.length, 0)){
-    state.isAsking = false;
-    return context.proxy.$toast({ text: `当前会话无文本消息`, icon: 'error' });
-  }
-  AI.answer({ msgs }).then((result) => {
-    let { code, msg, data } = result;
-    state.isAsking = false;
-    if(!utils.isEqual(code, RESPONSE.SUCCESS)){
-      return context.proxy.$toast({ text: `AI 回复异常 ${code}`, icon: 'error' });
-    }
-    state.content = data.answer;
-  });
 }
 watch(() => state.content, (val) => {
   let str = val.split('')[val.length - 1]
@@ -895,7 +879,6 @@ watch(() => state.content, (val) => {
         </div>
       </div>
       <ul class="tyn-list-inline gap gap-3 ms-auto">
-        <li><button class="btn btn-icon btn-light wr wr-gpt" @click="onAskAI()"></button></li>
         <li v-if="!conversationTools.isGroup(state.currentConversation)"><button class="btn btn-icon btn-light wr wr-rtc-mic jg-op-icon" @click="onShowCall(true, MediaType.AUDIO)"></button></li>
         <li><button class="btn btn-icon btn-light wr wr-rtc-camera jg-op-icon" @click="onShowCall(true, MediaType.VIDEO)"></button></li>
         <li><button class="btn btn-icon btn-light wr wr-more-dot" @click="onShowAside"></button></li>
@@ -1009,7 +992,7 @@ watch(() => state.content, (val) => {
               @change="onFileChange" />
           </li>
         </ul>
-        <input  class="tyn-chat-form-input" v-model="state.content" @keydown.enter="onSend()" :disabled="state.isShowGroupMute || state.isAsking" @keydown.esc="onInputEsc"
+        <input  class="tyn-chat-form-input" v-model="state.content" @keydown.enter="onSend()" :disabled="state.isShowGroupMute" @keydown.esc="onInputEsc"
           @keydown.up.prevent="onInputUp" @keydown.down.prevent="onInputDown" @paste="onPaste" placeholder="输入消息，开启乐享沟通..." ref="messageInput"/>
         <ul class="tyn-list-inline me-n2 my-1">
           <li class="d-sm-block">
@@ -1022,10 +1005,6 @@ watch(() => state.content, (val) => {
       </div>
       <Transfer :is-show="state.isShowTransfer" :op-type="state.msgOpType" @oncancel="onCancelTransfer(false)" @ontransfer="onTransfer"></Transfer>
       <div class="jg-group-ban" v-if="state.isShowGroupMute">群组已禁言</div>
-      <div class="jg-askai-ban" v-if="state.isAsking">
-        <div class="jg-askai-loading"></div>
-        <div class="jg-askai-memo">AI 正在理解最近的 3 条文本消息</div>
-      </div>
     </div>
     <ConversationAsider :is-show="state.isShowAside" 
       :conversation="props.conversation" 
