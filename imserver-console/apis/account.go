@@ -37,6 +37,7 @@ func Login(ctx *gin.Context) {
 			Env:           "private", //public
 			// RoleId:        account.RoleId,
 			RoleType:     account.RoleType,
+			AppKey:       account.AppKey,
 			IsCommercial: configures.Config.IsCommercial,
 		})
 	} else {
@@ -52,7 +53,8 @@ type AccountReq struct {
 	Password    string `json:"password"`
 	NewPassword string `json:"new_password"`
 	// RoleId      int    `json:"role_id"`
-	RoleType int `json:"role_type"`
+	RoleType int    `json:"role_type"`
+	AppKey   string `json:"app_key"` // 应用管理员绑定的应用key
 }
 
 type LoginResp struct {
@@ -60,8 +62,9 @@ type LoginResp struct {
 	Authorization string `json:"authorization"`
 	Env           string `json:"env"`
 	// RoleId        int    `json:"role_id"`
-	RoleType     int  `json:"role_type"`
-	IsCommercial bool `json:"is_commercial"`
+	RoleType     int    `json:"role_type"`
+	AppKey       string `json:"app_key"`
+	IsCommercial bool   `json:"is_commercial"`
 }
 
 func AddAccount(ctx *gin.Context) {
@@ -73,7 +76,26 @@ func AddAccount(ctx *gin.Context) {
 		})
 		return
 	}
-	code := services.AddAccount(ctxs.ToCtx(ctx), req.Account, req.Password, req.RoleType)
+	// 系统管理员全局只能有1个，创建前检查
+	if req.RoleType == 0 {
+		exists := services.CheckSysAdminExists(ctxs.ToCtx(ctx))
+		if exists {
+			ctx.JSON(http.StatusOK, &ctxs.ApiErrorMsg{
+				Code: errs.AdminErrorCode_Default,
+				Msg:  "系统管理员已存在，全局只能有1个系统管理员",
+			})
+			return
+		}
+	}
+	// 应用管理员必须绑定应用
+	if req.RoleType == 1 && req.AppKey == "" {
+		ctx.JSON(http.StatusOK, &ctxs.ApiErrorMsg{
+			Code: errs.AdminErrorCode_ParamError,
+			Msg:  "应用管理员必须绑定应用",
+		})
+		return
+	}
+	code := services.AddAccountWithAppKey(ctxs.ToCtx(ctx), req.Account, req.Password, req.RoleType, req.AppKey)
 	ctx.JSON(http.StatusOK, &ctxs.ApiErrorMsg{
 		Code: code,
 	})
@@ -185,6 +207,7 @@ func QryAccounts(ctx *gin.Context) {
 type UpdateRoleReq struct {
 	Account  string `json:"account"`
 	RoleType int    `json:"role_type"`
+	AppKey   string `json:"app_key"` // 应用管理员绑定的应用key
 }
 
 func UpdateRole(ctx *gin.Context) {
@@ -196,7 +219,26 @@ func UpdateRole(ctx *gin.Context) {
 		})
 		return
 	}
-	code := services.UpdateRole(ctxs.ToCtx(ctx), req.Account, req.RoleType)
+	// 如果要设置为系统管理员，检查是否已有系统管理员（排除当前账号）
+	if req.RoleType == 0 {
+		exists := services.CheckSysAdminExistsExcludeAccount(ctxs.ToCtx(ctx), req.Account)
+		if exists {
+			ctx.JSON(http.StatusOK, &ctxs.ApiErrorMsg{
+				Code: errs.AdminErrorCode_Default,
+				Msg:  "系统管理员已存在，全局只能有1个系统管理员，设置后当前系统管理员将自动降级为应用管理员",
+			})
+			return
+		}
+	}
+	// 应用管理员必须绑定应用
+	if req.RoleType == 1 && req.AppKey == "" {
+		ctx.JSON(http.StatusOK, &ctxs.ApiErrorMsg{
+			Code: errs.AdminErrorCode_ParamError,
+			Msg:  "应用管理员必须绑定应用",
+		})
+		return
+	}
+	code := services.UpdateRoleWithAppKey(ctxs.ToCtx(ctx), req.Account, req.RoleType, req.AppKey)
 	ctx.JSON(http.StatusOK, &ctxs.ApiErrorMsg{
 		Code: code,
 	})

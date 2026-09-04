@@ -6,6 +6,7 @@ import { STORAGE, RESPONSE } from "../common/enum";
 import common from "../common/common";
 import Storage from "../common/storage";
 import im from "../common/im";
+import { CONFIG } from "../config";
 import ModalServerSetting from "../components/modal-server-setting.vue";
 
 const props = defineProps(["isLogin", "isAdd", "isShow"]);
@@ -60,7 +61,11 @@ function validateConfirmPassword(pwd, confirm) {
 }
 
 function getApiBase() {
-  return '/jim';
+  let protocol = location.protocol;
+  if (protocol === 'file:') {
+    protocol = 'https:';
+  }
+  return protocol + '//' + CONFIG.API + '/jim';
 }
 
 function onLogin() {
@@ -75,7 +80,7 @@ function onLogin() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'AppKey': Storage.get(STORAGE.SERVER_SETTING)?.appkey || 'demo_app'
+      'AppKey': Storage.get(STORAGE.SERVER_SETTING)?.appkey || 'LXIM2026PROD001'
     },
     body: JSON.stringify({ account: account, password: password })
   })
@@ -95,7 +100,7 @@ function onLogin() {
       return;
     }
     let { user_id, authorization, nickname, avatar, im_token } = result.data;
-    let user = { id: user_id, token: im_token, authorization: authorization, name: nickname, portrait: avatar, isUsed: true };
+    let user = { id: user_id, token: im_token, authorization: authorization, name: nickname, portrait: avatar, vip_level: result.data.vip_level || 0, isUsed: true };
     Storage.set(STORAGE.USER_TOKEN, user);
     let accounts = Storage.get(STORAGE.USERS);
     if (!Array.isArray(accounts)) {
@@ -138,7 +143,7 @@ function onRegister() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'AppKey': Storage.get(STORAGE.SERVER_SETTING)?.appkey || 'demo_app'
+      'AppKey': Storage.get(STORAGE.SERVER_SETTING)?.appkey || 'LXIM2026PROD001'
     },
     body: JSON.stringify({ account: account, password: password, nickname: nickname })
   })
@@ -153,10 +158,48 @@ function onRegister() {
       }
       return;
     }
-    context.proxy.$toast({ text: '注册成功，请登录', icon: 'success' });
-    state.isRegister = false;
-    state.errorMsg = { account: '', password: '', nickname: '', confirmPassword: '' };
-    state.user = { account: account, password: '' };
+    context.proxy.$toast({ text: '注册成功，正在登录...', icon: 'success' });
+    // 注册成功后自动登录
+    setTimeout(() => {
+      fetch(`${getApiBase()}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'AppKey': Storage.get(STORAGE.SERVER_SETTING)?.appkey || 'LXIM2026PROD001'
+        },
+        body: JSON.stringify({ account: account, password: password })
+      })
+      .then(res => res.json())
+      .then(loginResult => {
+        if (loginResult.code !== 0) {
+          state.isRegister = false;
+          state.user = { account: account, password: '' };
+          state.errorMsg.account = '自动登录失败，请手动登录';
+          return;
+        }
+        let { user_id, authorization, nickname: loginNickname, avatar, im_token } = loginResult.data;
+        let user = { id: user_id, token: im_token, authorization: authorization, name: loginNickname || nickname, portrait: avatar, isUsed: true };
+        Storage.set(STORAGE.USER_TOKEN, user);
+        let accounts = Storage.get(STORAGE.USERS);
+        if (!Array.isArray(accounts)) {
+          accounts = [];
+        }
+        let index = utils.find(accounts, (item) => utils.isEqual(item.id, user.id));
+        if (index === -1) accounts.push(user);
+        Storage.set(STORAGE.USERS, accounts);
+        if (props.isLogin) {
+          router.replace({ name: 'ConversationList' });
+        } else {
+          location.reload();
+        }
+      })
+      .catch(err => {
+        state.isRegister = false;
+        state.user = { account: account, password: '' };
+        state.errorMsg.account = '网络连接失败，请手动登录';
+        console.error(err);
+      });
+    }, 500);
   })
   .catch(err => {
     state.loading = false;
@@ -221,6 +264,7 @@ function onShowServerSetting(isShow) {
               class="lx-input"
               v-model="state.user.account"
               placeholder="账号"
+              aria-label="账号"
               @input="onInput()"
               @keydown.enter="onLogin()"
             >
@@ -233,6 +277,7 @@ function onShowServerSetting(isShow) {
                 class="lx-input"
                 v-model="state.user.password"
                 placeholder="密码"
+                aria-label="密码"
                 @input="onInput()"
                 @keydown.enter="onLogin()"
               >
@@ -261,6 +306,7 @@ function onShowServerSetting(isShow) {
               class="lx-input"
               v-model="state.user.account"
               placeholder="账号（4-20位）"
+              aria-label="账号"
               @input="onInput()"
               @keydown.enter="onRegister()"
             >
@@ -272,6 +318,7 @@ function onShowServerSetting(isShow) {
               class="lx-input"
               v-model="state.nickname"
               placeholder="昵称"
+              aria-label="昵称"
               @input="onInput()"
               @keydown.enter="onRegister()"
             >
@@ -283,6 +330,7 @@ function onShowServerSetting(isShow) {
               class="lx-input"
               v-model="state.user.password"
               placeholder="设置密码（至少6位）"
+              aria-label="密码"
               @input="onInput()"
               @keydown.enter="onRegister()"
             >
@@ -294,6 +342,7 @@ function onShowServerSetting(isShow) {
               class="lx-input"
               v-model="state.confirmPassword"
               placeholder="确认密码"
+              aria-label="确认密码"
               @input="onInput()"
               @keydown.enter="onRegister()"
             >
@@ -301,7 +350,7 @@ function onShowServerSetting(isShow) {
           </div>
           <div class="lx-terms-wrap">
             <label class="lx-terms-checkbox">
-              <input type="checkbox" v-model="state.agreeTerms">
+              <input type="checkbox" v-model="state.agreeTerms" aria-label="我已阅读并同意用户协议和隐私政策">
               <span>我已阅读并同意</span>
             </label>
             <a href="https://juggle.im/jc/user.html" target="_blank" class="lx-terms-link">《用户协议》</a>
@@ -331,7 +380,7 @@ function onShowServerSetting(isShow) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(160deg, #0a3d3d 0%, #0d5c5c 35%, #118a7e 70%, #2bbbad 100%);
+  background: linear-gradient(160deg, #f0f4ff 0%, #e8ecf8 35%, #dfe4f2 70%, #d5dbeb 100%);
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
 }
@@ -346,14 +395,14 @@ function onShowServerSetting(isShow) {
 .lx-wave-1 {
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, #00c9a7 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(88, 101, 242, 0.4) 0%, transparent 70%);
   top: -200px;
   right: -150px;
 }
 .lx-wave-2 {
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, #00e5c4 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(88, 101, 242, 0.3) 0%, transparent 70%);
   bottom: -180px;
   left: -120px;
 }
@@ -362,9 +411,9 @@ function onShowServerSetting(isShow) {
 .lx-bubble {
   position: absolute;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 100%);
-  border: 1px solid rgba(255,255,255,0.25);
-  box-shadow: inset 0 0 20px rgba(255,255,255,0.15), 0 4px 20px rgba(0,0,0,0.1);
+  background: radial-gradient(circle at 30% 30%, rgba(88,101,242,0.15) 0%, rgba(88,101,242,0.05) 50%, rgba(88,101,242,0.02) 100%);
+  border: 1px solid rgba(88,101,242,0.2);
+  box-shadow: inset 0 0 20px rgba(88,101,242,0.05), 0 4px 20px rgba(0,0,0,0.05);
 }
 .lx-bubble-1 { width: 100px; height: 100px; top: 6%; left: 3%; }
 .lx-bubble-2 { width: 60px; height: 60px; top: 12%; right: 8%; }
@@ -382,15 +431,15 @@ function onShowServerSetting(isShow) {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.15);
+  background: #f8fafc;
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid #e2e8f0;
   cursor: pointer;
   z-index: 20;
   transition: all 0.2s;
 }
 .lx-server-settings:hover {
-  background: rgba(255,255,255,0.25);
+  background: #e2e8f0;
 }
 
 .lx-main {
@@ -416,7 +465,7 @@ function onShowServerSetting(isShow) {
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 4px 12px rgba(88,101,242,0.15));
 }
 .lx-logo-icon svg {
   width: 100%;
@@ -425,14 +474,14 @@ function onShowServerSetting(isShow) {
 .lx-title {
   font-size: 38px;
   font-weight: 800;
-  color: #ffffff;
+  color: #1a1d2e;
   margin: 0 0 10px;
   letter-spacing: 3px;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  text-shadow: none;
 }
 .lx-subtitle {
   font-size: 16px;
-  color: rgba(255,255,255,0.8);
+  color: #4a5568;
   margin: 0;
   letter-spacing: 1px;
 }
@@ -440,13 +489,13 @@ function onShowServerSetting(isShow) {
 /* 毛玻璃卡片 */
 .lx-card {
   width: 100%;
-  background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.08) 100%);
+  background: #ffffff;
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1.5px solid rgba(255,255,255,0.3);
+  border: 1.5px solid #e2e8f0;
   border-radius: 32px;
   padding: 36px 28px 28px;
-  box-shadow: 0 16px 48px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.3);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.08);
 }
 
 .lx-form-group {
@@ -459,22 +508,22 @@ function onShowServerSetting(isShow) {
   width: 100%;
   height: 52px;
   border-radius: 26px;
-  border: 1.5px solid rgba(255,255,255,0.35);
-  background: rgba(255,255,255,0.2);
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
   padding: 0 22px;
   font-size: 16px;
-  color: #ffffff;
+  color: #1e293b;
   box-sizing: border-box;
   transition: all 0.25s ease;
 }
 .lx-input::placeholder {
-  color: rgba(255,255,255,0.6);
+  color: #9ca3af;
 }
 .lx-input:focus {
   outline: none;
-  border-color: rgba(255,255,255,0.7);
-  background: rgba(255,255,255,0.28);
-  box-shadow: 0 0 0 3px rgba(255,255,255,0.1);
+  border-color: #6b7280;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(88,101,242,0.2);
 }
 .lx-input-arrow {
   position: absolute;
@@ -482,7 +531,7 @@ function onShowServerSetting(isShow) {
   top: 50%;
   transform: translateY(-50%);
   font-size: 24px;
-  color: rgba(255,255,255,0.6);
+  color: #9ca3af;
   pointer-events: none;
   line-height: 1;
 }
@@ -500,12 +549,12 @@ function onShowServerSetting(isShow) {
 }
 .lx-forgot {
   font-size: 13px;
-  color: rgba(255,255,255,0.7);
+  color: #6b7280;
   cursor: pointer;
   transition: color 0.2s;
 }
 .lx-forgot:hover {
-  color: #ffffff;
+  color: #1e293b;
 }
 
 .lx-btn {
@@ -515,21 +564,21 @@ function onShowServerSetting(isShow) {
   width: 100%;
   height: 54px;
   border-radius: 27px;
-  background: linear-gradient(135deg, #5eead4 0%, #2dd4bf 50%, #14b8a6 100%);
-  color: #0d3d3d;
+  background: linear-gradient(135deg, #5865f2 0%, #4752c4 100%);
+  color: #1e293b;
   font-size: 19px;
   font-weight: 700;
   letter-spacing: 4px;
   border: none;
   cursor: pointer;
-  box-shadow: 0 6px 24px rgba(20,184,166,0.5), inset 0 1px 0 rgba(255,255,255,0.5);
+  box-shadow: 0 6px 24px rgba(88, 101, 242, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   transition: all 0.25s ease;
   text-decoration: none;
   margin-top: 8px;
 }
 .lx-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 32px rgba(20,184,166,0.6), inset 0 1px 0 rgba(255,255,255,0.5);
+  box-shadow: 0 10px 32px rgba(88, 101, 242, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 .lx-btn:active {
   transform: translateY(0);
@@ -542,14 +591,14 @@ function onShowServerSetting(isShow) {
 
 .lx-toggle {
   text-align: center;
-  color: rgba(255,255,255,0.8);
+  color: #4a5568;
   font-size: 14px;
   margin-top: 18px;
   cursor: pointer;
   transition: color 0.2s;
 }
 .lx-toggle:hover {
-  color: #ffffff;
+  color: #1e293b;
   text-decoration: underline;
 }
 
@@ -560,7 +609,7 @@ function onShowServerSetting(isShow) {
   flex-wrap: wrap;
   gap: 4px;
   font-size: 12px;
-  color: rgba(255,255,255,0.75);
+  color: #6b7280;
   margin-bottom: 16px;
   line-height: 1.6;
 }
@@ -574,15 +623,16 @@ function onShowServerSetting(isShow) {
 .lx-terms-checkbox input {
   width: 14px;
   height: 14px;
-  accent-color: #2dd4bf;
+  accent-color: #5865f2;
   cursor: pointer;
 }
 .lx-terms-link {
-  color: #5eead4;
+  color: #5865f2;
   text-decoration: none;
   font-weight: 500;
 }
 .lx-terms-link:hover {
   text-decoration: underline;
 }
+
 </style>

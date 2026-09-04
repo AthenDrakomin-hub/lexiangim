@@ -65,7 +65,8 @@ func AddMultiAccount(ctx context.Context, req *models.AddMultiAccountReq) (*mode
 	if err != nil || user == nil {
 		return nil, errs.IMErrorCode_APP_USER_NOT_EXIST
 	}
-	if user.LoginPass != utils.SHA1(req.Password) {
+	matched, _ := utils.CheckPasswordOrMigrate(user.LoginPass, req.Password)
+	if !matched {
 		return nil, errs.IMErrorCode_APP_LOGIN_ERR_PASS
 	}
 

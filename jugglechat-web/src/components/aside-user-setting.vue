@@ -11,10 +11,10 @@ import AsiderUserAccount from "./aside-user-account.vue";
 import AsiderQrCode from "./aside-qrcode.vue";
 import AsideFavoriteMsg from "./aside-msg-favorite.vue";
 import AsideUserAgreement from "./aside-user-agreement.vue";
-import AdminMultiAccount from "./aside-admin-multi-account.vue";
-import AdminIpMonitor from "./aside-admin-ip-monitor.vue";
-import AdminIpChanges from "./aside-admin-ip-changes.vue";
-import AdminService from "../services/adminservice";
+import VipMultiAccount from "./aside-vip-multi-account.vue";
+import VipIpMonitor from "./aside-vip-ip-monitor.vue";
+import VipIpChanges from "./aside-vip-ip-changes.vue";
+import VipService from "../services/vipservice";
 
 import { User } from "../services/index";
 import { RESPONSE, STORAGE, ASIDE_MENU_TYPE, EVENT_NAME, SETTING_CARDS, USER_AGREEMENT } from "../common/enum";
@@ -34,9 +34,9 @@ let state = reactive({
   isShowUserQrcode: false,
   isShowFavoriteMsg: false,
   isShowUserAgreement: false,
-  isShowAdminMultiAccount: false,
-  isShowAdminIpMonitor: false,
-  isShowAdminIpChanges: false,
+  isShowVipMultiAccount: false,
+  isShowVipIpMonitor: false,
+  isShowVipIpChanges: false,
   userAgreentUrl: '',
   userAgreentTitle: '',
 });
@@ -71,15 +71,15 @@ function onClick(menu){
   if(utils.isEqual(event, ASIDE_MENU_TYPE.USER_LOGOUT)){
     emitter.$emit(EVENT_NAME.UN_UNATHORIZED);
   }
-  // 管理员功能
+  // VIP功能
   if(utils.isEqual(event, ASIDE_MENU_TYPE.ADMIN_MULTI_ACCOUNT)){
-    state.isShowAdminMultiAccount = true;
+    state.isShowVipMultiAccount = true;
   }
   if(utils.isEqual(event, ASIDE_MENU_TYPE.ADMIN_IP_MONITOR)){
-    state.isShowAdminIpMonitor = true;
+    state.isShowVipIpMonitor = true;
   }
   if(utils.isEqual(event, ASIDE_MENU_TYPE.ADMIN_IP_CHANGES)){
-    state.isShowAdminIpChanges = true;
+    state.isShowVipIpChanges = true;
   }
 }
 function onShowFavoriteMsg(isShow){
@@ -104,21 +104,21 @@ function onCancel() {
   emit('oncancel', {});
 }
 
-// 管理员角色检测
-let isAdmin = false;
-async function checkAdminRole() {
+// VIP角色检测
+let isVip = false;
+async function checkVipRole() {
   try {
-    let data = await AdminService.getUserRole();
-    isAdmin = data && data.role === 1;
+    let data = await VipService.getUserRole();
+    isVip = data && data.role === 1;
     state.cards = SETTING_CARDS.filter(card => {
-      if (card.isAdmin && !isAdmin) return false;
+      if (card.isVip && !isVip) return false;
       return true;
     });
   } catch (e) {
-    console.error('检查管理员角色失败', e);
+    console.error('检查VIP角色失败', e);
   }
 }
-checkAdminRole();
+checkVipRole();
 
 emitter.$on(EVENT_NAME.ON_USER_INFO_UPDATE, ({ user }) => {
   utils.extend(state.user, { ...user });
@@ -173,9 +173,9 @@ emitter.$on(EVENT_NAME.ON_USER_INFO_UPDATE, ({ user }) => {
     @oncancel="onShowUserQrCode(false)">
   </AsiderQrCode>
 
-  <!-- 管理员功能组件 -->
-  <AdminMultiAccount :is-show="state.isShowAdminMultiAccount" @oncancel="state.isShowAdminMultiAccount = false"></AdminMultiAccount>
-  <AdminIpMonitor :is-show="state.isShowAdminIpMonitor" @oncancel="state.isShowAdminIpMonitor = false"></AdminIpMonitor>
-  <AdminIpChanges :is-show="state.isShowAdminIpChanges" @oncancel="state.isShowAdminIpChanges = false"></AdminIpChanges>
+  <!-- VIP功能组件 -->
+  <VipMultiAccount :is-show="state.isShowVipMultiAccount" @oncancel="state.isShowVipMultiAccount = false"></VipMultiAccount>
+  <VipIpMonitor :is-show="state.isShowVipIpMonitor" @oncancel="state.isShowVipIpMonitor = false"></VipIpMonitor>
+  <VipIpChanges :is-show="state.isShowVipIpChanges" @oncancel="state.isShowVipIpChanges = false"></VipIpChanges>
 
 </template>

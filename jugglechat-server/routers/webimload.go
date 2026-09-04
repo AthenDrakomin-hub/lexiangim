@@ -2,6 +2,7 @@ package routers
 
 import (
 	"embed"
+	"fmt"
 	"io/fs"
 	"net/http"
 	"strings"
@@ -12,10 +13,10 @@ import (
 //go:embed webim
 var webimFS embed.FS
 
-func LoadWebIM(eng *gin.Engine) {
+func LoadWebIM(eng *gin.Engine) error {
 	subFS, err := fs.Sub(webimFS, "webim")
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("failed to sub webim FS: %w", err)
 	}
 	httpFS := http.FS(subFS)
 
@@ -48,6 +49,8 @@ func LoadWebIM(eng *gin.Engine) {
 		}
 		serveIndexFile(ctx, subFS)
 	})
+
+	return nil
 }
 
 func serveIndexFile(ctx *gin.Context, fileSystem fs.FS) {

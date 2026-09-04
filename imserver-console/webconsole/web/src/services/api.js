@@ -90,6 +90,9 @@ let SERVER_PATH = {
   USER_MANAGER_LIST: 'apps/users/list',
   USER_MANAGER_BAN: 'apps/users/ban',
   USER_MANAGER_UNBAN: 'apps/users/unban',
+  USER_MANAGER_UPDATE_PROFILE: 'apps/users/updateprofile',
+  USER_MANAGER_RESET_PASSWORD: 'apps/users/resetpassword',
+  USER_MANAGER_DELETE: 'apps/users/delete',
 
   GROUP_MANAGER_LIST: 'apps/groups/list',
   GROUP_MANAGER_DISSOLVE: 'apps/groups/dissolve',

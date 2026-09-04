@@ -1,0 +1,289 @@
+/**
+ * jg-icon-* 样式别名文件
+ *
+ * 过渡期别名 — 在 v2.0 移除
+ *
+ * 作用：为新图标命名体系 (jg-icon-*) 提供向后兼容，
+ *       使旧类名 (wr-*) 和新类名 (jg-icon-*) 均可正常使用。
+ *
+ * 迁移说明：
+ *   1. 新项目请直接使用 jg-icon-* 类名
+ *   2. 旧项目可通过此文件逐步迁移
+ *   3. 建议在 v2.0 版本移除本文件
+ */
+
+/* ── 方向类 ──────────────────────────────────────────────────────────────── */
+.jg-icon-arrow-left, .jg-icon-arrow-left {
+  /* 由 iconfont.css 定义 ::before 伪元素内容 */
+}
+.jg-icon-arrow-right, .jg-icon-arrow-right {
+}
+.jg-icon-arrow-up, .jg-icon-arrow-up {
+}
+.jg-icon-arrow-down, .jg-icon-arrow-down {
+}
+.jg-icon-arrow-right-af, .jg-icon-arrow-right {
+}
+
+/* ── 操作类 ──────────────────────────────────────────────────────────────── */
+.jg-icon-more, .jg-icon-more {
+}
+.jg-icon-more-dot, .jg-icon-more {
+}
+.jg-icon-more-list, .jg-icon-more-list {
+}
+.jg-icon-close, .jg-icon-close {
+}
+.jg-icon-search, .jg-icon-search {
+}
+.jg-icon-add, .jg-icon-add {
+}
+.jg-icon-subtract, .jg-icon-subtract {
+}
+.jg-icon-delete, .jg-icon-delete {
+}
+.jg-icon-edit, .jg-icon-edit {
+}
+.jg-icon-edit, .jg-icon-edit {
+}
+.jg-icon-edit-a, .jg-icon-edit {
+}
+.jg-icon-edit-pen, .jg-icon-edit {
+}
+.jg-icon-check, .jg-icon-check {
+}
+.jg-icon-check, .jg-icon-check {
+}
+.jg-icon-copy, .jg-icon-copy {
+}
+.jg-icon-forward, .jg-icon-forward {
+}
+.jg-icon-forward, .jg-icon-forward {
+}
+.jg-icon-forward-merge, .jg-icon-forward-merge {
+}
+.jg-icon-reply, .jg-icon-reply {
+}
+.jg-icon-reply, .jg-icon-reply {
+}
+.jg-icon-recall, .jg-icon-recall {
+}
+.jg-icon-emoji, .jg-icon-emoji {
+}
+.jg-icon-emoji, .jg-icon-emoji {
+}
+.jg-icon-image, .jg-icon-image {
+}
+.jg-icon-file, .jg-icon-file {
+}
+.jg-icon-file, .jg-icon-file {
+}
+.jg-icon-video, .jg-icon-video {
+}
+.jg-icon-emoji, .jg-icon-emoji {
+}
+.jg-icon-send, .jg-icon-send {
+}
+.jg-icon-send, .jg-icon-send {
+}
+.jg-icon-settings, .jg-icon-settings {
+}
+.jg-icon-settings, .jg-icon-settings {
+}
+.jg-icon-user, .jg-icon-user {
+}
+.jg-icon-user-add, .jg-icon-user-add {
+}
+.jg-icon-group, .jg-icon-group {
+}
+.jg-icon-logout, .jg-icon-logout {
+}
+.jg-icon-notice, .jg-icon-notice {
+}
+.jg-icon-contact, .jg-icon-contact {
+}
+.jg-icon-message, .jg-icon-message {
+}
+.jg-icon-category, .jg-icon-category {
+}
+.jg-icon-operate, .jg-icon-operate {
+}
+.jg-icon-block, .jg-icon-block {
+}
+.jg-icon-share, .jg-icon-share {
+}
+.jg-icon-mark, .jg-icon-mark {
+}
+
+/* ── 状态类 ──────────────────────────────────────────────────────────────── */
+.jg-icon-success, .jg-icon-success {
+}
+.jg-icon-success-square, .jg-icon-success-square {
+}
+.jg-icon-warning, .jg-icon-warning {
+}
+.jg-icon-error, .jg-icon-error {
+}
+.jg-icon-warning, .jg-icon-warning {
+}
+.jg-icon-failed, .jg-icon-failed {
+}
+.jg-icon-info, .jg-icon-info {
+}
+.jg-icon-disabled, .jg-icon-disabled {
+}
+
+/* ── 气泡类（保留独立样式）───────────────────────────────────────────────── */
+.jg-icon-bubble-a, .jg-icon-bubble-a {
+}
+.jg-icon-bubble-b, .jg-icon-bubble-b {
+}
+
+/* ── 选中/单选/复选 ──────────────────────────────────────────────────────── */
+.jg-icon-circle, .jg-icon-circle {
+}
+.jg-icon-square, .jg-icon-square {
+}
+.jg-icon-radio, .jg-icon-radio {
+}
+.jg-icon-radio-select, .jg-icon-radio-selected {
+}
+.jg-icon-circle-add, .jg-icon-circle-add {
+}
+.jg-icon-circle-remove, .jg-icon-circle-remove {
+}
+.jg-icon-asterisk, .jg-icon-asterisk {
+}
+
+/* ── 窗口控制 ────────────────────────────────────────────────────────────── */
+.jg-icon-window-maximize, .jg-icon-window-maximize {
+}
+.jg-icon-window-minimize, .jg-icon-window-minimize {
+}
+.jg-icon-window-hide, .jg-icon-window-hide {
+}
+.jg-icon-window-close, .jg-icon-window-close {
+}
+
+/* ── 置顶/收藏 ───────────────────────────────────────────────────────────── */
+.jg-icon-top, .jg-icon-top {
+}
+.jg-icon-untop, .jg-icon-untop {
+}
+.jg-icon-top-s, .jg-icon-pin {
+}
+.jg-icon-favorite, .jg-icon-favorite {
+}
+
+/* ── 菜单 ────────────────────────────────────────────────────────────────── */
+.jg-icon-menu-left, .jg-icon-menu-left {
+}
+.jg-icon-menu-right, .jg-icon-menu-right {
+}
+.jg-icon-menu-edit, .jg-icon-menu-edit {
+}
+.jg-icon-menu-add, .jg-icon-menu-add {
+}
+
+/* ── 群组相关 ────────────────────────────────────────────────────────────── */
+.jg-icon-mention, .jg-icon-mention {
+}
+.jg-icon-msg, .jg-icon-msg {
+}
+.jg-icon-tag, .jg-icon-tag {
+}
+.jg-icon-user-group, .jg-icon-user-group {
+}
+.jg-icon-group, .jg-icon-group {
+}
+.jg-icon-unread, .jg-icon-unread {
+}
+
+/* ── 消息状态 ────────────────────────────────────────────────────────────── */
+.jg-icon-read, .jg-icon-read {
+}
+.jg-icon-dot, .jg-icon-dot {
+}
+.jg-icon-quote, .jg-icon-quote {
+}
+.jg-icon-subtract, .jg-icon-subtract {
+}
+.jg-icon-clear, .jg-icon-clear {
+}
+
+/* ── 音视频/RTC ──────────────────────────────────────────────────────────── */
+.jg-icon-rtc-add, .jg-icon-rtc-add {
+}
+.jg-icon-mic, .jg-icon-mic {
+}
+.jg-icon-mic-mute, .jg-icon-mic-mute {
+}
+.jg-icon-camera, .jg-icon-camera {
+}
+.jg-icon-camera-mute, .jg-icon-camera-mute {
+}
+.jg-icon-call-outgoing, .jg-icon-call-outgoing {
+}
+.jg-icon-call-incoming, .jg-icon-call-incoming {
+}
+.jg-icon-call-hangup, .jg-icon-call-hangup {
+}
+.jg-icon-speaker, .jg-icon-speaker {
+}
+.jg-icon-call-accept, .jg-icon-call-accept {
+}
+.jg-icon-call-end, .jg-icon-call-end {
+}
+.jg-icon-mute, .jg-icon-mute {
+}
+.jg-icon-unmute, .jg-icon-unmute {
+}
+.jg-icon-sound-off, .jg-icon-sound-off {
+}
+.jg-icon-complete, .jg-icon-complete {
+}
+
+/* ── 用户相关 ────────────────────────────────────────────────────────────── */
+.jg-icon-user-st, .jg-icon-user-status {
+}
+.jg-icon-bot, .jg-icon-bot {
+}
+.jg-icon-security, .jg-icon-security {
+}
+.jg-icon-security-sum, .jg-icon-security-summary {
+}
+.jg-icon-history-contact, .jg-icon-history-contact {
+}
+.jg-icon-history-msg, .jg-icon-history-msg {
+}
+.jg-icon-history-settings, .jg-icon-history-settings {
+}
+.jg-icon-add-w600, .jg-icon-plus-wide {
+}
+.jg-icon-qrcode, .jg-icon-qrcode {
+}
+.jg-icon-ai, .jg-icon-ai {
+}
+.jg-icon-retry, .jg-icon-retry {
+}
+.jg-icon-hot, .jg-icon-hot {
+}
+.jg-icon-hot, .jg-icon-hot {
+}
+.jg-icon-min, .jg-icon-min {
+}
+
+/* ── 消息回复 ──────────────────────────────────────────────────────────────── */
+.jg-icon-message-square, .jg-icon-reply {
+}
+
+/* ── 收起 ─────────────────────────────────────────────────────────────────── */
+.jg-icon-collapse, .jg-icon-collapse {
+}
+
+/* ── 保留原始 .wr 基类（字体族声明）──────────────────────────────────────── */
+/*
+ * .wr 基类定义了 font-family: 'wr' 等通用属性，
+ * 迁移后 .jg-icon 也需要继承相同字体族。
+ * 如需完全迁移，请在 iconfont.css 中同步更新 .wr::before/.wr::after 为 .jg-icon::before/.jg-icon::after。
+ */

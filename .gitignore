@@ -61,6 +61,26 @@ create_admin_tables.sql
 fix_structs.py
 *.html
 !**/public/*.html
+# 调试脚本（禁止入库）
+debug_*.go
+tmp_*.py
+*_test.py
+!**/*_test.go
+# UI 测试产物
+screenshot-*.png
+test-results/
+ui-test-results.json
+# 本地嵌套部署副本（独立仓库，不纳入源码库）
+lexiang-deploy/
+
+# ---------- SQL 版本化文件（必须入库，覆盖上方 *.sql） ----------
+!im-server/sql/*.sql
+!im-server/commons/dbcommons/sqls/*.sql
+!lexiang-deploy/mysql-init/*.sql
+
+# ---------- 内嵌前端资源（go:embed 必需，覆盖上方 *.html） ----------
+!jugglechat-server/routers/webim/index.html
+!jugglechat-server/routers/webim/**/*.html
 
 # ---------- 用户上传 / 素材 ----------
 user-attachment/
@@ -77,3 +97,7 @@ docker-compose.override.yml
 # ---------- 测试覆盖率 ----------
 coverage/
 *.coverage
+
+# Go编译产物
+im-server-console-linux
+im-server-linux

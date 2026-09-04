@@ -32,7 +32,6 @@ function onSelected(account, index){
   }, 100);
 }
 function onShowLogin(isShow){
-  console.log(state.isShowLogin)
   state.isShowLogin = isShow;
 }
 function onRemove(index){
@@ -69,10 +68,10 @@ watch(() => props.isShow, () => {
       <ul class="jg-ul jg-acount-ul">
         <li class="jg-li jg-acount-li" @click="onShowLogin(true)">
           <div class="jg-account">
-            <div class="tyn-media jg-size-rg wr wr-user-st jg-acount-avatar"></div>
+            <div class="tyn-media jg-size-rg wr jg-icon-user-st jg-acount-avatar"></div>
             <div class="jg-account-name jg-account-add">添加账号</div>
           </div>
-          <div class="jg-account-status wr wr-plus"></div>
+          <div class="jg-account-status wr jg-icon-add"></div>
         </li>
         <li class="jg-li jg-acount-li" v-for="(account, index) in state.accounts" @click="onSelected(account, index)" :class="{'jg-account-status-selected': account.isUsed}">
           <div class="jg-account">

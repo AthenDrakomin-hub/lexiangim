@@ -10,7 +10,6 @@ let { MessageType, ConversationType, MentionType, UndisturbType } = juggle;
 
 export default function(conversations, state){
   utils.forEach(conversations, conversation => {
-    console.log("conversation", conversation);
 
     if(utils.isInclude(IGNORE_CONVERSATIONS, conversation.conversationId)){
       return;

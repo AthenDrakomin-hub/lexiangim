@@ -30,7 +30,7 @@ watch(() => props.message, (msg) => {
     <div class="d-flex align-items-center gap gap-3">
       <ul class="tyn-list-inline ">
         <li>
-          <button class="btn btn-icon btn-md btn-light js-toggle-chat-search wr wr-close" @click="onCancel"></button>
+          <button class="btn btn-icon btn-md btn-light js-toggle-chat-search wr jg-icon-close" @click="onCancel"></button>
         </li>
       </ul>
     </div>

@@ -27,6 +27,7 @@ type AccountInfo struct {
 	Account  string
 	RoleType RoleType
 	State    AccountState
+	AppKey   string // 应用管理员绑定的应用key（role_type=1 时有效）
 }
 
 var accountInfoCache *caches.LruCache
@@ -67,6 +68,7 @@ func GetAccountInfo(account string) (*AccountInfo, bool) {
 				Account:  account,
 				State:    AccountState(acc.State),
 				RoleType: RoleType(acc.RoleType),
+				AppKey:   acc.AppKey,
 			}
 			accountInfoCache.Add(account, info)
 			return info, true
@@ -104,6 +106,7 @@ func CheckLogin(account, password string) (errs.AdminErrorCode, *models.Account)
 			ParentAccount: admin.ParentAccount,
 			// RoleId:        admin.RoleId,
 			RoleType:    admin.RoleType,
+			AppKey:      admin.AppKey,
 			CreatedTime: admin.CreatedTime.UnixMilli(),
 			UpdatedTime: admin.UpdatedTime.UnixMilli(),
 		}
@@ -306,6 +309,100 @@ func UpdateRole(ctx context.Context, account string, roleType int) errs.AdminErr
 	}
 	dao := dbs.AccountDao{}
 	err := dao.UpdateRoleType(account, roleType)
+	if err != nil {
+		logs.NewLogEntity().Error(err.Error())
+		return errs.AdminErrorCode_Default
+	}
+	// 清除缓存
+	accountInfoCache.Remove(account)
+	return errs.AdminErrorCode_Success
+}
+
+// CheckSysAdminExists 检查系统管理员是否已存在
+func CheckSysAdminExists(ctx context.Context) bool {
+	dao := dbs.AccountDao{}
+	count, err := dao.CountByRoleType(int(RoleType_SuperAdmin))
+	if err != nil {
+		logs.NewLogEntity().Error(err.Error())
+		return false
+	}
+	return count >= 1
+}
+
+// CheckSysAdminExistsExcludeAccount 检查系统管理员是否已存在（排除指定账号）
+func CheckSysAdminExistsExcludeAccount(ctx context.Context, excludeAccount string) bool {
+	dao := dbs.AccountDao{}
+	count, err := dao.CountByRoleTypeExcludeAccount(int(RoleType_SuperAdmin), excludeAccount)
+	if err != nil {
+		logs.NewLogEntity().Error(err.Error())
+		return false
+	}
+	return count >= 1
+}
+
+// AddAccountWithAppKey 添加账号（带应用key）
+func AddAccountWithAppKey(ctx context.Context, account, password string, roleType int, appKey string) errs.AdminErrorCode {
+	parentAccount := ctxs.GetAccountFromCtx(ctx)
+	curAccount, exist := GetAccountInfo(parentAccount)
+	if !exist || curAccount == nil {
+		return errs.AdminErrorCode_AccountNotExist
+	}
+	if curAccount.RoleType != RoleType_SuperAdmin {
+		return errs.AdminErrorCode_NotPermission
+	}
+	// 系统管理员全局只能1个
+	if roleType == int(RoleType_SuperAdmin) {
+		if CheckSysAdminExists(ctx) {
+			return errs.AdminErrorCode_NotPermission
+		}
+	}
+	// 应用管理员必须绑定应用
+	if roleType == int(RoleType_NormalAdmin) && appKey == "" {
+		return errs.AdminErrorCode_ParamError
+	}
+	dao := dbs.AccountDao{}
+	password = tools.SHA1(password)
+	err := dao.Create(dbs.AccountDao{
+		Account:       account,
+		Password:      password,
+		ParentAccount: parentAccount,
+		UpdatedTime:   time.Now(),
+		CreatedTime:   time.Now(),
+		RoleType:      roleType,
+		AppKey:        appKey,
+	})
+	if err != nil {
+		logs.NewLogEntity().Error(err.Error())
+		return errs.AdminErrorCode_AccountExisted
+	}
+	return errs.AdminErrorCode_Success
+}
+
+// UpdateRoleWithAppKey 更新角色（带应用key）
+func UpdateRoleWithAppKey(ctx context.Context, account string, roleType int, appKey string) errs.AdminErrorCode {
+	curAccount, exist := GetAccountInfo(ctxs.GetAccountFromCtx(ctx))
+	if !exist || curAccount == nil {
+		return errs.AdminErrorCode_AccountNotExist
+	}
+	if curAccount.RoleType != RoleType_SuperAdmin {
+		return errs.AdminErrorCode_NotPermission
+	}
+	// 不能修改自己的角色
+	if curAccount.Account == account {
+		return errs.AdminErrorCode_NotPermission
+	}
+	// 系统管理员全局只能1个（排除当前账号）
+	if roleType == int(RoleType_SuperAdmin) {
+		if CheckSysAdminExistsExcludeAccount(ctx, account) {
+			return errs.AdminErrorCode_NotPermission
+		}
+	}
+	// 应用管理员必须绑定应用
+	if roleType == int(RoleType_NormalAdmin) && appKey == "" {
+		return errs.AdminErrorCode_ParamError
+	}
+	dao := dbs.AccountDao{}
+	err := dao.UpdateRoleTypeAndAppKey(account, roleType, appKey)
 	if err != nil {
 		logs.NewLogEntity().Error(err.Error())
 		return errs.AdminErrorCode_Default

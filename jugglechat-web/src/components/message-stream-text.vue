@@ -2,7 +2,7 @@
 const props = defineProps(['message']);
 const emit = defineEmits(['']);
 
-import { reactive, watch } from "vue";
+import { reactive, watch, onUnmounted } from "vue";
 import utils from "../common/utils";
 import im from "../common/im";
 import messageUtils from "./message-utils";
@@ -28,7 +28,6 @@ let isEndStream = false;
 watch(() => props.message.streamMsg.streams, () => {
   let { streamMsg } = props.message;
   streamMsg = streamMsg || {};
-  console.log('streamMsg', streamMsg)
   let { isEnd = false, streams = []} = streamMsg;
   isEndStream = isEnd;
   utils.forEach(streams, (stream) => {
@@ -67,6 +66,8 @@ function getContent(content){
   return state.renderedContent || content;
 }
 
+
+onUnmounted(() => { if(interval) clearInterval(interval); });
 </script>
 
 <template>

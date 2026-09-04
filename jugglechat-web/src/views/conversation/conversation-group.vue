@@ -5,7 +5,6 @@ import common from "../../common/common";
 import { reactive, watch } from "vue";
 import utils from "../../common/utils";
 import group from "../../services/group";
-import ModalConversationGroup from "../../components/modal-groups.vue";
 import emitter from "../../common/emmit";
 import { EVENT_NAME, CONVERATION_TAG_ID } from "../../common/enum";
 
@@ -17,7 +16,6 @@ let { MessageType, Event } = juggle;
 let state = reactive({
   isRemote: false,
   groups: [],
-  isShowGroupManager: false,
 });
 
 function onSelected(item, index){
@@ -50,9 +48,6 @@ emitter.$on(EVENT_NAME.ON_CONVERSATION_TAG_CHANGED, ({ isRemove, tag }) => {
   }
 });
 
-function onShowGroupManager(isShow){
-  state.isShowGroupManager = isShow;
-}
 
 juggle.once(Event.TAG_ADDED, (notify) => {
   let { tags } = notify;
@@ -105,16 +100,15 @@ watch(() => props.isShow, async () => {
     <div class="jg-conversations-header">
       <ul class="jg-conversations-tools">
         <li></li>
-        <li class="jg-conversation-tool wr wr-setting" @click="onShowGroupManager(true)">设置</li>
+        <li></li>
       </ul>
     </div>
     <ul class="jg-conver-groups">
       <li class="jg-conver-group" v-for="(group, index) in state.groups" :key="group.id" :class="{'active': group.isActive}" @click="onSelected(group, index)">
-        <div class="jg-conver-group-content wr wr-mg-tag" :class="[group.icon]" >
+        <div class="jg-conver-group-content wr jg-icon-tag" :class="[group.icon]" >
           <span class="jg-conver-group-content-name">{{ group.name }}</span>
         </div>
       </li>
     </ul>
   </div>
-  <ModalConversationGroup :is-show="state.isShowGroupManager" @oncancel="onShowGroupManager(false)"></ModalConversationGroup>
 </template>

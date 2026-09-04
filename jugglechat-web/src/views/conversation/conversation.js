@@ -1,4 +1,5 @@
-import utils from "../../common/utils";
+﻿import utils from "../../common/utils";
+import { showToast } from "../../components/toast";
 import im from "../../common/im";
 import messageUtils from "../../components/message-utils";
 import { TRANSFER_TYPE } from "../../common/enum";
@@ -7,29 +8,26 @@ import { STORAGE } from "../../common/enum";
 import Storage from "../../common/storage";
 
 let juggle = im.getCurrent();
+function __err(action){ return function(error){ showToast({ text: action + '失败: ' + (error.code || error.message || '未知错误'), icon: 'error' }); }; }
 let { MessageType, ConversationType, MentionType, UndisturbType, UnreadTag } = juggle;
 
 function readMessage(messages){
   if(!utils.isEmpty(messages)){
     juggle.readMessage(messages).then(() => {
-      console.log('read message successfully.')
     }, (error) => {
-      console.log('read message error', error)
     });
   }
 }
 
 function clearUnreadCount(conversation){
   juggle.clearUnreadcount(conversation).then(() => {
-    console.log('clearnunread successfully.')
   }, (error) => {
-    console.log('clearnunread error', error)
   });
 }
 
 function getMessages(isFirst, callback, state, props) {
   if(!im.isConnected()){
-    return;
+    return Promise.reject(new Error('IM not connected'));
   }
   callback = callback || utils.noop;
   let { conversationType, conversationId, latestMessage } = props.conversation;
@@ -44,7 +42,6 @@ function getMessages(isFirst, callback, state, props) {
   juggle.getMessages(params).then((result) => {
     let { messages, isFinished } = result;
     messages.reverse();
-    console.log('getMessages', messages)
     let unReadMsgs = [];
 
     let tranMgs = [];
@@ -54,7 +51,7 @@ function getMessages(isFirst, callback, state, props) {
       }
       if (index % 6 == 0 && index > 0) {
         let time = utils.formatTime(message.sentTime);
-        let notifyMsg = { name: 'notify', sentTime: time };
+        let notifyMsg = { name: 'notify', sentTime: time, messageId: 'notify_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9) };
         state.messages.push(notifyMsg);
       }
       if(isGroup(message)){
@@ -87,14 +84,12 @@ function getMessages(isFirst, callback, state, props) {
       }
     });
     state.isFinished = isFinished;
-    callback(callback);
+    callback();
 
     translate(state, tranMgs);
 
     readMessage(unReadMsgs);
-  }, (error) => {
-    console.log(error);
-  })
+  }, __err('加载消息'))
 }
 
 function translate(state, msgs){
@@ -151,9 +146,7 @@ function sendVideo(file, message, callback, state){
     let { messageId, sentTime, content } = result;
     utils.extend(propMsg, { messageId, sentTime, content });
     callback();
-  }, (error) => {
-    console.log(error)
-  })
+  }, __err('发送视频'))
 }
 function sendFile(file, message, callback, state){
   let content = { 
@@ -166,7 +159,6 @@ function sendFile(file, message, callback, state){
 
   juggle.sendFileMessage(message, {
     onbefore: (msg) => {
-      console.log('file msg', msg)
       state.messages.unshift(msg);
     },
     onprogress: ({ percent, message }) => {
@@ -181,9 +173,7 @@ function sendFile(file, message, callback, state){
     })[0];
     utils.extend(propMsg, { messageId, sentTime, content, messageIndex });
     callback();
-  }, (error) => {
-    console.log(error)
-  })
+  }, __err('发送文件'))
 }
 function isGroup(currentConversation){
   return utils.isEqual(currentConversation.conversationType, ConversationType.GROUP);
@@ -262,10 +252,8 @@ function sendMerge(conversations, msgs, state){
       if(isSameConversation(conversation, state)){
         state.messages.unshift(msg);
       }
-      console.log(msg)
       next();
     }, (error) => {
-      console.log(error);
       next();
     });
   });
@@ -294,12 +282,9 @@ function conversationDisturb(item){
   if(utils.isEqual(item.undisturbType, UndisturbType.DISTURB)){
     conversation.undisturbType = UndisturbType.UNDISTURB;
     return juggle.disturbConversation(conversation).then(() => {
-      console.log('set conversation disturb successfully');
     });
   }
-  juggle.disturbConversation(conversation).then(() => {
-    console.log('set conversation disturb successfully');
-  });
+  juggle.disturbConversation(conversation).then(() => {}, __err('免打扰设置'));
 }
 function setConversationTop({ item, isTop, tops, conversations }) {
   let topIndex = utils.find(tops, top => {
@@ -327,7 +312,6 @@ function setConversationTop({ item, isTop, tops, conversations }) {
     isTop
   };
   juggle.setTopConversation(_item).then(() => {
-    console.log("set conversation top successfully", _item);
   });
 }
 function updateDraft({ conversation, conversations }) {
@@ -358,21 +342,15 @@ function clearMessages(conversation) {
     time: conversation.latestMessage.sentTime
   };
   juggle.clearMessage(params).then(
-    () => {
-      console.log("clear messages successfully");
-    },
-    error => {
-      console.log(error);
-    }
+    () => {},
+    __err('清空消息')
   );
 }
 function removeConversation(index, state) {
   let conversation = state.conversationMap[state.currentTag.id].splice(index, 1)[0];
   conversation.isShowDrop = false;
   let { conversationType, conversationId } = conversation;
-  juggle.removeConversation({ conversationType, conversationId }).then(() => {
-    console.log("remove conversation successfully");
-  });
+  juggle.removeConversation({ conversationType, conversationId }).then(() => {}, __err('删除会话'));
   let { currentConversation } = state;
   if (isSame(currentConversation, conversation)) {
     utils.extend(state, { currentConversation: {} });
@@ -387,21 +365,14 @@ function markUnread(index, state) {
   });
 
   if (utils.isEqual(unreadTag, UnreadTag.UNREAD)) {
-    return clearUnreadCount(conversation, index);
+    return clearUnreadCount(conversation);
   }
   let { conversationId, conversationType } = conversation;
   juggle.markUnread({
       conversationId: conversationId,
       conversationType: conversationType,
       unreadTag: UnreadTag.UNREAD
-    }).then(
-      () => {
-        console.log("markunread successfully");
-      },
-      error => {
-        console.log(error);
-      }
-    );
+    }).then(() => {}, __err('标记未读'));
 }
 function insertTempConversation(query, state) {
   if (query.id) {
@@ -422,7 +393,8 @@ function insertTempConversation(query, state) {
         name: MessageType.TEXT,
         content: { content: "[新会话]" },
         sentTime: Date.now(),
-        messageIndex: -1
+        messageIndex: -1,
+        messageId: 'temp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9)
       };
       if (!utils.isEqual(index, -1)) {
         var item = conversations.splice(index, 1)[0] || {};
@@ -442,7 +414,6 @@ function insertTempConversation(query, state) {
         item.isActive = false;
         return item;
       });
-      console.log("insert new converation", conversation);
       conversations.unshift(conversation);
       utils.extend(state, { currentConversation: conversation });
     });

@@ -1,7 +1,7 @@
 <script setup>
 import im from "../../common/im";
 import common from "../../common/common";
-import { reactive, watch, nextTick, getCurrentInstance } from "vue";
+import { reactive, watch, nextTick, getCurrentInstance, onUnmounted } from "vue";
 import utils from "../../common/utils";
 import emitter from "../../common/emmit";
 import { EVENT_NAME } from "../../common/enum";
@@ -58,7 +58,7 @@ function onShowDropmenu(e) {
 let canscroll = true;
 nextTick(() => {
   let { conversations } = context.refs;
-  conversations.addEventListener("scroll", () => {
+  if (conversations) { conversations.addEventListener("scroll", () => {
     let scrollTop = conversations.scrollTop;
     let scrollHeight = conversations.scrollHeight;
     let rectHeight = conversations.getBoundingClientRect().height;
@@ -70,7 +70,7 @@ nextTick(() => {
         canscroll = true;
       }});
     }
-  });
+  });}
 });
 
 // function onConversation(item, index) {
@@ -105,8 +105,9 @@ async function clearUnreadCount(item, index) {
     unreadIndex: latestUnreadIndex
   };
   let result = await juggle.clearUnreadcount(params);
-  console.log('clearunreadcount', params);
 }
+
+onUnmounted(() => { try { var el = context.refs.conversations; if(el && __bodyScrollHandler) el.removeEventListener('scroll', __bodyScrollHandler); } catch(e){} });
 </script>
 
 <template>
@@ -136,23 +137,23 @@ async function clearUnreadCount(item, index) {
                 class="badge bg-danger position-absolute rounded-pill top-0 end-0 mt-n2 me-n2"
                 v-if="item.unreadCount == 0 && item.unreadTag && utils.isEqual(item.undisturbType, UndisturbType.UNDISTURB)"
               >1</div>
-              <div class="position-absolute rounded-pill top-1 end-0 mt-n2 me-n1 wr wr-dot text-danger conver-dot" v-if="((item.unreadCount == 0 && item.unreadTag) || item.unreadCount > 0) && utils.isEqual(item.undisturbType, UndisturbType.DISTURB)"></div>
+              <div class="position-absolute rounded-pill top-1 end-0 mt-n2 me-n1 wr jg-icon-dot text-danger conver-dot" v-if="((item.unreadCount == 0 && item.unreadTag) || item.unreadCount > 0) && utils.isEqual(item.undisturbType, UndisturbType.DISTURB)"></div>
             </div>
           </div>
           <div class="tyn-media-col">
             <div class="tyn-media-row jg-conversation-title">
               <h6 class="name">
                 {{ item.conversationTitle }}
-                <span class="wr wr-fire" v-if="item.conversationUserType == UserType.BOT">( 智能体 )</span>
+                <span class="wr jg-icon-hot" v-if="item.conversationUserType == UserType.BOT">( 智能体 )</span>
               </h6>
-              <span class="wr wr-soundoff jg-conver-mute" v-if="utils.isEqual(item.undisturbType, UndisturbType.DISTURB)"></span>
+              <span class="wr jg-icon-sound-off jg-conver-mute" v-if="utils.isEqual(item.undisturbType, UndisturbType.DISTURB)"></span>
               <span class="typing" v-if="item.isTyping">typing ...</span>
             </div>
             <div class="tyn-media-row has-dot-sap between">
               <span
                 class="content wr"
                 v-if="item.draft"
-                :class="{ 'wr-modify-pen content-draft': item.draft }"
+                :class="{ 'jg-icon-edit-pen content-draft': item.draft }"
               >
                 {{
                 item.draft }}

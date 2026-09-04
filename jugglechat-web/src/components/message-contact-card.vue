@@ -24,7 +24,6 @@ function onShow(){
         icon: 'error'
       });
     }
-    console.log(data)
     let friend = {
       user: data,
       name: data.nickname,

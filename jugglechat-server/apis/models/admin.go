@@ -3,7 +3,7 @@ package models
 // 用户角色相关
 type GetUserRoleResp struct {
 	UserId string `json:"user_id"`
-	Role   int    `json:"role"` // 0=普通玩家, 1=应用管理员
+	Role   int    `json:"role"` // 0=普通用户, 1=VIP
 }
 
 type SetUserRoleReq struct {

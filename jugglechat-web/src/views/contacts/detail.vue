@@ -24,7 +24,34 @@ function onConversation(){
     type = CONTACT_TYPE.FRIEND;
   }
 
-  router.replace({ name: 'ConversationList', query: {  type, id } });
+  // 构造会话对象，保存到sessionStorage，确保组件初始化后能读取到
+  const conversationType = parseInt(type) || 1;
+  const conversationTitle = props.current.user?.remark_name || props.current.user?.nickname || props.current.user?.login_account || id;
+  const conversation = {
+    conversationType: conversationType,
+    conversationId: id,
+    conversationTitle: conversationTitle,
+    conversationPortrait: props.current.user?.portrait || '',
+    isTop: false,
+    unreadCount: 0,
+    isActive: true,
+    draft: '',
+    tags: [{ id: 1 }],
+    latestMessage: {
+      messageType: 1,
+      content: '',
+      sentTime: Date.now(),
+      searchableContent: ''
+    },
+    shortName: '',
+    f_time: '',
+    sortTime: Date.now()
+  };
+  sessionStorage.setItem('pending_conversation', JSON.stringify(conversation));
+  router.replace({ name: 'ConversationList' });
+  setTimeout(() => {
+    emitter.$emit(EVENT_NAME.ON_CONVERSATION_SEARCH_NAV, { conversation });
+  }, 500);
 }
 function onAddFriend(isAgree){
   let user = props.current.user;
@@ -67,6 +94,32 @@ function onRemoveFriend(){
     emit('onremoved', { item: props.current })
   });
 }
+
+// 备注编辑功能
+const remarkState = reactive({
+  isShowEdit: false,
+  remark: ''
+});
+
+function onShowRemarkEdit(){
+  remarkState.remark = props.current.remark || props.current.user?.nickname || '';
+  remarkState.isShowEdit = true;
+}
+
+function onSaveRemark(){
+  let { id, user } = props.current;
+  let friendId = id || user?.user_id;
+  Friend.updateRemark({ friend_id: friendId, remark: remarkState.remark }).then(({ code }) => {
+    if(!utils.isEqual(code, RESPONSE.SUCCESS)){
+      return context.proxy.$toast({ text: `保存备注失败：${code}`, icon: 'error' });
+    }
+    context.proxy.$toast({ text: '备注已保存', icon: 'success' });
+    remarkState.isShowEdit = false;
+    emitter.$emit(EVENT_NAME.ON_USER_INFO_UPDATE, { user: { ...user, remark: remarkState.remark } });
+  }).catch(() => {
+      return context.proxy.$toast({ text: `保存备注失败：${code}`, icon: 'error' });
+  });
+}
 </script>
 <template>
   <div class="tyn-main tyn-content-inner">
@@ -100,14 +153,31 @@ function onRemoveFriend(){
         <div class="tyn-media-group">
           <div class="tyn-media-row">
             <div class="tyn-media-col" v-if="!utils.isEqual(props.current.type, CONTACT_TYPE.NEW_FRIEND) || (utils.isEqual(props.current.type, CONTACT_TYPE.NEW_FRIEND) && utils.isEqual(props.current.status, FRIEND_APPLY_STATUS.ACCEPTED))">
-              <div class="wr wr-message btn btn-light jg-size-md w-100 contact-send-msg" @click="onConversation">发起会话</div>
-              <div class="wr wr-message btn btn-light jg-size-md w-100 jg-warn-bg" @click="onRemoveFriend" v-if="utils.isEqual(props.current.type, ConversationType.PRIVATE)" >删除好友</div>
+              <div class="wr jg-icon-message btn btn-light jg-size-md w-100 contact-send-msg" @click="onConversation">发起会话</div>
+              <div class="wr jg-icon-edit btn btn-light jg-size-md w-100" @click="onShowRemarkEdit" v-if="utils.isEqual(props.current.type, ConversationType.PRIVATE)">设置备注</div>
+              <div class="wr jg-icon-message btn btn-light jg-size-md w-100 jg-warn-bg" @click="onRemoveFriend" v-if="utils.isEqual(props.current.type, ConversationType.PRIVATE)" >删除好友</div>
             </div>
             <div class="tyn-media-col" v-else-if="!props.current.isOneSelf && utils.isEqual(props.current.status, FRIEND_APPLY_STATUS.APPLYING)">
-              <div class="wr wr-message btn btn-light jg-size-md w-100 contact-send-msg" @click="onAddFriend(true)">添加好友</div>
+              <div class="wr jg-icon-message btn btn-light jg-size-md w-100 contact-send-msg" @click="onAddFriend(true)">添加好友</div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+  <!-- 备注编辑弹窗 -->
+  <div class="jg-modal-overlay" v-if="remarkState.isShowEdit" @click.self="remarkState.isShowEdit = false">
+    <div class="jg-modal-container" style="max-width:400px;">
+      <div class="jg-modal-header">
+        <div class="jg-modal-title">设置备注</div>
+        <button class="jg-modal-close" @click="remarkState.isShowEdit = false">✕</button>
+      </div>
+      <div class="jg-modal-body">
+        <input type="text" class="jg-modal-input" v-model="remarkState.remark" placeholder="请输入备注名" maxlength="20" />
+      </div>
+      <div class="jg-modal-footer">
+        <button class="jg-modal-btn jg-modal-btn-cancel" @click="remarkState.isShowEdit = false">取消</button>
+        <button class="jg-modal-btn jg-modal-btn-confirm" @click="onSaveRemark">保存</button>
       </div>
     </div>
   </div>

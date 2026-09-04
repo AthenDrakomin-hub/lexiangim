@@ -85,13 +85,13 @@ watch(() => props.isShow, async () => {
             <div class="jg-modal-header">
               <div class="title">会话分组</div>
               <ul class="jg-conversations-tools">
-                <li class="jg-conversation-tool wr wr-cir-add jg-modal-add" @click="onAdd">添加</li>
+                <li class="jg-conversation-tool wr jg-icon-circle-add jg-modal-add" @click="onAdd">添加</li>
               </ul>
             </div>
             <ul class="tyn-media-list" ref="groups">
               <li v-for="(item, index) in state.list" class="jg-conver-modal-group">
-                <div class="jg-conver-group-name" :class="{ 'wr-asterisk jg-text-danger': item.name.length == 0 }">
-                  <span class="wr wr-cir-remove jg-text-danger" :class="{'jg-text-disable': item.isInner}" @click="onRemove(index)"></span>
+                <div class="jg-conver-group-name" :class="{ 'jg-icon-asterisk jg-text-danger': item.name.length == 0 }">
+                  <span class="wr jg-icon-circle-remove jg-text-danger" :class="{'jg-text-disable': item.isInner}" @click="onRemove(index)"></span>
                   <input type="text" class="form-control" placeholder="请输入分组名称（回车保存）" :disabled="item.isInner" v-model="item.name" @keydown.enter="onSave(index)">
                 </div>
                 <div class="jg-conver-group-desc" :class="{'jg-conver-group-desc-custom': !item.isInner}">{{ item.isInner ? '系统分组' : '自定义分组' }}</div>

@@ -97,6 +97,15 @@ let routes = [{
       }
     },
     {
+      path: '/argument_ai_config/:app_key',
+      name: 'ArguAiConfig',
+      component:  () => import('@/views/argument/ai-config.vue'),
+      meta: {
+        titles: ['应用管理', 'AI配置'],
+        showHeaderApps: true
+      }
+    },
+    {
       path: '/argument_worklist/:app_key',
       name: 'ArguWorkList',
       component:  () => import('@/views/argument/worklist.vue'),

@@ -78,6 +78,11 @@ func Validate(ctx *gin.Context) {
 			return
 		}
 		ctx.Set(string(ctxs.CtxKey_Account), account)
+		// 应用管理员（role_type=1）只能访问其绑定的应用
+		accountInfo, exists := services.GetAccountInfo(account)
+		if exists && accountInfo != nil && int(accountInfo.RoleType) == 1 && accountInfo.AppKey != "" {
+			ctx.Set(string(ctxs.CtxKey_AppKey), accountInfo.AppKey)
+		}
 	}
 }
 
@@ -86,6 +91,20 @@ func GetLoginedAccount(ctx *gin.Context) string {
 		return account
 	}
 	return ""
+}
+
+// GetEffectiveAppKey 获取有效的 app_key：应用管理员使用绑定的 app_key，系统管理员使用请求参数
+func GetEffectiveAppKey(ctx *gin.Context, reqAppKey string) (string, errs.AdminErrorCode) {
+	ctxAppKey := ctx.GetString(string(ctxs.CtxKey_AppKey))
+	if ctxAppKey != "" {
+		// 应用管理员：强制使用绑定的 app_key
+		if reqAppKey != "" && ctxAppKey != reqAppKey {
+			return "", errs.AdminErrorCode_NotPermission
+		}
+		return ctxAppKey, errs.AdminErrorCode_Success
+	}
+	// 系统管理员或无绑定：使用请求参数
+	return reqAppKey, errs.AdminErrorCode_Success
 }
 
 var defaultJwtkey = []byte("jug9le1m")

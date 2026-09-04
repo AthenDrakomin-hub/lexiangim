@@ -20,11 +20,7 @@ let routes = [{
       name: 'Contacts',
       component: () => import('@/views/contacts/contacts.vue'),
     },
-    {
-      path: '/setting',
-      name: 'Setting',
-      component: () => import('@/views/setting/setting.vue'),
-    }
+    // /setting 旧版页面已废弃，设置功能统一由侧边栏头像面板提供
   ],
 },
 {
@@ -64,7 +60,11 @@ router.beforeEach((to, from, next) => {
   if (user.id && utils.isEqual(to.name, 'Login')) {
     return next({ name: 'ConversationList' });
   }
-  // 未登录用户访问邀请或登录页，正常放行
+  // 未登录用户访问未知路由，直接跳邀请页
+  if (!user.id && utils.isEqual(to.name, 'notFound')) {
+    return next({ name: 'Invite' });
+  }
+  // 未登录用户访问邀请、登录页，正常放行
   if (!user.id && (utils.isEqual(to.name, 'Invite') || utils.isEqual(to.name, 'Login'))) {
     return next();
   }

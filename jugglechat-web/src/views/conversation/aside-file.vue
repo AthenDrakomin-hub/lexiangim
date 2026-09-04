@@ -8,7 +8,7 @@ const props = defineProps(["isShow", "messages"]);
       <li>
         <a :href="msg.content.url" target="_blank"  class="jg-file" v-for="msg in props.messages">
           <div class="tyn-media-group tyn-aside-group">
-            <div class="tyn-media jg-size-lg text-bg-light wr wr-file tyb-msg-fileicon"></div>
+            <div class="tyn-media jg-size-lg text-bg-light wr jg-icon-file tyb-msg-fileicon"></div>
             <div class="tyn-media-col">
               <div class="name tyn-aside-filename">{{ msg.content.name }}</div>
               <div class="meta">{{ ((msg.content.size || 0) / 1024).toFixed(2) }} KB</div>

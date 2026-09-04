@@ -1,6 +1,6 @@
 module im-server
 
-go 1.25.12
+go 1.26.0
 
 require (
 	firebase.google.com/go v3.13.0+incompatible
@@ -28,8 +28,8 @@ require (
 )
 
 replace (
-	github.com/juggleim/jugglechat-server => ../jugglechat-server
 	github.com/juggleim/imserver-console => ../imserver-console
+	github.com/juggleim/jugglechat-server => ../jugglechat-server
 )
 
 require (
@@ -204,10 +204,10 @@ require (
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
 	golang.org/x/arch v0.22.0 // indirect
-	golang.org/x/crypto v0.52.0 // indirect
-	golang.org/x/net v0.55.0 // indirect
-	golang.org/x/sync v0.20.0 // indirect
-	golang.org/x/text v0.37.0 // indirect
+	golang.org/x/crypto v0.56.0 // indirect
+	golang.org/x/net v0.57.0 // indirect
+	golang.org/x/sync v0.22.0 // indirect
+	golang.org/x/text v0.41.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20251202230838-ff82c1b0f217 // indirect
 )
 
@@ -233,7 +233,7 @@ require (
 	github.com/tsuna/gohbase v0.0.0-20240604184322-67d205cb2079
 	github.com/yidun/yidun-golang-sdk v1.0.33
 	github.com/zegoim/zego_server_assistant/token/go/src v0.0.0-20231013093807-4e80bab42ec3
-	golang.org/x/sys v0.45.0 // indirect
+	golang.org/x/sys v0.47.0 // indirect
 	golang.org/x/time v0.12.0
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/mysql v1.6.0

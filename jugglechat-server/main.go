@@ -31,7 +31,10 @@ func main() {
 
 	httpServer := gin.Default()
 	routers.Route(httpServer, "jim")
-	routers.LoadWebIM(httpServer)
+	if err := routers.LoadWebIM(httpServer); err != nil {
+		log.Error("Load WebIM failed.", err)
+		return
+	}
 	go httpServer.Run(fmt.Sprintf(":%d", configures.Config.Port))
 	if configures.Config.CallbackPort > 0 {
 		callbackServer := gin.Default()

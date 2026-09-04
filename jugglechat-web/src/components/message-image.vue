@@ -10,7 +10,7 @@ import ReactionEmoji from "../components/emoji-reaction.vue"
 import Reaction from "./message-reaction.vue";
 
 const props = defineProps(["message", "isRead"]);
-const emit = defineEmits(["onpreview", "onrecall", "ontransfer", "onreply", "onreaction", "onpinned", "onfav"]);
+const emit = defineEmits(["onpreview", "onrecall", "ontransfer", "onreply", "onreaction", "onpinned", "onfav", 'onretry']);
 
 function onPreview() {
   let { content: { url } } = props.message;
@@ -90,6 +90,9 @@ function onShowEmojiReaction(isShow){
 function onChoiceEmoji(item){
   emit('onreaction', { ...item, message: props.message });
 }
+function onRetry(){
+  emit('onretry', { message: props.message });
+}
 
 </script>
 
@@ -117,8 +120,8 @@ function onChoiceEmoji(item){
 
         <Reaction :is-show="!utils.isEmpty(props.message.reactions)" :reactions="props.message.reactions" @oncancel="onChoiceEmoji"></Reaction>
 
-        <div class="wr message-state wr-circle" @click.stop="onShowReadDetail(true)"
-        :class="{ 'wr-dui': props.message.isRead && !messageUtils.isGroup(props.message) || props.message.unreadCount == 0, 'message-read': props.message.isRead && !messageUtils.isGroup(props.message) || props.message.readCount > 0 }"
+        <div class="wr message-state jg-icon-circle" @click.stop="onShowReadDetail(true)"
+        :class="{ 'jg-icon-check': props.message.isRead && !messageUtils.isGroup(props.message) || props.message.unreadCount == 0, 'message-read': props.message.isRead && !messageUtils.isGroup(props.message) || props.message.readCount > 0 }"
           v-if="props.message.isSender && !props.isRead">
           <div v-if="messageUtils.isGroup(props.message) && props.message.readCount > 0 && props.message.unreadCount > 0"
             class="message-group-state"
@@ -129,6 +132,10 @@ function onChoiceEmoji(item){
             v-if="state.isShowGroupDetail" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"></div>
         </div>
         <div class="jg-message-senttime" v-if="props.message.sentTime">{{ utils.formatTimetoHM(props.message.sentTime) }}</div>
+        <div v-if="props.message.sentState == 3" class="jg-msg-retry" @click.stop="onRetry">
+          <JgIcon name="retry" />
+          <span>发送失败，点击重试</span>
+        </div>
       </div>
 
       <ul class="tyn-reply-tools">

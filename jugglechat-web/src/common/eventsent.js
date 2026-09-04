@@ -12,10 +12,8 @@ function EventSent(url, options){
   function connnect(){
     es = new EventSourcePolyfill(url, { headers });
     let timer = setTimeout(() => {
-      console.log('超时啦')
       clearTimeout(timer)
       if(!isReceiving){
-        console.log('重连啦')
         es.close();
         connnect();
       }
@@ -24,7 +22,13 @@ function EventSent(url, options){
     function onReceived(e){
       // console.log('onreceived', e)
       clearTimeout(timer);
-      let message = JSON.parse(e.data);
+      let message;
+      try {
+        message = JSON.parse(e.data);
+      } catch (err) {
+        console.warn('[EventSent] JSON parse error:', err, 'data:', e.data);
+        return;
+      }
       let { type, is_finished, payload } = message;
       if(is_finished){
         es.close();
@@ -34,11 +38,9 @@ function EventSent(url, options){
       event(payload, is_finished);
     }
     function onError(e){
-      console.log('onerror', e)
       es.close();
       isReceiving = false;
       clearTimeout(timer);
-      console.log('error', e)
     }
 
     es.addEventListener('message', onReceived);

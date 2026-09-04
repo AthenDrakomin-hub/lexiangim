@@ -1,4 +1,4 @@
-import JuggleChat from "../libs/juggleim-es-1.8.0";
+﻿import JuggleChat from "../libs/juggleim-es-1.8.0";
 import JuggleCall from "../libs/jugglecall-es-1.0.0";
 
 // import JuggleChat from "jugglechat-websdk";
@@ -8,6 +8,16 @@ import { EVENT_NAME, MSG_NAME, STORAGE } from "../common/enum";
 import emitter from "../common/emmit";
 import Storage from "../common/storage";
 
+
+// 容错处理：OSS 和 ZegoExpressEngine 由 index.html 全局 script 引入，若 CDN 加载失败则降级
+if (typeof OSS === 'undefined') {
+  console.warn('[im] OSS SDK 未加载，文件上传功能将不可用');
+  window.OSS = {};
+}
+if (typeof ZegoExpressEngine === 'undefined') {
+  console.warn('[im] ZegoExpressEngine 未加载，音视频通话功能将不可用');
+  window.ZegoExpressEngine = function() { this.setLogConfig = function() {}; };
+}
 
 let option = { appkey: CONFIG.appkey, upload: OSS, serverList: CONFIG.serverList };
 let juggle = JuggleChat.init(option);
@@ -40,7 +50,6 @@ function connect(user, callbacks){
   }
   juggle.on(Event.STATE_CHANGED, ({ state }) => {
     if (ConnectionState.DISCONNECTED == state) {
-      console.log('im is disconnected');
     }
     if (ConnectionState.CONNECTED == state) {
       let _user = Storage.get(STORAGE.USER_TOKEN);
@@ -58,6 +67,31 @@ function connect(user, callbacks){
 
 function isConnected(){
   return juggle.isConnected();
+}
+
+const RETRY_MAX_COUNT = 3;
+const RETRY_DELAYS = [1000, 2000, 4000];
+
+function sendWithRetry(msg, callbacks = {}, maxRetries = RETRY_MAX_COUNT) {
+  let retryCount = 0;
+
+  function attempt() {
+    return juggle.sendMessage(msg, callbacks).then(
+      (result) => result,
+      (error) => {
+        if (retryCount < maxRetries) {
+          let delay = RETRY_DELAYS[retryCount] || RETRY_DELAYS[RETRY_DELAYS.length - 1];
+          retryCount++;
+          console.warn(`消息发送失败，${delay / 1000}s 后第 ${retryCount} 次重试...`, error);
+          return new Promise((resolve) => setTimeout(resolve, delay)).then(attempt);
+        }
+        console.error('消息发送最终失败', error);
+        throw error;
+      }
+    );
+  }
+
+  return attempt();
 }
 
 function msgShortFormat(message){
@@ -138,4 +172,5 @@ export default {
   CallEvent,
   CallFinishedReason,
   getRTCEngine,
+  sendWithRetry,
 }

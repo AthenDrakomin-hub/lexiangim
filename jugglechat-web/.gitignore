@@ -1,8 +1,54 @@
+# 依赖
 node_modules/
+
+# 构建产物
 dist/
+dist-ssr/
+*.local
+
+# 环境变量（所有 .env 文件均不提交，包括 .env.development / .env.production）
+.env
+.env.*
+!.env.example
+
+# Python 缓存
 __pycache__/
 *.pyc
+
+# 系统文件
 .DS_Store
-.env
-.env.local
+Thumbs.db
+
+# 日志
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 编辑器/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 代码索引缓存
+.codegraph/
+*.code-workspace
+
+# 测试产物
+test-results/
+ui-test-results.json
+playwright-report/
+
+# UI 测试截图（临时产物，不提交）
+screenshot-*.png
+
+# 临时文档/重构笔记（个人工作文件，不提交）
+migration-report.txt
+ARCHITECTURE_REFACTOR.md
+UI_REFACTOR_LOG.md
+.designrc
+
+# 包管理器（统一用 npm，忽略 yarn）
+yarn.lock

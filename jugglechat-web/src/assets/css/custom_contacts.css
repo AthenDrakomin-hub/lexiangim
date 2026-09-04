@@ -1,4 +1,4 @@
-.contact_dp_show{
+﻿.contact_dp_show{
   position: absolute; 
   inset: 0px 0px auto auto; 
   margin: 0px; 
@@ -58,16 +58,26 @@
 .m-friend-name{
   justify-content: start;
 }
-.m-friend-add-btn .wr-plus{
+.m-friend-add-btn .jg-icon-add{
   background-color: var(--jg-primary-lighter);
   border-radius: var(--jg-radius-sm);
   padding: 0 var(--jg-space-1);
   font-weight: 700;
   transition: background-color 0.3s ease;
 }
-.m-friend-add-btn .wr-plus:hover{
+.m-friend-add-btn .jg-icon-add:hover{
   background-color: var(--jg-primary);
   color: var(--jg-primary-lighter);
+}
+
+/* 深色模式好友添加按钮 */
+.m-friend-add-btn .jg-icon-add {
+  background-color: rgba(37, 99, 235, 0.2);
+}
+
+.m-friend-add-btn .jg-icon-add:hover {
+  background-color: var(--jg-primary);
+  color: var(--jg-text-white);
 }
 
 .jg-setting-body{

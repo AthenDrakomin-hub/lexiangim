@@ -1,6 +1,6 @@
 <script setup>
 const props = defineProps(['title']);
-import { reactive, getCurrentInstance, watch } from "vue";
+import { reactive, getCurrentInstance, watch, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import utils from "../common/utils";
 import common from "../common/common";
@@ -27,6 +27,11 @@ let { ConversationType, Event, ConnectionState } = juggle;
 
 let { _value: { path } } = router.currentRoute;
 let user = Storage.get(STORAGE.USER_TOKEN);
+
+// 事件监听清理机制
+const __cleanupFns = [];
+function listen(event, handler) { juggle.on(event, handler); __cleanupFns.push(() => juggle.off(event, handler)); }
+function listenEmitter(event, handler) { emitter.$on(event, handler); __cleanupFns.push(() => emitter.$off(event, handler)); }
 
 let state = reactive({
   settingMenus: [
@@ -90,19 +95,19 @@ function onConversationChanged({ conversations }){
     });
   });
 }
-juggle.on(Event.CONVERSATION_CHANGED, onConversationChanged);
-juggle.on(Event.CONVERSATION_ADDED, onConversationChanged);
+listen(Event.CONVERSATION_CHANGED, onConversationChanged);
+listen(Event.CONVERSATION_ADDED, onConversationChanged);
 
 utils.extend(state, { user });
 
-emitter.$on(EVENT_NAME.UN_UNATHORIZED, () => {
+listenEmitter(EVENT_NAME.UN_UNATHORIZED, () => {
   Storage.remove(STORAGE.USER_TOKEN);
   let juggle = im.getCurrent();
   juggle.disconnect();
   router.replace({ name: 'Login' });
 });
 
-juggle.on(Event.STATE_CHANGED, ({ state: status }) => {
+listen(Event.STATE_CHANGED, ({ state: status }) => {
   if (ConnectionState.CONNECTED == status) {
     juggle.getConversation({ conversationId: SYS_CONVERSATION_FRIEND, conversationType: ConversationType.SYSTEM }).then(({ conversation }) => {
       let index = utils.find(state.settingMenus, (menu) => { 
@@ -132,7 +137,7 @@ function onMenuClick(menu){
   router.push({ name: menu.name });
 }
 
-emitter.$on(EVENT_NAME.ON_USER_INFO_UPDATE, ({ user }) => {
+listenEmitter(EVENT_NAME.ON_USER_INFO_UPDATE, ({ user }) => {
   utils.extend(state.user, user);
 });
 
@@ -196,6 +201,8 @@ watch(useRouterCurrent, (value) => {
     selectMenu(menu);
   }
 });
+
+onUnmounted(() => { __cleanupFns.forEach(function(fn){try{fn()}catch(e){}}); });
 </script>
 
 <template>
@@ -203,21 +210,21 @@ watch(useRouterCurrent, (value) => {
     <ul class="jg-footer-tools jg-footer-top-box">
       <li class="jg-footer-tool"  @click.prevent="onShowSettingMenu(true)">
         <div class="jg-header-user">
-          <div class="tyn-avatar jg-header-user-avatar" :style="{ 'background-image': 'url(' + state.user.portrait + ')' }"></div>
+          <div class="tyn-avatar jg-header-user-avatar" :style="{ 'background-image': state.user.portrait ? 'url(' + state.user.portrait + ')' : '' }"></div>
           <div class="jg-header-user-name">{{ state.user.name || state.user.id }}</div>
         </div>
       </li>
       
       <li class="jg-footer-tool" v-if="juggle.isDesktop()">
         <div class="jg-asider-footer-item" @click="onShowSearchModal(true)">
-          <div class="icon wr wr-search"></div>
+          <div class="icon wr jg-icon-search"></div>
           <div class="name">搜索</div>
         </div>
       </li>
 
       <li class="jg-footer-tool">
         <div class="jg-asider-footer-item" @click="onShowAddMenu(true)">
-          <div class="icon wr wr-plus"></div>
+          <div class="icon wr jg-icon-add"></div>
           <div class="name">创建</div>
         </div>
         <HeaderDropMenu @onemit="onDropMenuClick" :is-show="state.isShowAddMenu" :menus="state.addMenus" :class="'jg-header-create-list'" @onhide="onShowAddMenu(false)"></HeaderDropMenu>
@@ -226,14 +233,14 @@ watch(useRouterCurrent, (value) => {
       <li class="jg-footer-tool" v-for="menu in state.settingMenus">
         <div class="jg-asider-footer-item" @click="onMenuClick(menu)" :class="[menu.isActive ? 'jg-footer-active' : '']">
           <div class="nav-unreadcount" v-if="menu.unreadCount > 0">{{ menu.unreadCount }}</div>
-          <div class="icon wr" :class="{ ['wr-' + menu.icon]: true }"></div>
+          <div class="icon jg-icon" :class="{ ['jg-icon-' + menu.icon]: true }"></div>
           <div class="name">{{ menu.title }}</div>
         </div>
       </li>
 
       <li class="jg-footer-tool">
         <div class="jg-asider-footer-item" @click="onShowFavoriteMsg(true)">
-          <div class="icon wr wr-fav"></div>
+          <div class="icon wr jg-icon-favorite"></div>
           <div class="name">收藏</div>
         </div>
       </li>
@@ -241,7 +248,7 @@ watch(useRouterCurrent, (value) => {
     <!-- <ul class="jg-footer-tools jg-footer-bottom-box">
       <li class="jg-footer-tool">
         <div class="jg-asider-footer-item" @click="onShowSettingMenu(true)">
-          <div class="icon wr wr-setting"></div>
+          <div class="icon wr jg-icon-settings"></div>
           <div class="name">设置</div>
         </div>
         <HeaderDropMenu @onemit="onDropMenuClick" :is-show="state.isShowSettingMenu" :menus="state.bottomMenus" :class="'jg-header-create-list jg-layout-settingdrop'" @onhide="onShowSettingMenu(false)"></HeaderDropMenu>

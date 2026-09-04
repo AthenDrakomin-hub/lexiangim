@@ -1,14 +1,13 @@
-﻿package routers
+package routers
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/juggleim/jugglechat-server/apis"
 )
 
 func Route(eng *gin.Engine, prefix string) *gin.RouterGroup {
-	eng.Use(corsHandler())
+	// CORS 由 Nginx 层统一处理（yefeng-us-cc.production.conf），后端不再添加 CORS 头
+	// 原因：nginx add_header + 后端 SetHeader 会产生重复的 Access-Control-Allow-Origin，导致浏览器拒绝
 
 	group := eng.Group("/" + prefix)
 	group.Use(apis.Validate)
@@ -28,6 +27,9 @@ func Route(eng *gin.Engine, prefix string) *gin.RouterGroup {
 	group.POST("/file_cred", apis.GetFileCred)
 	group.POST("/translate", apis.Translate)
 	group.GET("/syncconfs", apis.SyncConfs)
+
+	// AI 回答接口（对接 Agnes API）
+	group.POST("/ai/answer", apis.AiAnswer)
 
 	group.POST("/users/update", apis.UpdateUser)
 	group.POST("/users/updpass", apis.UpdatePass)
@@ -66,7 +68,7 @@ func Route(eng *gin.Engine, prefix string) *gin.RouterGroup {
 	group.GET("/groups/qrcode", apis.QryGrpQrCode)
 	group.POST("/groups/setgrpannouncement", apis.SetGrpAnnouncement)
 	group.GET("/groups/getgrpannouncement", apis.GetGrpAnnouncement)
-	// group.POST("/groups/setdisplayname", apis.SetGroupDisplayName) // 函数不存在，已注释
+	group.POST("/groups/setdisplayname", apis.SetGrpDisplayName)
 	//group manage
 	group.POST("/groups/management/chgowner", apis.ChgGroupOwner)
 	group.POST("/groups/management/administrators/add", apis.AddGrpAdministrator)
@@ -131,21 +133,14 @@ func Route(eng *gin.Engine, prefix string) *gin.RouterGroup {
 	group.GET("/admin/ip-changes", apis.GetIpChangeNotifications)
 	group.POST("/admin/ip-changes/read", apis.MarkIpChangeRead)
 
+	// AI 配置管理（API Key、用量统计）
+	group.POST("/admin/ai-keys/add", apis.AddAiApiKey)
+	group.POST("/admin/ai-keys/update", apis.UpdateAiApiKey)
+	group.GET("/admin/ai-keys/delete", apis.DeleteAiApiKey)
+	group.GET("/admin/ai-keys/list", apis.ListAiApiKeys)
+	group.GET("/admin/ai-usage/stats", apis.GetAiUsageStats)
+
 	return group
 }
 
-func corsHandler() gin.HandlerFunc {
-	return func(context *gin.Context) {
-		method := context.Request.Method
-		context.Writer.Header().Add("Access-Control-Allow-Origin", "*")
-		context.Writer.Header().Add("Access-Control-Allow-Headers", "*")
-		context.Writer.Header().Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PATCH, PUT")
-		context.Writer.Header().Add("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type")
-		context.Writer.Header().Add("Access-Control-Allow-Credentials", "true")
 
-		if method == "OPTIONS" {
-			context.AbortWithStatus(http.StatusNoContent)
-		}
-		context.Next()
-	}
-}

@@ -1,4 +1,4 @@
-@media (max-width: 768px) {  
+﻿@media (max-width: 768px) {  
   .tyn-root::after,
   .tyn-root::before{
     position: fixed;
@@ -115,8 +115,8 @@
   .emojis__grid{
     justify-content: center;
   }
-  .wr-rtc-mic,
-  .wr-rtc-camera{
+  .jg-icon-mic,
+  .jg-icon-camera{
     display: none;
   }
 
@@ -133,6 +133,11 @@
     font-size: var(--jg-font-size-lg);
     font-weight: 600;
     color: #000000ba;
+  }
+
+  /* 深色模式 H5 标题 */
+  .jg-h5header-title {
+    color: var(--jg-text-body);
   }
   .jg-message-senttime,
   .tyn-reply-text,

@@ -26,7 +26,36 @@ function onConversation(){
     type = CONTACT_TYPE.FRIEND;
   }
 
-  router.replace({ name: 'ConversationList', query: {  type, id } });
+  // 构造会话对象，保存到sessionStorage，确保组件初始化后能读取到
+  const conversationType = parseInt(type) || 1;
+  const conversationTitle = props.current.user?.remark_name || props.current.user?.nickname || props.current.user?.login_account || id;
+  const conversation = {
+    conversationType: conversationType,
+    conversationId: id,
+    conversationTitle: conversationTitle,
+    conversationPortrait: props.current.user?.portrait || '',
+    isTop: false,
+    unreadCount: 0,
+    isActive: true,
+    draft: '',
+    tags: [{ id: 1 }],
+    latestMessage: {
+      messageType: 1,
+      content: '',
+      sentTime: Date.now(),
+      searchableContent: ''
+    },
+    shortName: '',
+    f_time: '',
+    sortTime: Date.now()
+  };
+  console.log('发起会话 - 构造会话对象:', conversation);
+  sessionStorage.setItem('pending_conversation', JSON.stringify(conversation));
+  router.replace({ name: 'ConversationList' });
+  setTimeout(() => {
+    console.log('发起会话 - 触发全局事件');
+    emitter.$emit(EVENT_NAME.ON_CONVERSATION_SEARCH_NAV, { conversation });
+  }, 500);
 }
 function onAddFriend(isAgree){
   let user = props.current.user;
@@ -133,11 +162,11 @@ watch(() => props.isShow, () => {
         <div class="tyn-media-group">
           <div class="tyn-media-row">
             <div class="tyn-media-col" v-if="!utils.isEqual(props.current.type, CONTACT_TYPE.NEW_FRIEND) || (utils.isEqual(props.current.type, CONTACT_TYPE.NEW_FRIEND) && utils.isEqual(props.current.status, FRIEND_APPLY_STATUS.ACCEPTED))">
-              <div class="wr wr-message btn btn-light contact-send-msg" @click="onConversation">发起会话</div>
-              <div class="wr wr-message btn btn-light jg-warn-bg" @click="onRemoveFriend" v-if="utils.isEqual(props.current.type, ConversationType.PRIVATE)" >删除好友</div>
+              <div class="wr jg-icon-message btn btn-light contact-send-msg" @click="onConversation">发起会话</div>
+              <div class="wr jg-icon-message btn btn-light jg-warn-bg" @click="onRemoveFriend" v-if="utils.isEqual(props.current.type, ConversationType.PRIVATE)" >删除好友</div>
             </div>
             <div class="tyn-media-col" v-else-if="!props.current.isOneSelf && utils.isEqual(props.current.status, FRIEND_APPLY_STATUS.APPLYING)">
-              <div class="wr wr-message btn btn-light contact-send-msg" @click="onAddFriend(true)">添加好友</div>
+              <div class="wr jg-icon-message btn btn-light contact-send-msg" @click="onAddFriend(true)">添加好友</div>
             </div>
           </div>
         </div>

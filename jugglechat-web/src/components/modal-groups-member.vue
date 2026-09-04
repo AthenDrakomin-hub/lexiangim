@@ -18,7 +18,7 @@ let state = reactive({
   addList: {},
   removeList: {},
 });
-let user = Storage.get(STORAGE.USER_TOKEN);
+let user = Storage.get('user_auth_token');
 
 function onCancel() {
   emit('oncancel', {});
@@ -183,14 +183,14 @@ watch(() => props.isShow, () => {
               <div class="jg-group-conver-box">
                 <div class="jg-group-conver-header">最近聊天</div>
                 <div class="jg-group-convers" ref="conversations">
-                  <Conversation v-for="(item, index) in state.conversations" :is-remove="0" :conversation="item" :index="index" :cls="'wr-cir-add jg-text-success'" @onemit="onClick"></Conversation>
+                  <Conversation v-for="(item, index) in state.conversations" :is-remove="0" :conversation="item" :index="index" :cls="'jg-icon-circle-add jg-text-success'" @onemit="onClick"></Conversation>
                 </div>
               </div>
               <div class="jg-line"></div>
               <div class="jg-group-conver-checkbox">
                 <div class="jg-group-conver-header">已选聊天</div>
                 <div class="jg-group-convers" ref="selectList">
-                  <Conversation v-for="(item, index) in state.selectList" :is-remove="1" :conversation="item" :index="index"  :cls="'wr-cir-remove jg-text-danger'" @onemit="onClick"></Conversation>
+                  <Conversation v-for="(item, index) in state.selectList" :is-remove="1" :conversation="item" :index="index"  :cls="'jg-icon-circle-remove jg-text-danger'" @onemit="onClick"></Conversation>
                 </div>
               </div>
             </div>

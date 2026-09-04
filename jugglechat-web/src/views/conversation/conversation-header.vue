@@ -65,7 +65,7 @@ function onShowCreateGroup(isShow){
     <ul class="jg-h5header">
       <li class="jg-h5header-left">
         <div class="jg-asider-footer-item" @click="onShowNavBar(true)">
-          <div class="icon wr wr-more-list"></div>
+          <div class="icon wr jg-icon-more-list"></div>
           <div class="name"></div>
         </div>
         <HeaderDropMenu @onemit="onDropMenuClick" :is-show="state.isShowNavBar" :menus="state.tbars" :class="'tyn-h5header-nav-list'" @onhide="onShowNavBar(false)"></HeaderDropMenu>
@@ -73,7 +73,7 @@ function onShowCreateGroup(isShow){
       <li class="jg-h5header-title"><img src="/logo.png" class="jg-header-logo" alt="乐享"> 乐享</li>
       <li class="jg-h5header-right" v-if="state.isShowAddButton">
         <div class="jg-asider-footer-item" @click="onShowAddMenu(true)">
-          <div class="icon wr wr-plus-w600"></div>
+          <div class="icon wr jg-icon-add-w600"></div>
           <div class="name"></div>
         </div>
         <HeaderDropMenu @onemit="onDropMenuClick" :is-show="state.isShowAddMenu" :menus="state.addMenus" :class="'tyn-h5header-create-list'" @onhide="onShowAddMenu(false)"></HeaderDropMenu>

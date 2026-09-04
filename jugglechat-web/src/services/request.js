@@ -1,4 +1,4 @@
-import utils from '../common/utils';
+﻿import utils from '../common/utils';
 import { STORAGE, RESPONSE, EVENT_NAME } from '../common/enum';
 import Storage from '../common/storage';
 import EventSent from '../common/eventsent';
@@ -19,7 +19,8 @@ function request(url, options = {}){
   options.headers = utils.extend(_headers, headers);
   return fetch(url, options).then((res) => {
     if(utils.isEqual(res.status, RESPONSE.UNATHORIZED)){
-      return emitter.$emit(EVENT_NAME.UN_UNATHORIZED);
+      emitter.$emit(EVENT_NAME.UN_UNATHORIZED);
+      return Promise.reject({ code: RESPONSE.UNATHORIZED, msg: 'Unauthorized' });
     }
     return res.json();
   });

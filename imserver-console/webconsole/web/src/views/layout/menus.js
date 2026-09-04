@@ -34,6 +34,7 @@ function MenuFactory() {
             { title: 'menu.app.rtcSettings', name: 'ArguRTC' },
             { title: 'menu.app.emailSettings', name: 'ArguEmail' },
             { title: 'menu.app.smsSettings', name: 'ArguSms' },
+            { title: 'menu.app.aiConfigSettings', name: 'ArguAiConfig' },
           ],
         });
       }

@@ -1,6 +1,6 @@
-<template>
-  <Asider :isShow="isShow" title="用户IP监控" @oncancel="onCancel">
-    <div class="admin-ip-monitor">
+﻿<template>
+  <Asider :isShow="isShow" title="IP在线状态" @oncancel="onCancel">
+    <div class="vip-ip-monitor">
       <!-- 搜索栏 -->
       <div class="search-bar">
         <input v-model="keyword" type="text" placeholder="搜索用户ID/昵称/IP" @keyup.enter="onSearch" />
@@ -83,7 +83,7 @@
 <script setup>
 import { reactive, onMounted, computed } from "vue";
 import Asider from "./aside.vue";
-import Admin from "../services/adminservice";
+import Vip from "../services/vipservice";
 
 const props = defineProps(["isShow"]);
 const emit = defineEmits(["oncancel"]);
@@ -107,7 +107,7 @@ onMounted(() => {
 
 async function loadUsers() {
   try {
-    let data = await Admin.getAllUsersIpStatus(state.page, state.pageSize, state.keyword);
+    let data = await Vip.getAllUsersIpStatus(state.page, state.pageSize, state.keyword);
     state.users = data.list || [];
     state.total = data.total || 0;
   } catch (e) {
@@ -139,7 +139,7 @@ async function onViewHistory(user) {
   state.showHistory = true;
   state.ipHistory = [];
   try {
-    let data = await Admin.getUserIpHistory(user.user_id, 1, 50);
+    let data = await Vip.getUserIpHistory(user.user_id, 1, 50);
     state.ipHistory = data.list || [];
   } catch (e) {
     console.error("加载IP历史失败", e);
@@ -152,7 +152,7 @@ function onCancel() {
 </script>
 
 <style scoped>
-.admin-ip-monitor {
+.vip-ip-monitor {
   padding: 16px;
 }
 .search-bar {
@@ -188,11 +188,18 @@ function onCancel() {
   padding: 40px 20px;
   color: #999;
 }
+
+/* 深色模式空提示 */
+.empty-tip {
+  color: var(--jg-text-muted);
+}
+
 .user-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
+
 .user-item {
   display: flex;
   align-items: flex-start;
@@ -202,8 +209,19 @@ function onCancel() {
   cursor: pointer;
   transition: background 0.2s;
 }
+
+/* 深色模式用户项 */
+.user-item {
+  background: var(--jg-bg-card);
+}
+
 .user-item:hover {
   background: #eff6ff;
+}
+
+/* 深色模式用户项悬停 */
+.user-item:hover {
+  background: var(--jg-bg-hover);
 }
 .user-avatar {
   width: 40px;

@@ -7,7 +7,7 @@
   <p>A deeply customized fork of JuggleIM open-source project, managing apps, users, groups, messages, bots, integrations, monitoring, and analytics from one web UI.</p>
 
   <p>
-    <img src="https://img.shields.io/badge/Version-v2.0.0%20LeXiang-2563EB?style=flat-square" alt="Version" />
+    <img src="https://img.shields.io/badge/Version-v1.0.0%20LeXiang-2563EB?style=flat-square" alt="Version" />
     <img src="https://img.shields.io/badge/Go-1.25+-00ADD8?style=flat-square&logo=go&logoColor=white" alt="Go 1.25+" />
     <img src="https://img.shields.io/badge/Vue-3-42b883?style=flat-square&logo=vuedotjs&logoColor=white" alt="Vue 3" />
     <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?style=flat-square&logo=mysql&logoColor=white" alt="MySQL 8.0" />
@@ -264,5 +264,5 @@ Released under the [Apache License 2.0](LICENSE). The LeXiang brand customizatio
 
 <div align="center">
   <strong>LeXiang · Make Communication Happier</strong><br />
-  <sub>Deeply customized from JuggleIM open-source project, v2.0.0 LeXiang Edition</sub>
+  <sub>Deeply customized from JuggleIM open-source project, v1.0.0 LeXiang Edition</sub>
 </div>

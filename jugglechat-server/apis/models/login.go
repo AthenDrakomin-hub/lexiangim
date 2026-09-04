@@ -6,6 +6,7 @@ type RegisterReq struct {
 	Email    string `json:"email"`
 	Code     string `json:"code"`
 	Password string `json:"password"`
+	Nickname string `json:"nickname"`
 }
 
 type SmsLoginReq struct {
@@ -25,6 +26,7 @@ type LoginUserResp struct {
 	Avatar        string `json:"avatar"`
 	Status        int    `json:"status"`
 	ImToken       string `json:"im_token,omitempty"`
+	VipLevel      int    `json:"vip_level"`
 }
 
 type QrCode struct {

@@ -1,4 +1,43 @@
 /** 01. FONTS */
+
+/* Poppins — 英文/数字主字体（本地加载） */
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('../fonts/Poppins-Regular.woff2') format('woff2'),
+       url('../fonts/Poppins-Regular.woff') format('woff'),
+       url('../fonts/Poppins-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url('../fonts/Poppins-Medium.woff2') format('woff2'),
+       url('../fonts/Poppins-Medium.woff') format('woff'),
+       url('../fonts/Poppins-Medium.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url('../fonts/Poppins-SemiBold.woff2') format('woff2'),
+       url('../fonts/Poppins-SemiBold.woff') format('woff'),
+       url('../fonts/Poppins-SemiBold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('../fonts/Poppins-Bold.woff2') format('woff2'),
+       url('../fonts/Poppins-Bold.woff') format('woff'),
+       url('../fonts/Poppins-Bold.ttf') format('truetype');
+}
+
 ol,
 ul,
 dl {
@@ -8,9 +47,20 @@ dl {
 }
 
 :root {
-  --lx-primary: #FF6B35;
-  --lx-primary-light: #FF8F66;
-  --lx-primary-dark: #E55A28;
+  /* ── 全局字体栈：英文用 Poppins，中文回退系统字体 ── */
+  --jg-font-family: 'Poppins', -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+}
+
+body {
+  font-family: var(--jg-font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  --lx-primary: #5865f2;
+  --lx-primary-light: #7289da;
+  --lx-primary-dark: #4752c4;
 }
 
 /** 02. LAYOUT */
@@ -28,19 +78,16 @@ dl {
   background-position: 54%; */
   position: relative;
 }
-.tyn-root::after{
+.tyn-root::after {
+  /* 已移除：改为纯色 Discord 背景，不再使用涂鸦图案 */
   content: "";
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  background-image: url(../images/cover/bg-chat.png);
-  background-position: top right;
-  background-size: 510px auto;
-  background-repeat: repeat;
-  mix-blend-mode: overlay;
-  opacity: 0.48;
+  /* background-image: url(../images/cover/bg-chat.png); */
+  background-color: var(--jg-bg-primary, #313338);
   z-index: -1;
 }
 .tyn-root::before{
@@ -54,7 +101,7 @@ dl {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  background-color: #f1ede7;
+  background-color: #313338;
   z-index: -1;
 }
 
@@ -243,7 +290,7 @@ dl {
 .tyn-aside {
   /* width: var(--aside-width); */
   background: var(--aside-bg);
-  background-image: linear-gradient(120deg, #fff 45%, #f5f5f5);
+  background-image: linear-gradient(120deg, #2b2d31 45%, #1e1f22);
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -251,6 +298,12 @@ dl {
   flex-shrink: 0;
   overflow: hidden;
   border-right: 1px solid #38353c2b;
+}
+
+/* 深色模式侧边栏背景 */
+.tyn-aside {
+  background-image: none;
+  background: var(--jg-bg-card);
 }
 .tyn-aside-base {
   height: var(--content-full-height);
@@ -282,6 +335,10 @@ dl {
   min-width: 62px;
 }
 .jg-asider-footer-item{
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -289,10 +346,17 @@ dl {
   font-size: var(--jg-font-size-xs);
   font-weight: 600;
   cursor: pointer;
-  height: 40px;
-  width: 40px;
-  color: #7f7e82;
+  color: var(--jg-text-muted);
   position: relative;
+}
+
+/* 深色模式底部导航项 */
+.jg-asider-footer-item {
+  color: var(--jg-text-muted);
+}
+
+.jg-footer-active {
+  color: #5865f2;
 }
 .jg-asider-footer-item .nav-unreadcount{
   right: -2px;
@@ -302,7 +366,7 @@ dl {
   border-radius: var(--jg-radius-circle);
 }
 .jg-footer-active{
-  color: #0000ffe8;
+  color: var(--jg-primary);
 }
 
 .tyn-aside-search {
@@ -325,9 +389,14 @@ dl {
   border-radius: var(--jg-radius-lg);
 }
 .tyn-aside-item.active{
-  background: #cce3ff;
+  background: rgba(88, 101, 242, 0.15);
   border-radius: var(--jg-radius-lg);
   transition: background 0.3s linear;
+}
+
+/* 深色模式活跃项 */
+.tyn-aside-item.active {
+  background: var(--jg-bg-hover);
 }
 .jg-aside-item-bubbly {
   border-radius: var(--aside-item-bubbly-radius);
@@ -339,7 +408,13 @@ dl {
   height: 100%;
   overflow: auto;
   -webkit-app-region: no-drag;
-  background-image: linear-gradient(120deg, #fff 45%, #f5f5f5);
+  background-image: linear-gradient(120deg, #2b2d31 45%, #1e1f22);
+}
+
+/* 深色模式会话列表背景 */
+.tyn-aside-body {
+  background-image: none;
+  background: #2b2d31;
 }
 .tyn-chat-content{
   -webkit-app-region: no-drag;
@@ -878,7 +953,7 @@ dl {
   --reply-text: #000000;
   --reply-anchor-text: var(--bs-primary-400);
   --reply-anchor-hover: var(--bs-primary);
-  --outgoing-message-bg: #316ff3;
+  --outgoing-message-bg: #5865f2;
   --outgoing-message-text: var(--bs-white);
   --radius-large: .5rem;
   --radius-small: .25rem;
@@ -888,10 +963,12 @@ dl {
   flex-direction: column-reverse;
 }
 [data-bs-theme=dark] .tyn-reply {
-  --reply-bg: var(--bs-gray-800);
-  --reply-text: var(--bs-gray-200);
-  --reply-anchor-text: var(--bs-primary-500);
+  --reply-bg: #313338;
+  --reply-text: #dbdee1;
+  --reply-anchor-text: var(--bs-primary-400);
   --reply-anchor-hover: var(--bs-primary);
+  --outgoing-message-bg: #5865f2;
+  --outgoing-message-text: #ffffff;
 }
 .tyn-reply-preview {
   padding: 0;
@@ -916,9 +993,15 @@ dl {
   font-size: var(--jg-font-size-xs);
   font-weight: 500;
   text-align: center;
-  color: #111b2182;
+  color: rgba(0,0,0,0.51);
   margin: 1rem 0;
 }
+
+/* 深色模式分隔线 */
+.tyn-reply-separator {
+  color: rgba(255,255,255,0.4);
+}
+
 .tyn-separator-item{
   margin: 0 auto;
   background: var(--jg-text-white);
@@ -926,6 +1009,12 @@ dl {
   padding: 0 var(--jg-space-3);
   line-height: 14px;
   display: inline-block;
+}
+
+/* 深色模式分隔项 */
+.tyn-separator-item {
+  background: var(--jg-bg-card);
+  color: var(--jg-text-muted);
 }
 .tyn-reply-avatar {
   margin-right: var(--avatar-gap);
@@ -1002,23 +1091,29 @@ dl {
   height: 20px;
   background: linear-gradient(239deg, #FFF 0%, #FFF 50%, transparent 50%, transparent);
 }
-.wr-bubble-a::after,
-.wr-bubble-b::before{
+.jg-icon-bubble-a::after,
+.jg-icon-bubble-b::before{
   position: absolute;
   left: -17px;
   font-size: var(--jg-font-size-5xl);
   top: 11px;
   color: var(--jg-text-white);
 }
-.wr-bubble-a::after{
+.jg-icon-bubble-a::after{
   left: auto;
   right: -17px;
   top: 11px;
-  color: #effcde;
+  color: var(--jg-text-white);
 }
 .outgoing .tyn-reply-text {
   color: #111b21;
   background: #d9fdd3;
+}
+
+/* 深色模式出站消息气泡 - 使用品牌蓝色 */
+.outgoing .tyn-reply-text {
+  color: #ffffff;
+  background: #5865f2;
 }
 .outgoing .tyn-reply-text::before{
   --chat: #d9fdd3;
@@ -1030,6 +1125,11 @@ dl {
   width: 20px;
   height: 20px;
   background: linear-gradient(113deg, var(--chat) 0%, var(--chat) 50%, transparent 50%, transparent);
+}
+
+/* 深色模式出站消息气泡箭头 */
+.outgoing .tyn-reply-text::before {
+  --chat: #5865f2;
 }
 .tyn-reply-link {
   display: flex;
@@ -1589,22 +1689,22 @@ dl {
   --qa-sap-color: var(--bs-gray-700);
 }
 
-/* 品牌色覆盖：乐享橙色 #FF6B35 */
+/* 品牌色覆盖：乐享 Blurple #5865f2 (Discord 风格) */
 :root {
-  --bs-primary: #FF6B35;
-  --bs-primary-rgb: 255, 107, 53;
-  --bs-primary-50: #FFF3ED;
-  --bs-primary-100: #FFE4D6;
-  --bs-primary-200: #FFC9AD;
-  --bs-primary-300: #FFA87E;
-  --bs-primary-400: #FF844D;
-  --bs-primary-500: #FF6B35;
-  --bs-primary-600: #E55A28;
-  --bs-primary-700: #CC491E;
-  --bs-primary-800: #A33A17;
-  --bs-primary-900: #7A2B11;
-  --bs-primary-dark: #7A2B11;
-  --bs-primary-text-emphasis: #5A1F08;
+  --bs-primary: #5865f2;
+  --bs-primary-rgb: 88, 101, 242;
+  --bs-primary-50: rgba(88, 101, 242, 0.1);
+  --bs-primary-100: rgba(88, 101, 242, 0.2);
+  --bs-primary-200: rgba(88, 101, 242, 0.3);
+  --bs-primary-300: #7289da;
+  --bs-primary-400: #5865f2;
+  --bs-primary-500: #5865f2;
+  --bs-primary-600: #4752c4;
+  --bs-primary-700: #3d47b5;
+  --bs-primary-800: #323aa0;
+  --bs-primary-900: #282d8a;
+  --bs-primary-dark: #282d8a;
+  --bs-primary-text-emphasis: #1a1d4a;
   --bs-primary-bg-subtle: #FFF3ED;
   --bs-primary-border-subtle: #FFD4C0;
 }
@@ -1860,15 +1960,15 @@ dl {
   margin-bottom: 12px;
 }
 .jg-modal-header .title{
-  color: #242325;
+  color: var(--jg-text-header);
   font-weight: 700;
   font-size: var(--jg-font-size-lg);
 }
 .jg-modal-add::before{
-  color: #069806;
+  color: var(--jg-success);
 }
 .jg-modal-add:hover{
-  color: #242325 !important;
+  color: var(--jg-text-header) !important;
 }
 
 .tyn-common-aside {
@@ -1912,7 +2012,7 @@ dl {
 }
 .tyn-common-header .title{
   font-size: var(--jg-font-size-lg);
-  color: #2b2a2a;
+  color: var(--jg-text-body);
   font-weight: 600;
 }
 .tyn-common-header .close{
@@ -1931,4 +2031,218 @@ dl {
 .tyn-common-body{
   padding: 0 var(--jg-space-4);
   overflow-y: auto;
+}
+
+/* ── 深色模式额外覆盖 ───────────────────────────────────── */
+{
+  /* 消息气泡深色模式 */
+  --reply-bg: #2d2d44;
+  --reply-text: #e6e6e6;
+  --outgoing-message-bg: #5865f2;
+  --outgoing-message-text: #ffffff;
+}
+
+/* 入站消息气泡 */
+.incoming .tyn-reply-text {
+  background: var(--reply-bg);
+  color: var(--reply-text);
+}
+
+/* 出站消息气泡 */
+.outgoing .tyn-reply-text {
+  background: var(--outgoing-message-bg);
+  color: var(--outgoing-message-text);
+}
+
+/* 深色模式出站消息 */
+.outgoing .tyn-reply-text {
+  background: #5865f2;
+  color: #ffffff;
+}
+
+/* 输入框深色模式 */
+.tyn-chat-form-enter {
+  background: var(--jg-bg-input);
+  color: var(--jg-text-body);
+}
+
+.tyn-chat-form-input {
+  background: var(--jg-bg-input);
+  color: var(--jg-text-body);
+  border-color: var(--jg-border);
+}
+
+/* 聊天头部深色模式 */
+.tyn-chat-head {
+  background: var(--jg-bg-card);
+  border-bottom-color: var(--jg-border);
+}
+
+/* 弹窗深色模式 */
+.modal-content {
+  background: var(--jg-bg-card);
+  color: var(--jg-text-body);
+  border-color: var(--jg-border);
+}
+
+.modal-header {
+  border-bottom-color: var(--jg-border);
+}
+
+.modal-footer {
+  border-top-color: var(--jg-border);
+}
+
+.modal-body {
+  color: var(--jg-text-body);
+}
+
+/* 搜索框深色模式 */
+.jg-search-rs-box {
+  background: var(--jg-bg-card);
+  border-color: var(--jg-border);
+}
+
+.jg-search-preview-box {
+  background: var(--jg-bg-card);
+}
+
+/* 会话列表项深色模式 */
+.tyn-aside-body {
+  background: var(--jg-bg-card);
+}
+
+.tyn-aside-item.active {
+  background: var(--jg-bg-hover);
+}
+
+.tyn-aside-item:hover {
+  background: var(--jg-bg-hover);
+}
+
+/* 联系人页面深色模式 */
+.jg-contact-action-btn:hover {
+  background: var(--jg-bg-hover);
+}
+
+.jg-empty-title {
+  color: var(--jg-text-body);
+}
+
+.jg-empty-desc {
+  color: var(--jg-text-muted);
+}
+
+/* 设置页深色模式 */
+.jg-header-user-signature {
+  color: var(--jg-text-muted);
+}
+
+/* 头像背景深色模式 */
+.jg-topitem-avatar {
+  background-color: rgba(255,255,255,0.1);
+}
+
+/* 分隔线深色模式 */
+.tyn-aside-head {
+  border-bottom-color: var(--jg-border);
+}
+
+.tyn-aside-toplist {
+  border-bottom-color: var(--jg-border);
+}
+
+/* 代码块深色模式 */
+.tyn-code-block-title {
+  color: var(--jg-text-body);
+  border-bottom-color: var(--jg-border);
+  background: rgba(0,0,0,0.2);
+}
+
+/* Toast 深色模式 */
+.jg-toast {
+  background: var(--jg-bg-card);
+  border-color: var(--jg-border);
+  color: var(--jg-text-body);
+}
+
+/* 滚动条深色模式 */
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255,255,255,0.15);
+}
+
+/* 通用文本颜色确保对比度 */
+.tyn-media-col .content {
+  color: var(--jg-text-muted);
+}
+
+.tyn-media-col .meta {
+  color: var(--jg-text-muted);
+}
+
+/* 表单控件深色模式 */
+.form-control {
+  background-color: var(--jg-bg-input);
+  border-color: var(--jg-border);
+  color: var(--jg-text-body);
+}
+
+.form-control::placeholder {
+  color: var(--jg-text-muted);
+}
+
+.form-select {
+  background-color: var(--jg-bg-input);
+  border-color: var(--jg-border);
+  color: var(--jg-text-body);
+}
+
+/* 导航标签深色模式 */
+.nav-tabs-line .nav-link {
+  color: var(--jg-text-body);
+}
+
+.nav-tabs-line .nav-link:hover {
+  color: var(--jg-primary);
+}
+
+.nav-tabs-line .nav-link.active {
+  color: var(--jg-primary);
+  border-bottom-color: var(--jg-primary);
+}
+
+/* 底部导航栏深色模式 */
+.tyn-aside-footer {
+  background: var(--jg-bg-card);
+  border-top-color: var(--jg-border);
+}
+
+/* 应用栏深色模式 */
+.tyn-appbar {
+  background: var(--jg-bg-card);
+  border-right-color: var(--jg-border);
+}
+
+/* 桌面标题栏深色模式 */
+.tyn-desktop-header {
+  background-color: var(--jg-bg-card);
+  border-bottom-color: var(--jg-border);
+}
+
+.tyn-desktop-nav a {
+  color: var(--jg-text-body);
+}
+
+
+/* 侧边栏工具深色模式 */
+.jg-asider-tools .btn {
+  background-color: rgba(255,255,255,0.08);
+}
+
+.jg-asider-seach-box .form-control-wrap {
+  border-color: rgba(255,255,255,0.1);
+}
+
+.jg-asider-seach-box .jg-search-icon::before {
+  color: rgba(255,255,255,0.5);
 }

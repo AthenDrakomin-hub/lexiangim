@@ -57,7 +57,7 @@ watch(() => props.message, (msg) => {
             </div>
           </div>
           <button @click="onCancel()"
-            class="btn btn-md btn-icon btn-pill btn-white shadow position-absolute top-0 end-0 mt-n3 me-n3 wr wr-close"></button>
+            class="btn btn-md btn-icon btn-pill btn-white shadow position-absolute top-0 end-0 mt-n3 me-n3 wr jg-icon-close"></button>
         </div>
       </div>
     </DialogContent>

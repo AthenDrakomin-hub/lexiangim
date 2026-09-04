@@ -1,6 +1,6 @@
-<template>
+﻿<template>
   <Asider :isShow="isShow" title="IP变动通知" @oncancel="onCancel">
-    <div class="admin-ip-changes">
+    <div class="vip-ip-changes">
       <!-- 未读统计 -->
       <div class="stats-bar">
         <span>未读: <b class="unread-count">{{ unreadCount }}</b></span>
@@ -56,7 +56,7 @@
 <script setup>
 import { reactive, onMounted } from "vue";
 import Asider from "./aside.vue";
-import Admin from "../services/adminservice";
+import Vip from "../services/vipservice";
 
 const props = defineProps(["isShow"]);
 const emit = defineEmits(["oncancel"]);
@@ -77,7 +77,7 @@ onMounted(() => {
 async function loadNotifications() {
   try {
     let isRead = state.filter === "unread" ? 0 : state.filter === "read" ? 1 : null;
-    let data = await Admin.getIpChanges(state.page, state.pageSize, isRead);
+    let data = await Vip.getIpChanges(state.page, state.pageSize, isRead);
     state.notifications = data.list || [];
     state.total = data.total || 0;
     state.unreadCount = data.unread_count || 0;
@@ -96,7 +96,7 @@ async function onMarkAllRead() {
   try {
     let unreadIds = state.notifications.filter(n => n.is_read === 0).map(n => n.id);
     if (unreadIds.length > 0) {
-      await Admin.markIpChangeRead(unreadIds);
+      await Vip.markIpChangeRead(unreadIds);
     }
     loadNotifications();
   } catch (e) {
@@ -107,7 +107,7 @@ async function onMarkAllRead() {
 async function onViewDetail(item) {
   if (item.is_read === 0) {
     try {
-      await Admin.markIpChangeRead([item.id]);
+      await Vip.markIpChangeRead([item.id]);
       item.is_read = 1;
       state.unreadCount = Math.max(0, state.unreadCount - 1);
     } catch (e) {
@@ -136,7 +136,7 @@ function onCancel() {
 </script>
 
 <style scoped>
-.admin-ip-changes {
+.vip-ip-changes {
   padding: 16px;
 }
 .stats-bar {
@@ -184,6 +184,11 @@ function onCancel() {
   padding: 40px 20px;
   color: #999;
 }
+
+/* 深色模式空提示 */
+.empty-tip {
+  color: var(--jg-text-muted);
+}
 .notification-list {
   display: flex;
   flex-direction: column;
@@ -198,12 +203,29 @@ function onCancel() {
   cursor: pointer;
   transition: background 0.2s;
 }
+
+/* 深色模式通知项 */
+.notification-item {
+  background: var(--jg-bg-card);
+}
+
 .notification-item.unread {
   background: #eff6ff;
   border-left: 3px solid #2563eb;
 }
+
+/* 深色模式未读通知 */
+.notification-item.unread {
+  background: var(--jg-bg-hover);
+}
+
 .notification-item:hover {
   background: #eef2ff;
+}
+
+/* 深色模式通知项悬停 */
+.notification-item:hover {
+  background: var(--jg-bg-hover);
 }
 .notif-icon {
   position: relative;

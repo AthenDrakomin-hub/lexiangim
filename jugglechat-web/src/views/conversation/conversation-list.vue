@@ -5,7 +5,7 @@ import { useRouter } from "vue-router";
 import Conversation from "./conversation.vue";
 import None from "./none.vue";
 
-import { STORAGE, EVENT_NAME, CONVERATION_TAG_ID, CONVERSATION_TAG_TYPE } from "../../common/enum";
+import { EVENT_NAME, CONVERATION_TAG_ID, CONVERSATION_TAG_TYPE } from "../../common/enum";
 import Storage from "../../common/storage";
 import im from "../../common/im";
 import common from "../../common/common";
@@ -97,15 +97,20 @@ function onHideTopDrop(conversation) {
   });
 }
 function onConversation(conversation){
-  if(!conversationTools.isSame(state.currentConversation, conversation)){
-    state.currentConversation = conversation;
-  }
+  console.log('onConversation被调用:', conversation);
+  console.log('当前currentConversation:', state.currentConversation);
+  state.currentConversation = conversation;
+  console.log('更新后的currentConversation:', state.currentConversation);
 }
 emitter.$on(EVENT_NAME.ON_CONVERSATION_RESET, () => {
   state.currentConversation = {};
 });
 emitter.$on(EVENT_NAME.ON_CONVERSATION_SEARCH_NAV, ({ conversation }) => {
+  console.log('ON_CONVERSATION_SEARCH_NAV事件触发:', conversation);
+  console.log('设置前currentConversation:', state.currentConversation);
   state.currentConversation = conversation;
+  console.log('设置后currentConversation:', state.currentConversation);
+  console.log('currentConversation.conversationId:', state.currentConversation.conversationId);
   onConversationChanged({ conversations: [conversation], state });
 });
 emitter.$on(EVENT_NAME.ON_GROUP_CREATED, ({ conversation }) => {
@@ -130,14 +135,13 @@ function updateConversation(conversation) {
   });
 }
 
-let user = Storage.get(STORAGE.USER_TOKEN);
+let user = Storage.get('user_auth_token');
 if (utils.isEmpty(user)) {
   router.replace({ name: "Login" });
 }
 
 im.connect(user, {
   success: async (_user) => {
-    console.log("conversation connect success", _user);
     // let { tags = [] } = await juggle.getConversationTags();
     let tags = [{id: CONVERATION_TAG_ID.ALL, name: '消息'}]
     utils.forEach(tags, (tag) => {
@@ -149,6 +153,24 @@ im.connect(user, {
     getConversations(isFirst, CONVERATION_TAG_ID.ALL);
     conversationTools.getTops(state);
     utils.extend(state.currentUser, user);
+    
+    // 路由参数获取会话方案已移除（hash模式下路由参数不可靠，改用sessionStorage方案）
+    
+    // 从sessionStorage读取待处理的会话（从通讯录/好友详情发起聊天）
+    try {
+      const pendingConv = sessionStorage.getItem('pending_conversation');
+      if (pendingConv) {
+        const conversation = JSON.parse(pendingConv);
+        console.log('从sessionStorage恢复待处理会话:', conversation);
+        sessionStorage.removeItem('pending_conversation');
+        if (conversation && conversation.conversationId) {
+          state.currentConversation = conversation;
+          onConversationChanged({ conversations: [conversation], state });
+        }
+      }
+    } catch (e) {
+      console.warn('读取待处理会话失败:', e);
+    }
   },
   error: () => {
     router.replace({ name: "Login" });
@@ -172,12 +194,13 @@ function onConversationRemove({ conversations }){
 function getConversations(isFirst = false, tag, callback = utils.noop) {
   let params = {};
   if (!isFirst) {
-    let index = state.conversationMap[tag].length - 1;
-    let item = state.conversationMap[tag][index];
-    params = { time: item.sortTime };
+    let tagList = state.conversationMap[tag] || [];
+    let index = tagList.length - 1;
+    let item = tagList[index];
+    if (item) {
+      params = { time: item.sortTime };
+    }
   }
-  utils.extend(params, { tag });
-
   //临时代码：和服务端约定获取全部规则后可删除
   if(utils.isEqual(tag, CONVERATION_TAG_ID.ALL)){
     params.tag = '';
@@ -185,7 +208,6 @@ function getConversations(isFirst = false, tag, callback = utils.noop) {
   juggle.getConversations(params).then(result => {
     let { conversations: _list } = result;
     _list = common.filterIgnoreConversations(_list);
-    console.log("conversatoins", _list);
     utils.forEach(_list, conversation => {
       let {
         latestMessage,
@@ -354,8 +376,8 @@ function onTagConversationChanged({ removes, adds, tag }){
 
           <div class="jg-conversations-header">
             <ul class="jg-conversations-tools jg-convers-tools">
-              <li class="jg-conversation-tool wr" :class="[state.isShowConversationGroup ? 'wr-menu-left' : 'wr-menu-right']" @click="onShowConversationGroup()">消息</li>
-              <li class="jg-conversation-tool wr wr-menu-modify" @click="onShowGroupMemberManager(true)" v-if="state.currentTag.type == CONVERSATION_TAG_TYPE.CUSTOM">会话设置</li>
+              <li class="jg-conversation-tool wr" :class="[state.isShowConversationGroup ? 'jg-icon-menu-left' : 'jg-icon-menu-right']" @click="onShowConversationGroup()">消息</li>
+              <li class="jg-conversation-tool wr jg-icon-menu-edit" @click="onShowGroupMemberManager(true)" v-if="state.currentTag.type == CONVERSATION_TAG_TYPE.CUSTOM">会话设置</li>
             </ul>
           </div>
 
@@ -377,7 +399,7 @@ function onTagConversationChanged({ removes, adds, tag }){
                   <div class="dropdown-menu" :class="{ 'show jg-topmenu-show': item.isShowTopDrop }">
                     <ul class="tyn-list-links">
                       <li>
-                        <a class="wr wr-untop" @click.stop="onSetConversationTop(item, false)">
+                        <a class="wr jg-icon-untop" @click.stop="onSetConversationTop(item, false)">
                           <span>取消置顶</span>
                         </a>
                       </li>
